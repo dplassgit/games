@@ -1,6 +1,11 @@
-5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}"
+10 input "{cls}visiting team (3-letters)"; v$
+15 if len(v$)<>3 then print "wrong length, sorry!": goto 10
+20 input "home team"; h$
+25 if len(h$)<>3 then print "wrong length, sorry!": goto 10
 
-10 rem print field
+95 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}"
+
+100 print field
 100 gosub 5000
 110 gosub 6000
 120 rem strikes, balls, outs, inning, team
@@ -81,7 +86,7 @@
 1199 return
 
 1200 rem update in,b,s,o
-1200 poke 32768+1*40+5,in+asc("0")
+1200 print "{home}{down}{right}{right}{right}{right}";in
 1210 poke 32768+1*40+37,b+asc("0")
 1220 poke 32768+2*40+37,s+asc("0")
 1230 poke 32768+3*40+37,ou+asc("0")
@@ -135,17 +140,17 @@
 5110 print "      M       QN      M        N"
 5120 print "       M      N        M      N"
 5130 print "        M    N          M    N"
-5140 print "         M  N           QM  N"
-5150 print "          MNMQ    UQ     NMN"
-5160 print "           MN     JK     MN"
+5140 print "         M  N     NM    QM  N"
+5150 print "          MNMQ   {167} Q{165}    NMN"
+5160 print "           MN     MN     MN"
 5170 print "            M            N"
 5180 print "             M          N"
 5190 print "              M        N"
 5200 print "               M      N"
 5210 print "                M    N       r  h  e"
 5220 print "                 MOPN      {176}{192}{192}{178}{192}{192}{178}{192}{192}{174}"    
-5230 print "                  MN  home:{221} 0{221} 0{221} 0{221}"
-5240 print "                 W     vis:{221} 0{221} 0{221} 0{221}"
+5230 print "                  MN   ";v$;":{221} 0{221} 0{221} 0{221}"
+5240 print "                 W     ";h$;":{221} 0{221} 0{221} 0{221}"
 5250 print "                   Q       {173}{192}{192}{177}{192}{192}{177}{192}{192}{189}{HOME}";
 5999 return
 
@@ -159,4 +164,3 @@
 6012 ba=2: gosub 1800
 6013 ba=3: gosub 1800
 6999 return
-
