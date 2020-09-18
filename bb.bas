@@ -4,20 +4,48 @@
 100 gosub 5000
 110 gosub 6000
 120 rem strikes, balls, outs, inning, team
-120 s=0:b=0:ou=0:in=0:t=0
+120 s=0:b=0:ou=0:in=1:t=0
+130 gosub 1200
+140 rem hits, runs, errors
+140 dim h(2), r(2), e(2)
 
 200 rem main loop
-210 hit=0: sw=1: gosub 1600: gosub 1000: rem pitch
-220 if hit=10 then poke 32768,8: rem hit
-230 if hit=1 then poke 32768,19: rem miss
-240 poke 32769,42: rem TEMPORARY wait indicator
-250 rem pause between pitches
-260 for j=1 to 1000: next
-270 rem clear indicators
-280 poke 32769,32: poke 32768,32
-290 goto 200
+200 hit=0: sw=1: gosub 1600: gosub 1000: rem pitch
+210 if hit<>1 goto 300
+220 poke 32768,19: rem strike TEMPORARY
+230 rem strike
+230 s=s+1: gosub 1200
+240 if s<3 goto 299
+250 rem struck out
+250 s=0:ou=ou+1: gosub 1200: if ou=3 then s=0:b=0:ou=0: gosub 1200
+260 if ou=0 then t=1-t: if t=0 then in = in + 1: if in<10 then gosub 1200
+299 goto 900
 
-1000 rem pitch/bat loop
+300 rem hit
+300 if hit<>10 then goto 400
+310 nb=int(4*rnd(0))+1: gosub 1300
+320 poke 32768,nb+asc("0"): rem TEMPORARY
+330 s=0:b=0:h(t)=h(t)+1: gosub 1200
+399 goto 900
+
+400 rem didn't swing - ball or strike?
+400 if rnd(0) < 0.5 goto 220: rem strike
+410 rem ball
+410 poke 32768,2: rem ball TEMPORARY
+420 b=b+1: gosub 1200
+430 if b < 4 goto 499
+440 rem walked
+440 s=0: b=0: gosub 1200: nb=1: gosub 1300
+499 goto 900
+
+900 poke 32769,42: rem TEMPORARY wait indicator
+910 rem pause between pitches
+920 for j=1 to 1000: next
+930 rem clear indicators
+940 poke 32769,32: poke 32768,32
+950 goto 200
+
+1000 rem pitch/bat loop. Sets "hit" (0=no swing, 1=miss, ...10=hit)
 1000 get c$: if c$ >= "1" then if c$ <= "3" goto 1030
 1020 goto 1000
 1030 delay=20+40*(asc(c$)-asc("1"))
@@ -35,10 +63,23 @@
 1130 gosub 1500: if hit>1 then br=br+1: goto 1180
 1170 next br
 
-1180 rem pitch is over: either missed (strike or ball) or hit
+1180 rem pitch is over
 1180 poke 32768+(14+br)*40+bc, pc
 1190 sw=1: gosub 1600: rem reset bat
-1499 return
+1199 return
+
+1200 rem update in,b,s,o
+1200 poke 32768+1*40+5,in+asc("0")
+1210 poke 32768+1*40+37,b+asc("0")
+1220 poke 32768+2*40+37,s+asc("0")
+1230 poke 32768+3*40+37,ou+asc("0")
+1299 return
+
+1300 rem advance base runners. # of bases=nb
+1300 if nb>1 then for ba=0 to nb-2: gosub 1700: for j=1 to 500: next j: gosub 1800: next ba
+1310 ba=nb-1: gosub 1700
+1320 rem todo: fix base running.
+1399 return
 
 1500 rem swing. param: sw
 1500 if sw < len(bat$) then sw=sw+1: gosub 1600
@@ -51,20 +92,20 @@
 1600 poke 32768+23*40+18, asc(mid$(bat$,sw,1))-128
 1610 return
 
-1700 rem light a base. base number in ba
+1700 rem light a base. base number in ba(0=first, 3=home)
 1700 b0=233: b1=223: b2=95: b3=105
-1710 if ba=0 then b0=160: b1=160: rem home, override
+1710 if ba=3 then b0=160: b1=160: rem home, override
 1720 goto 1900
 
 1800 rem unlight a base. base number in ba
 1800 b0=78: b1=77: b2=77: b3=78
-1810 if ba=0 then b0=79: b1=80: rem home, override
+1810 if ba=3 then b0=79: b1=80: rem home, override
 
 1900 rem light or unlight a base. base in ba, chars in b0-b3
-1900 if ba=0 then y=21: x=18: rem home
-1910 if ba=1 then y=14: x=25: rem first
-1915 if ba=2 then y=7: x=18: rem second
-1920 if ba=3 then y=14: x=11: rem third
+1900 if ba=3 then y=21: x=18: rem home
+1910 if ba=0 then y=14: x=25: rem first
+1915 if ba=1 then y=7: x=18: rem second
+1920 if ba=2 then y=14: x=11: rem third
 1930 poke 32768+y*40+x,b0: poke 32768+y*40+x+1,b1: poke 32768+(y+1)*40+x,b2: poke 32768+(y+1)*40+x+1,b3:return
 
 5000 print "{CLS}"
@@ -89,17 +130,17 @@
 5180 print "             M          N"
 5190 print "              M        N"
 5200 print "               M      N"
-5210 print "                M    N      r  h  e"
+5210 print "                M    N       r  h  e"
 5220 print "                 MOPN      {176}{192}{192}{178}{192}{192}{178}{192}{192}{174}"    
 5230 print "                  MN  home:{221} 0{221} 0{221} 0{221}"
 5240 print "                 W     vis:{221} 0{221} 0{221} 0{221}"
-5250 print "                   Q       {173}{192}{192}{177}{192}{192}{177}{192}{192}{189}";
+5250 print "                   Q       {173}{192}{192}{177}{192}{192}{177}{192}{192}{189}{HOME}";
 5999 return
 
-6000 ba=1: gosub 1700
-6001 ba=2: gosub 1700
-6002 ba=3: gosub 1700
-6003 ba=0: gosub 1700
+6000 ba=0: gosub 1700
+6001 ba=1: gosub 1700
+6002 ba=2: gosub 1700
+6003 ba=3: gosub 1700
 6005 for i = 1 to 500: next
 6010 ba=0: gosub 1800
 6011 ba=1: gosub 1800
