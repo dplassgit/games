@@ -58,9 +58,8 @@
 
 900 poke 32769,42: rem TEMPORARY wait indicator
 910 rem pause between pitches
-920 for j=1 to 1000: next
-930 rem clear indicators
-940 poke 32769,32: poke 32768,32
+920 for j=1 to 500: next
+940 poke 32769,32:poke 32768,32: rem clear indicators TEMPORARY
 950 goto 200
 
 1000 rem pitch/bat loop. Sets "hit" (0=no swing, 1=miss, 2..10=hit)
@@ -88,9 +87,12 @@
 
 1200 rem update in,b,s,o
 1200 print "{home}{down}{right}{right}{right}{right}";in
-1210 poke 32768+1*40+37,b+asc("0")
+1210 poke 32768+40+37,b+asc("0")
 1220 poke 32768+2*40+37,s+asc("0")
 1230 poke 32768+3*40+37,ou+asc("0")
+1210 poke 32845,b+asc("0")
+1220 poke 32885,s+asc("0")
+1230 poke 32925,ou+asc("0")
 1299 return
 
 1300 rem advance base runners. # of bases=nb. walk=walk
@@ -108,6 +110,7 @@
 
 1600 rem move bat. param: sw
 1600 poke 32768+23*40+18, asc(mid$(bat$,sw,1))-128
+1600 poke 33706, asc(mid$(bat$,sw,1))-128
 1610 return
 
 1700 rem light a base. base number in ba(0=first, 3=home)
@@ -119,12 +122,12 @@
 1800 b0=78: b1=77: b2=77: b3=78
 1810 if ba=3 then b0=79: b1=80: rem home, override
 
-1900 rem light or unlight a base. base in ba, chars in b0-b3
+1900 rem light or unlight a base. base in ba, chars in b0-b3. consider precalculating each x&y
 1900 if ba=3 then y=21: x=18: rem home
 1910 if ba=0 then y=14: x=25: rem first
 1915 if ba=1 then y=7: x=18: rem second
 1920 if ba=2 then y=14: x=11: rem third
-1930 poke 32768+y*40+x,b0: poke 32768+y*40+x+1,b1: poke 32768+(y+1)*40+x,b2: poke 32768+(y+1)*40+x+1,b3:return
+1930 poke 32768+y*40+x,b0: poke 32769+y*40+x,b1: poke 32768+(y+1)*40+x,b2: poke 32769+(y+1)*40+x,b3:return
 
 5000 print "{CLS}"
 5010 rem print "         this bud's for you!|"
