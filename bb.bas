@@ -1,11 +1,12 @@
-5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}"
+1 print "{cls}"
+5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym":goto 100
 
 10 v$="nyy": input "visiting team (3-letters)"; v$
 20 if len(v$)<>3 then print "wrong length, sorry!": goto 10
 30 h$="nym": input "home team"; h$
 40 if len(h$)<>3 then print "wrong length, sorry!": goto 30
 
-100 print field
+100 rem print field
 100 gosub 5000
 110 gosub 6000
 120 rem strikes, balls, outs, inning, team (0=vis,1=home)
@@ -98,16 +99,19 @@
 1230 poke 32925,ou+asc("0")
 1299 return
 
-1300 rem advance base runners. # of bases=nb. walk=walk
-1300 gosub 1400
+1300 rem advance base runners. # of bases=nb. todo: walk=walk
+1300 m1=peek(32768+14*40+25)=233
+1305 rem only move if first is occupied; in the future make it random
+1305 if m1=-1 then gosub 1400
 1310 rem bb=batter base. light first
 1310 bb=1: ba=0: gosub 1700
 1320 rem move the batter until they've gone the right number of bases
-1320 if bb<nb then bb=bb+1: gosub 1400: goto 1320
-1330 rem todo: how to deal with steals or moving too far
+1320 if bb=nb then goto 1399
+1330 bb=bb+1: gosub 1400: goto 1320
+1399 rem todo: how to deal with steals or moving too far
 1399 return
 
-1400 rem move players one base each
+1400 rem all move players one base each. in the future make it random
 1400 m3=peek(32768+14*40+11)=233:m2=peek(32768+7*40+18)=233:m1=peek(32768+14*40+25)=233
 1410 rem if man on 3rd, clear 3rd, light home, update score, clear home
 1410 if m3=-1 then ba=2: gosub 1800: ba=3: gosub 1700: gosub 1800
