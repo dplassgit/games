@@ -1,19 +1,18 @@
 1 print "{cls}"
 5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym":goto 100
+10 dim h(2), r(2), e(2)
 
-10 v$="nyy": input "visiting team (3-letters)"; v$
-20 if len(v$)<>3 then print "wrong length, sorry!": goto 10
-30 h$="nym": input "home team"; h$
-40 if len(h$)<>3 then print "wrong length, sorry!": goto 30
+20 v$="nyy": input "visiting team (3-letters)"; v$
+30 if len(v$)<>3 then print "wrong length, sorry!": goto 20
+40 h$="nym": input "home team"; h$
+50 if len(h$)<>3 then print "wrong length, sorry!": goto 40
 
 100 rem print field
 100 gosub 5000
-110 gosub 6000
 120 rem strikes, balls, outs, inning, team (0=vis,1=home)
 120 s=0:b=0:ou=0:in=1:t=0
-130 gosub 1200
+130 gosub 1200: gosub 1250
 140 rem hits, runs, errors (per team)
-140 dim h(2), r(2), e(2)
 
 200 rem main loop
 200 hit=0: sw=1: gosub 1600: gosub 1000: rem pitch
@@ -27,10 +26,10 @@
 
 250 rem an out
 250 s=0:b=0:ou=ou+1: gosub 1200
-260 rem 3 outs, switch sides, clear men on base
 260 if ou<>3 goto 299
+270 rem 3 outs, switch sides, clear men on base
 270 s=0:b=0:ou=0: gosub 1200: for ba=0 to 3: gosub 1800: next
-280 t=1-t: if t=0 then in=in+1: if in<10 then gosub 1200
+280 t=1-t: gosub 1250: if t=0 then in=in+1: if in<10 then gosub 1200
 299 rem fix extra innings, end of game, etc.
 299 goto 900
 
@@ -46,7 +45,7 @@
 410 nb=int(4*rnd(0))+1
 415 poke 32768,nb+asc("0"): rem temporary
 420 gosub 1300
-430 s=0:b=0:h(t)=h(t)+1: gosub 1200
+430 s=0:b=0:h(t)=h(t)+1: gosub 1200: gosub 1250
 499 goto 900
 
 500 rem didn't swing - ball or strike?
@@ -97,10 +96,18 @@
 1210 poke 32845,b+asc("0")
 1220 poke 32885,s+asc("0")
 1230 poke 32925,ou+asc("0")
+1249 return
+
+1250 rem update r,h,e. todo: > 10
+1250 poke 32768+22*40+29,r(0)+asc("0")
+1255 poke 32768+23*40+29,r(1)+asc("0")
+1260 poke 32768+22*40+32,h(0)+asc("0")
+1265 poke 32768+23*40+32,h(1)+asc("0")
+1270 poke 32768+(t+22)*40+37,42: poke 32768+(23-t)*40+37,32
 1299 return
 
 1300 rem advance base runners. # of bases=nb. todo: walk=walk
-1300 m1=peek(32768+14*40+25)=233
+1300 m1=peek(33353)=233
 1305 rem only move if first is occupied; in the future make it random
 1305 if m1=-1 then gosub 1400
 1310 rem bb=batter base. light first
@@ -112,9 +119,9 @@
 1399 return
 
 1400 rem all move players one base each. in the future make it random
-1400 m3=peek(32768+14*40+11)=233:m2=peek(32768+7*40+18)=233:m1=peek(32768+14*40+25)=233
+1400 m3=peek(33339)=233:m2=peek(33066)=233:m1=peek(33353)=233
 1410 rem if man on 3rd, clear 3rd, light home, update score, clear home
-1410 if m3=-1 then ba=2: gosub 1800: ba=3: gosub 1700: gosub 1800
+1410 if m3=-1 then ba=2: gosub 1800: ba=3: gosub 1700: r(t)=r(t)+1: gosub 1250: gosub 1800
 1420 rem else if man on 2nd, clear 2nd, light 3rd
 1420 if m2=-1 then ba=1: gosub 1800: ba=2: gosub 1700
 1430 rem else if man on 1st, clear 1st, light 2nd
