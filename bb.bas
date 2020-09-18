@@ -12,31 +12,43 @@
 200 rem main loop
 200 hit=0: sw=1: gosub 1600: gosub 1000: rem pitch
 210 if hit<>1 goto 300
+
+220 rem strike
+220 rem TODO: identify strike
 220 poke 32768,19: rem strike TEMPORARY
-230 rem strike
 230 s=s+1: gosub 1200
-240 if s<3 goto 299
-250 rem struck out
-250 s=0:ou=ou+1: gosub 1200: if ou=3 then s=0:b=0:ou=0: gosub 1200
+240 if s<3 goto 299: rem else strikeout
+
+250 rem an out
+250 s=0:b=0:ou=ou+1: gosub 1200: if ou=3 then s=0:b=0:ou=0: gosub 1200
 260 if ou=0 then t=1-t: if t=0 then in = in + 1: if in<10 then gosub 1200
 299 goto 900
 
-300 rem hit
-300 if hit<>10 then goto 400
-310 nb=int(4*rnd(0))+1: gosub 1300
-320 poke 32768,nb+asc("0"): rem TEMPORARY
-330 s=0:b=0:h(t)=h(t)+1: gosub 1200
-399 goto 900
+300 rem made contact - may be a hit or an out
+300 if hit<>10 goto 500
+310 if rnd(0) <= 0.3 goto 400
+320 rem out
+320 rem TODO: identify type of out
+320 poke 32768,15: rem out TEMPORARY
+330 goto 250
 
-400 rem didn't swing - ball or strike?
-400 if rnd(0) < 0.5 goto 220: rem strike
-410 rem ball
-410 poke 32768,2: rem ball TEMPORARY
-420 b=b+1: gosub 1200
-430 if b < 4 goto 499
-440 rem walked
-440 s=0: b=0: gosub 1200: nb=1: gosub 1300
+400 rem actual hit
+400 rem TODO: identify type of hit
+410 nb=int(4*rnd(0))+1: poke 32768,nb+asc("0"): rem TEMPORARY
+420 gosub 1300
+430 s=0:b=0:h(t)=h(t)+1: gosub 1200
 499 goto 900
+
+500 rem didn't swing - ball or strike?
+500 if rnd(0) < 0.5 goto 220: rem strike
+510 rem ball
+510 rem TODO: identify ball
+510 poke 32768,2: rem ball TEMPORARY
+520 b=b+1: gosub 1200
+530 if b < 4 goto 499
+540 rem walked
+540 s=0: b=0: gosub 1200: nb=1: gosub 1300
+599 goto 900
 
 900 poke 32769,42: rem TEMPORARY wait indicator
 910 rem pause between pitches
