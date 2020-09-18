@@ -11,34 +11,36 @@
 120 rem strikes, balls, outs, inning, team (0=vis,1=home)
 120 s=0:b=0:ou=0:in=1:t=0
 130 gosub 1200
-140 rem hits, runs, errors (per team)
-140 dim h(2), r(2), e(2)
+140 rem hits, runs, errors (per team), men on base
+140 dim h(2), r(2), e(2), mb(3)
 
 200 rem main loop
 200 hit=0: sw=1: gosub 1600: gosub 1000: rem pitch
 210 on hit+1 goto 500, 220, 300: rem no swing, swing&miss, contact
 
 220 rem strike
-220 rem TODO: identify strike
-220 poke 32768,19: rem strike TEMPORARY
+220 rem TODO: announce strike
+220 poke 32768,19: rem TEMPORARY
 230 s=s+1: gosub 1200
 240 if s<3 goto 299: rem else strikeout
 
 250 rem an out
 250 s=0:b=0:ou=ou+1: gosub 1200: if ou=3 then s=0:b=0:ou=0: gosub 1200
+260 rem fix extra innings, end of game, etc.
 260 if ou=0 then t=1-t: if t=0 then in = in + 1: if in<10 then gosub 1200
 299 goto 900
 
 300 rem made contact - may be a hit or an out
 300 if rnd(0) <= 0.3 goto 400
 310 rem out
-310 rem TODO: identify type of out
-320 poke 32768,15: rem out TEMPORARY
+310 rem TODO: announce type of out: possible double play
+320 poke 32768,15: rem TEMPORARY
 330 goto 250
 
 400 rem actual hit
-400 rem TODO: identify type of hit
-410 nb=int(4*rnd(0))+1: poke 32768,nb+asc("0"): rem TEMPORARY
+400 rem TODO: announce type of hit
+410 nb=int(4*rnd(0))+1
+415 poke 32768,nb+asc("0"): rem TEMPORARY
 420 gosub 1300
 430 s=0:b=0:h(t)=h(t)+1: gosub 1200
 499 goto 900
@@ -46,12 +48,12 @@
 500 rem didn't swing - ball or strike?
 500 if rnd(0) < 0.5 goto 220: rem strike
 510 rem ball
-510 rem TODO: identify ball
-510 poke 32768,2: rem ball TEMPORARY
+510 rem TODO: annoynce ball
+510 poke 32768,2: rem TEMPORARY
 520 b=b+1: gosub 1200
 530 if b < 4 goto 499
 540 rem walked
-540 s=0: b=0: gosub 1200: nb=1: gosub 1300
+540 s=0: b=0: gosub 1200: walk=1:nb=1: gosub 1300: walk=0
 599 goto 900
 
 900 poke 32769,42: rem TEMPORARY wait indicator
@@ -61,7 +63,7 @@
 940 poke 32769,32: poke 32768,32
 950 goto 200
 
-1000 rem pitch/bat loop. Sets "hit" (0=no swing, 1=miss, ...10=hit)
+1000 rem pitch/bat loop. Sets "hit" (0=no swing, 1=miss, 2..10=hit)
 1000 get c$: if c$ >= "1" then if c$ <= "3" goto 1030
 1020 goto 1000
 1030 delay=20+40*(asc(c$)-asc("1"))
@@ -91,7 +93,7 @@
 1230 poke 32768+3*40+37,ou+asc("0")
 1299 return
 
-1300 rem advance base runners. # of bases=nb
+1300 rem advance base runners. # of bases=nb. walk=walk
 1300 if nb>1 then for ba=0 to nb-2: gosub 1700: for j=1 to 500: next j: gosub 1800: next ba
 1310 ba=nb-1: gosub 1700
 1320 rem todo: fix base running.
