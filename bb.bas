@@ -1,22 +1,22 @@
-10 input "{cls}visiting team (3-letters)"; v$
-15 if len(v$)<>3 then print "wrong length, sorry!": goto 10
-20 input "home team"; h$
-25 if len(h$)<>3 then print "wrong length, sorry!": goto 10
+5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}"
 
-95 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}"
+10 v$="nyy": input "visiting team (3-letters)"; v$
+20 if len(v$)<>3 then print "wrong length, sorry!": goto 10
+30 h$="nym": input "home team"; h$
+40 if len(h$)<>3 then print "wrong length, sorry!": goto 30
 
 100 print field
 100 gosub 5000
 110 gosub 6000
-120 rem strikes, balls, outs, inning, team
+120 rem strikes, balls, outs, inning, team (0=vis,1=home)
 120 s=0:b=0:ou=0:in=1:t=0
 130 gosub 1200
-140 rem hits, runs, errors
+140 rem hits, runs, errors (per team)
 140 dim h(2), r(2), e(2)
 
 200 rem main loop
 200 hit=0: sw=1: gosub 1600: gosub 1000: rem pitch
-210 if hit<>1 goto 300
+210 on hit+1 goto 500, 220, 300: rem no swing, swing&miss, contact
 
 220 rem strike
 220 rem TODO: identify strike
@@ -30,10 +30,9 @@
 299 goto 900
 
 300 rem made contact - may be a hit or an out
-300 if hit<>10 goto 500
-310 if rnd(0) <= 0.3 goto 400
-320 rem out
-320 rem TODO: identify type of out
+300 if rnd(0) <= 0.3 goto 400
+310 rem out
+310 rem TODO: identify type of out
 320 poke 32768,15: rem out TEMPORARY
 330 goto 250
 
@@ -101,8 +100,8 @@
 1500 rem swing. param: sw
 1500 if sw < len(bat$) then sw=sw+1: gosub 1600
 1510 rem decide if hit the ball. for now, if s=2 when br=7, it's contact
-1520 rem 1=miss, 10=hit, for now. eventually we'll have different strengths/levels
-1520 hit=1: if sw=2 then if br=7 then hit=10
+1520 rem 1=miss, 2=hit, for now. eventually we'll have different strengths/levels
+1520 hit=1: if sw=2 then if br=7 then hit=2
 1599 return
 
 1600 rem move bat. param: sw
