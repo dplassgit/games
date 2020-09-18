@@ -11,8 +11,8 @@
 120 rem strikes, balls, outs, inning, team (0=vis,1=home)
 120 s=0:b=0:ou=0:in=1:t=0
 130 gosub 1200
-140 rem hits, runs, errors (per team), men on base
-140 dim h(2), r(2), e(2), mb(3)
+140 rem hits, runs, errors (per team)
+140 dim h(2), r(2), e(2)
 
 200 rem main loop
 200 hit=0: sw=1: gosub 1600: gosub 1000: rem pitch
@@ -25,9 +25,12 @@
 240 if s<3 goto 299: rem else strikeout
 
 250 rem an out
-250 s=0:b=0:ou=ou+1: gosub 1200: if ou=3 then s=0:b=0:ou=0: gosub 1200
-260 rem fix extra innings, end of game, etc.
-260 if ou=0 then t=1-t: if t=0 then in = in + 1: if in<10 then gosub 1200
+250 s=0:b=0:ou=ou+1: gosub 1200
+260 rem 3 outs, switch sides, clear men on base
+260 if ou<>3 goto 299
+270 s=0:b=0:ou=0: gosub 1200: for ba=0 to 3: gosub 1800: next
+280 t=1-t: if t=0 then in=in+1: if in<10 then gosub 1200
+299 rem fix extra innings, end of game, etc.
 299 goto 900
 
 300 rem made contact - may be a hit or an out
@@ -96,10 +99,22 @@
 1299 return
 
 1300 rem advance base runners. # of bases=nb. walk=walk
-1300 if nb>1 then for ba=0 to nb-2: gosub 1700: for j=1 to 500: next j: gosub 1800: next ba
-1310 ba=nb-1: gosub 1700
-1320 rem todo: fix base running.
+1300 gosub 1400
+1310 rem light first
+1310 bb=1: ba=0: gosub 1700
+1320 if bb<nb then bb=bb+1: gosub 1400: goto 1320
+1330 rem TODO: how to deal with steals or moving too far
 1399 return
+
+1400 rem move players one base each
+1400 m3=peek(32768+14*40+11)=233:m2=peek(32768+7*40+18)=233:m1=peek(32768+14*40+25)=233
+1410 rem if man on 3rd, clear 3rd, light home, update score, clear home
+1410 if m3=-1 then ba=2: gosub 1800: ba=3: gosub 1700: gosub 1800
+1420 rem else if man on 2nd, clear 2nd, light 3rd
+1420 if m2=-1 then ba=1: gosub 1800: ba=2: gosub 1700
+1430 rem else if man on 1st, clear 1st, light 2nd
+1430 if m1=-1 then ba=0: gosub 1800: ba=1: gosub 1700
+1499 return
 
 1500 rem swing. param: sw
 1500 if sw < len(bat$) then sw=sw+1: gosub 1600
