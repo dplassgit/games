@@ -19,8 +19,8 @@
 210 on hit+1 goto 500, 220, 300: rem no swing, swing&miss, contact
 
 220 rem strike
-220 rem TODO: announce strike
-220 poke 32768,19: rem TEMPORARY
+220 rem todo: announce strike
+220 poke 32768,19: rem temporary
 230 s=s+1: gosub 1200
 240 if s<3 goto 299: rem else strikeout
 
@@ -36,14 +36,14 @@
 300 rem made contact - may be a hit or an out
 300 if rnd(0) <= 0.3 goto 400
 310 rem out
-310 rem TODO: announce type of out: possible double play
-320 poke 32768,15: rem TEMPORARY
+310 rem todo: announce type of out: possible double play
+320 poke 32768,15: rem temporary
 330 goto 250
 
 400 rem actual hit
-400 rem TODO: announce type of hit
+400 rem todo: announce type of hit
 410 nb=int(4*rnd(0))+1
-415 poke 32768,nb+asc("0"): rem TEMPORARY
+415 poke 32768,nb+asc("0"): rem temporary
 420 gosub 1300
 430 s=0:b=0:h(t)=h(t)+1: gosub 1200
 499 goto 900
@@ -51,18 +51,18 @@
 500 rem didn't swing - ball or strike?
 500 if rnd(0) < 0.5 goto 220: rem strike
 510 rem ball
-510 rem TODO: annoynce ball
-510 poke 32768,2: rem TEMPORARY
+510 rem todo: announce ball
+510 poke 32768,2: rem temporary
 520 b=b+1: gosub 1200
 530 if b < 4 goto 499
 540 rem walked
 540 s=0: b=0: gosub 1200: walk=1:nb=1: gosub 1300: walk=0
 599 goto 900
 
-900 poke 32769,42: rem TEMPORARY wait indicator
+900 poke 32769,42: rem temporary wait indicator
 910 rem pause between pitches
 920 for j=1 to 500: next
-940 poke 32769,32:poke 32768,32: rem clear indicators TEMPORARY
+940 poke 32769,32:poke 32768,32: rem clear indicators temporary
 950 goto 200
 
 1000 rem pitch/bat loop. Sets "hit" (0=no swing, 1=miss, 2..10=hit)
@@ -100,10 +100,11 @@
 
 1300 rem advance base runners. # of bases=nb. walk=walk
 1300 gosub 1400
-1310 rem light first
+1310 rem bb=batter base. light first
 1310 bb=1: ba=0: gosub 1700
+1320 rem move the batter until they've gone the right number of bases
 1320 if bb<nb then bb=bb+1: gosub 1400: goto 1320
-1330 rem TODO: how to deal with steals or moving too far
+1330 rem todo: how to deal with steals or moving too far
 1399 return
 
 1400 rem move players one base each
