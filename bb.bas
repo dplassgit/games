@@ -159,6 +159,8 @@
 5000 print "{CLS}"
 5010 rem print "         this bud's for you!|"
 5010 print "         {$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}"
+5010 print "         {$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}"
+5010 print "         {rvs}{233} a plass program  {223}{off}"
 5020 print "inn: 0  N                    M    b: 0"
 5030 print "       N           Q          M   s: 0"
 5040 print "      N                        M  o: 0"
