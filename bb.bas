@@ -19,8 +19,7 @@
 210 on hit+1 goto 500, 220, 300: rem no swing, swing&miss, contact
 
 220 rem strike
-220 rem todo: announce strike
-220 poke 32768,19: rem temporary
+220 poke 32768,19: rem temporary. todo: announce strike
 230 s=s+1: gosub 1200
 240 if s<3 goto 299: rem else strikeout
 
@@ -36,23 +35,22 @@
 300 rem made contact - may be a hit or an out
 300 if rnd(0) <= 0.3 goto 400
 310 rem out
-310 rem todo: announce type of out: possible double play
-320 poke 32768,15: rem temporary
-330 goto 250
+310 poke 32768,15: rem temporary. todo: announce type of out: possible double play
+399 goto 250
 
 400 rem actual hit
-400 rem todo: announce type of hit
-410 nb=int(4*rnd(0))+1
-415 poke 32768,nb+asc("0"): rem temporary
-420 gosub 1300
-430 s=0:b=0:h(t)=h(t)+1: gosub 1200: gosub 1250
+400 nb=int(4*rnd(0))+1: rem todo: announce type of hit
+410 if nb=4 then print "{home}         {rvs}this bud's for you! {roff}"
+420 poke 32768,nb+asc("0"): rem temporary
+430 gosub 1300: rem move baserunners
+440 s=0:b=0:h(t)=h(t)+1: gosub 1200: gosub 1250
+450 if nb=4 then print "{home}         {rvs}{233} a plass program  {223}{roff}"
 499 goto 900
 
 500 rem didn't swing - ball or strike?
 500 if rnd(0) < 0.5 goto 220: rem strike
 510 rem ball
-510 rem todo: announce ball
-510 poke 32768,2: rem temporary
+510 poke 32768,2: rem temporary. todo: announce ball
 520 b=b+1: gosub 1200
 530 if b < 4 goto 499
 540 rem walked
@@ -156,9 +154,7 @@
 1920 if ba=2 then y=14: x=11: rem third
 1930 poke 32768+y*40+x,b0: poke 32769+y*40+x,b1: poke 32768+(y+1)*40+x,b2: poke 32769+(y+1)*40+x,b3:return
 
-5000 print "{CLS}"
-5010 rem print "         this bud's for you!|"
-5010 print "         {$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}"
+5000 print "{clr}"
 5010 print "         {$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}"
 5010 print "         {rvs}{233} a plass program  {223}{off}"
 5020 print "inn: 0  N                    M    b: 0"
