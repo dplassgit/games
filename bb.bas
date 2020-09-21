@@ -1,5 +1,6 @@
 1 print "{cls}"
 5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym"
+6 ix$(1)="1st":ix$(2)="2nd":ix$(3)="3rd"
 10 dim h(2), r(2), e(2)
 19 goto 100
 
@@ -11,7 +12,7 @@
 100 rem print field
 100 gosub 5000: gosub 6000
 120 rem strikes, balls, outs, inning, team (0=vis,1=home)
-120 s=0:b=0:ou=0:in=1:t=0
+120 s=0:b=0:ou=0:in=1:gosub 1620: t=0
 130 gosub 1200: gosub 1250
 
 200 rem main loop
@@ -19,7 +20,7 @@
 210 on hit+1 goto 500, 220, 300: rem no swing, swing&miss, contact
 
 220 rem strike
-220 me$="strike!": gosub 2000
+220 me$="strike "+str$(s+1)+"!": gosub 2000
 230 s=s+1: gosub 1200
 240 if s<3 goto 299: rem else strikeout
 245 me$="strikeout!": gosub 2000
@@ -30,7 +31,8 @@
 270 rem 3 outs, switch sides, clear men on base
 270 s=0:b=0:ou=0: gosub 1200: for ba=0 to 3: gosub 1800: next
 280 t=1-t: gosub 1250
-290 if t=0 then me$="end of inning "+str$(in): gosub 2000: in=in+1: if in<10 then gosub 1200
+285 if t=1 then me$="middle of "+in$: gosub 2000
+290 if t=0 then me$="end of "+in$: gosub 2000: in=in+1: gosub 1620:if in<10 then gosub 1200
 299 rem fix extra innings, end of game, etc.
 299 goto 900
 
@@ -40,11 +42,11 @@
 310 rem line drive = 21%. ground ball = 44%. fly ball=35%. infield fly=11% of the 35%
 315 ot=rnd(0): rem out type
 320 if ot<=0.44 then me$="ground out": gosub 2000: goto 399: rem ground out, oppty for double play
-330 if ot<=0.65 then me$="line drive!": gosub 2000: goto 399
+330 if ot<=0.65 then me$="line drive out!": gosub 2000: goto 399
 340 if ot>0.99 then me$="infield pop up": gosub 2000: goto 399
-345 if ot>0.98 then me$="foul out": gosub 2000: goto 399
-350 if ou<2 and peek(33339)=233 and rnd(0)>0.75 then me$="sac fly!": gosub 2000: gosub 1610: goto 399
-360 me$="fly ball, out": gosub 2000: goto 399
+345 if ot>0.98 then me$="fouled out": gosub 2000: goto 399
+350 if ou<2 and peek(33339)=233 and rnd(0)<0.75 then me$="sac fly!": gosub 2000: gosub 1610: goto 399
+360 me$="fly ball...out!": gosub 2000: goto 399
 399 goto 250
 
 400 rem actual hit
@@ -60,7 +62,7 @@
 500 if rnd(0) < 0.5 goto 220: rem strike (mlb average 62% strikes)
 510 rem ball
 510 b=b+1: gosub 1200
-520 me$="ball "+str$(b): gosub 2000
+520 me$="ball"+str$(b): gosub 2000
 530 if b < 4 goto 499
 540 rem walked
 540 s=0: b=0: gosub 1200: walk=1:nb=1: gosub 1300: walk=0
@@ -95,12 +97,9 @@
 
 1200 rem update in,b,s,o
 1200 print "{home}{down}{right}{right}{right}{right}";in
-1210 poke 32768+40+37,b+asc("0")
-1220 poke 32768+2*40+37,s+asc("0")
-1230 poke 32768+3*40+37,ou+asc("0")
-1210 poke 32845,b+asc("0")
-1220 poke 32885,s+asc("0")
-1230 poke 32925,ou+asc("0")
+1210 poke 32845,b+asc("0"): rem poke 32768+40+37,b+asc("0")
+1220 poke 32885,s+asc("0"): rem poke 32768+2*40+37,s+asc("0")
+1230 poke 32925,ou+asc("0"): rem poke 32768+3*40+37,ou+asc("0")
 1249 return
 
 1250 rem update r,h,e. todo: > 10
@@ -146,6 +145,10 @@
 
 1610 rem score from 3rd
 1610 ba=2: gosub 1800: ba=3: gosub 1700: r(t)=r(t)+1: gosub 1250: gosub 1800: return
+
+1620 rem update the inning string in$
+1620 if in<=3 then in$=ix$(in): return
+1621 in$=str$(in)+"th": return
 
 1700 rem light a base. base number in ba(0=first, 3=home)
 1700 b0=233: b1=223: b2=95: b3=105
