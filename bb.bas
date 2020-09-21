@@ -39,17 +39,18 @@
 310 rem out
 310 rem line drive = 21%. ground ball = 44%. fly ball=35%. infield fly=11% of the 35%
 315 ot=rnd(0): rem out type
-320 if ot<=0.44 then me$="ground out": gosub 2000: rem ground out, oppty for double play
-330 if ot>0.44 and ot<=0.65 then me$="line drive!": gosub 2000
-340 rem if rnd(0)>0.5 then rem fly out, oppty for score
-340 if ot>0.65 and ot<=0.98 and ou<2 and peek(33339)=233 then me$="sac fly": gosub 2000: gosub 1610
-350 if ot>0.98 then me$="infield fly": gosub 2000
+320 if ot<=0.44 then me$="ground out": gosub 2000: goto 399: rem ground out, oppty for double play
+330 if ot<=0.65 then me$="line drive!": gosub 2000: goto 399
+340 if ot>0.99 then me$="infield pop up": gosub 2000: goto 399
+345 if ot>0.98 then me$="foul out": gosub 2000: goto 399
+350 if ou<2 and peek(33339)=233 and rnd(0)>0.75 then me$="sac fly!": gosub 2000: gosub 1610: goto 399
+360 me$="fly ball, out": gosub 2000: goto 399
 399 goto 250
 
 400 rem actual hit
 400 nb=int(4*rnd(0))+1: rem todo: announce type of hit
 410 if nb=4 then print "{home}         {rvs}this bud's for you! {roff}"
-420 me$="hit "+str$(nb): gosub 2000: temporary
+420 me$="hit "+str$(nb): gosub 2000: rem temporary
 430 gosub 1300: rem move baserunners
 440 s=0:b=0:h(t)=h(t)+1: gosub 1200: gosub 1250
 450 if nb=4 then print "{home}         {rvs}{233} a plass program  {223}{roff}"
@@ -164,8 +165,8 @@
 
 2000 rem show message. param: me$
 2000 ?"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}";me$
-2005 for i=0 to 500: next
-2010 ?"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}";spc(15)
+2005 for i=0 to 1000: next
+2010 ?"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}                 "
 2015 return
 
 5000 print "{clr}"
