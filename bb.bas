@@ -76,7 +76,7 @@
 1000 get c$: if c$ >= "1" and c$ <= "3" goto 1030
 1020 goto 1000
 1030 delay=20+40*(asc(c$)-asc("1"))
-1040 bc=19: rem ball column
+1040 bc=18: rem ball column
 1045 pc=peek(32768+14*40+bc): rem stash prev character (pc)
 1050 for br = 0 to 8: rem relative row of ball
 1060 poke 32768+(14+br)*40+bc, pc
@@ -187,8 +187,8 @@
 5110 print "      M       QN      M        N"
 5120 print "       M      N        M      N"
 5130 print "        M    N          M    N"
-5140 print "         M  N     NM    QM  N"
-5150 print "          MNMQ   {167} Q{165}    NMN"
+5140 print "         M  N     NM     MQ N"
+5150 print "          MNMQ   {167}Q {165}    NMN"
 5160 print "           MN     MN     MN"
 5170 print "            M            N"
 5180 print "             M          N"
@@ -198,7 +198,7 @@
 5220 print "                 MOPN      {176}{192}{192}{178}{192}{192}{178}{192}{192}{174}"    
 5230 print "                  MN   ";v$;":{221} 0{221} 0{221} 0{221}"
 5240 print "                 W     ";h$;":{221} 0{221} 0{221} 0{221}"
-5250 print "                   Q       {173}{192}{192}{177}{192}{192}{177}{192}{192}{189}{HOME}";
+5250 print "                  Q        {173}{192}{192}{177}{192}{192}{177}{192}{192}{189}{HOME}";
 5999 return
 
 6000 ba=0: gosub 1700
