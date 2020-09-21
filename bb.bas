@@ -13,8 +13,6 @@
 120 rem strikes, balls, outs, inning, team (0=vis,1=home)
 120 s=0:b=0:ou=0:in=1:t=0
 130 gosub 1200: gosub 1250
-140 rem hits, runs, errors (per team)
-140 ba=2: gosub 1700: rem put man on 3rd
 
 200 rem main loop
 200 hit=0: sw=1: gosub 1600: gosub 1000: rem pitch
