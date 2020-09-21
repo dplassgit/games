@@ -1,6 +1,7 @@
 1 print "{cls}"
-5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym":goto 100
+5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym"
 10 dim h(2), r(2), e(2)
+19 goto 100
 
 20 v$="nyy": input "visiting team (3-letters)"; v$
 30 if len(v$)<>3 then print "wrong length, sorry!": goto 20
@@ -8,7 +9,7 @@
 50 if len(h$)<>3 then print "wrong length, sorry!": goto 40
 
 100 rem print field
-100 gosub 5000
+100 gosub 5000: gosub 6000
 120 rem strikes, balls, outs, inning, team (0=vis,1=home)
 120 s=0:b=0:ou=0:in=1:t=0
 130 gosub 1200: gosub 1250
@@ -33,9 +34,10 @@
 299 goto 900
 
 300 rem made contact - may be a hit or an out
-300 if rnd(0) <= 0.3 goto 400
+300 if rnd(0) <= 0.5 goto 400: yes this is a really good batting average
 310 rem out
 310 poke 32768,15: rem temporary. todo: announce type of out: possible double play
+320 rem if pop out, and 0 or 1 out, and someone on 3rd, randomly score a run
 399 goto 250
 
 400 rem actual hit
@@ -48,7 +50,7 @@
 499 goto 900
 
 500 rem didn't swing - ball or strike?
-500 if rnd(0) < 0.5 goto 220: rem strike
+500 if rnd(0) < 0.5 goto 220: rem strike (mlb average 62% strikes)
 510 rem ball
 510 poke 32768,2: rem temporary. todo: announce ball
 520 b=b+1: gosub 1200
@@ -105,7 +107,7 @@
 1299 return
 
 1300 rem advance base runners. # of bases=nb. todo: walk=walk
-1300 m1=peek(33353)=233
+1300 m1=peek(33353)=233: rem first
 1305 rem only move if first is occupied; in the future make it random
 1305 if m1=-1 then gosub 1400
 1310 rem bb=batter base. light first
@@ -148,11 +150,11 @@
 1810 if ba=3 then b0=79: b1=80: rem home, override
 
 1900 rem light or unlight a base. base in ba, chars in b0-b3. consider precalculating each x&y
-1900 if ba=3 then y=21: x=18: rem home
-1910 if ba=0 then y=14: x=25: rem first
-1915 if ba=1 then y=7: x=18: rem second
-1920 if ba=2 then y=14: x=11: rem third
-1930 poke 32768+y*40+x,b0: poke 32769+y*40+x,b1: poke 32768+(y+1)*40+x,b2: poke 32769+(y+1)*40+x,b3:return
+1900 if ba=3 then ul=33626: rem: 32768+21*40+18: rem home
+1910 if ba=0 then ul=33353: rem: 32768+14*40+25: rem first
+1915 if ba=1 then ul=33066: rem: 32768+7*40+18: rem second
+1920 if ba=2 then ul=33339: rem: 32768+14*40+11: rem third
+1930 poke ul,b0: poke ul+1,b1: poke ul+40,b2: poke ul+41,b3:return
 
 5000 print "{clr}"
 5010 print "         {$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}"
