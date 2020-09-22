@@ -63,13 +63,14 @@
 510 rem ball
 510 b=b+1: gosub 1200
 520 me$="ball"+str$(b): gosub 2000
-530 if b < 4 goto 499
+530 if b < 4 goto 599
 540 rem walked
-540 s=0: b=0: gosub 1200: walk=1:nb=1: gosub 1300: walk=0
+540 me$="walk": gosub 2000
+550 s=0: b=0: gosub 1200: walk=1:nb=1: gosub 1300: walk=0
 599 goto 900
 
 900 rem poke 32769,42: rem temporary wait indicator
-940 poke 32769,32:poke 32768,32: rem clear indicators temporary
+940 rem poke 32769,32:poke 32768,32: rem clear indicators temporary
 950 goto 200
 
 1000 rem pitch/bat loop. Sets "hit" (0=no swing, 1=miss, 2..10=hit)
@@ -98,9 +99,9 @@
 
 1200 rem update in,b,s,o
 1200 print "{home}{down}{right}{right}{right}{right}";in
-1205 poke 32845,b+asc("0"): rem poke 32768+40+37,b+asc("0")
-1210 poke 32885,s+asc("0"): rem poke 32768+2*40+37,s+asc("0")
-1215 poke 32925,ou+asc("0"): rem poke 32768+3*40+37,ou+asc("0")
+1205 poke 32845,b+asc("0"):  rem poke 32768+   40+37,b+asc("0")
+1210 poke 32885,s+asc("0"):  rem poke 32768+ 2*40+37,s+asc("0")
+1215 poke 32925,ou+asc("0"): rem poke 32768+ 3*40+37,ou+asc("0")
 1219 return
 
 1250 rem update r,h,e
@@ -157,7 +158,7 @@
 1620 if in<=3 then in$=ix$(in): return
 1621 in$=str$(in)+"th": return
 
-1700 rem light a base. base number in ba(0=first, 3=home)
+1700 rem light a base. base number in ba
 1700 b0=233: b1=223: b2=95: b3=105
 1710 if ba=4 then b0=160: b1=160: rem home, override
 1720 goto 1900
@@ -166,17 +167,17 @@
 1800 b0=78: b1=77: b2=77: b3=78
 1810 if ba=4 then b0=79: b1=80: rem home, override
 
-1900 rem light or unlight a base. base in ba, chars in b0-b3. consider precalculating each x&y
+1900 rem light or unlight a base. base in ba, chars in b0-b3.
 1901 if ba=1 then ul=33353: rem: 32768+14*40+25: rem first
-1902 if ba=2 then ul=33066: rem: 32768+7*40+18: rem second
+1902 if ba=2 then ul=33066: rem: 32768+ 7*40+18: rem second
 1903 if ba=3 then ul=33339: rem: 32768+14*40+11: rem third
 1904 if ba=4 then ul=33626: rem: 32768+21*40+18: rem home
 1910 poke ul,b0: poke ul+1,b1: poke ul+40,b2: poke ul+41,b3:return
 
 2000 rem show message. param: me$
-2000 ?"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}";me$
+2000 print "{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}";me$
 2005 for i=0 to 1000: next
-2010 ?"{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}                 "
+2010 print "{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}                 "
 2015 return
 
 5000 print "{clr}"
