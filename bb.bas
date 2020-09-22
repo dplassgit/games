@@ -1,6 +1,7 @@
 1 print "{cls}"
 5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym"
 6 ix$(1)="1st":ix$(2)="2nd":ix$(3)="3rd"
+7 ht$(1)="single":ht$(2)="double!":ht$(3)="triple!!":ht$(4)="home run!!!"
 10 dim h(2), r(2), e(2)
 19 goto 100
 
@@ -50,9 +51,9 @@
 399 goto 250
 
 400 rem actual hit
-400 nb=int(4*rnd(0))+1: rem todo: announce type of hit
+400 nb=int(4*rnd(0))+1: rem todo: change % of each type of hit
 410 if nb=4 then print "{home}         {rvs}this bud's for you! {roff}"
-420 me$="hit "+str$(nb): gosub 2000: rem temporary
+420 me$=ht$(nb): gosub 2000
 430 gosub 1300: rem move baserunners
 440 s=0:b=0:h(t)=h(t)+1: gosub 1200: gosub 1250
 450 if nb=4 then print "{home}         {rvs}{233} a plass program  {223}{roff}"
