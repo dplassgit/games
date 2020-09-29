@@ -1,7 +1,11 @@
 1 print "{cls}"
-5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym"
-6 ix$(1)="1st":ix$(2)="2nd":ix$(3)="3rd"
-7 ht$(1)="single":ht$(2)="double!":ht$(3)="triple!!":ht$(4)="home run!!!"
+2 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym"
+3 ix$(1)="1st":ix$(2)="2nd":ix$(3)="3rd"
+4 ht$(1)="single":ht$(2)="double!":ht$(3)="triple!!":ht$(4)="home run!!!"
+5 rem player locations
+5 pl(1)=32768+14*40+18: pl(2)=32768+24*40+18: pl(3)=32768+13*40+26
+6 pl(4)=32768+9*40+22: pl(5)=32768+14*40+13: pl(6)=32768+10*40+14
+7 pl(7)=32768+6*40+9: pl(8)=32768+2*40+19: pl(9)=32768+7*40+28
 10 dim h(2), r(2), e(2)
 19 goto 100
 
@@ -43,12 +47,12 @@
 310 rem line drive = 21%. ground ball = 44%. fly ball=35%. infield fly=11% of the 35%
 315 ot=rnd(0): rem out type
 320 if ot<=0.44 then me$="ground out": gosub 2000: goto 399: rem ground out, oppty for double play
-330 if ot<=0.65 then me$="line drive out!": gosub 2000: goto 399
-340 if ot>0.99 then me$="infield pop up": gosub 2000: goto 399
-345 if ot>0.98 then me$="fouled out": gosub 2000: goto 399
-350 if ou<2 and peek(33339)=233 and rnd(0)<0.75 then me$="sac fly!": gosub 2000: gosub 1610: goto 399
-360 me$="fly ball...out!": gosub 2000: goto 399
-399 goto 250
+330 if ot<=0.65 then gosub 1970: me$="line drive out!": gosub 2000: goto 399
+340 if ot>0.99 then gosub 1970: me$="infield pop up": gosub 2000: goto 399
+345 if ot>0.98 then gosub 1970: me$="fouled out": gosub 2000: goto 399
+350 if ou<2 and peek(33339)=233 and rnd(0)<0.75 then gosub 1970: me$="sac fly!": gosub 2000: gosub 1610: goto 399
+360 gosub 1970: me$="fly ball...out!": gosub 2000: goto 399
+399 hl=0: gosub 1950: goto 250: rem clears the player
 
 400 rem actual hit
 400 nb=int(4*rnd(0))+1: rem todo: change % of each type of hit
@@ -121,17 +125,17 @@
 
 1300 rem advance base runners. # of bases=nb. todo: walk=walk
 1300 m1=peek(33353)=233: rem first
-1305 rem only move players first is occupied
+1305 rem only move runners if first is occupied
 1305 if m1=-1 then gosub 1400
 1310 rem bb=batter base. light first
 1310 bb=1: ba=1: gosub 1700
 1320 rem move the batter until they've gone the right number of bases
 1320 if bb<>nb then bb=bb+1: gosub 1400: goto 1320
-1340 rem randomly move player home or a player to a next base
+1340 rem todo: randomly move runners home or a runner to a next base
 1399 rem todo: how to deal with steals or moving too far
 1399 return
 
-1400 rem all move players one base each. 
+1400 rem all move runners one base each. 
 1400 rem in the future make it random (only move if they have to)
 1400 m3=peek(33339)=233:m2=peek(33066)=233:m1=peek(33353)=233
 1410 rem if man on 3rd, clear 3rd, light home, update score, clear home
@@ -175,6 +179,14 @@
 1904 if ba=4 then ul=33626: rem: 32768+21*40+18: rem home
 1910 poke ul,b0: poke ul+1,b1: poke ul+40,b2: poke ul+41,b3:return
 
+1950 rem light or unlight a player. player in pl, hilight(0/1) in hl
+1950 ch=81: if t=0 then ch=87
+1955 ch=ch+128*hl
+1960 poke pl(pl), ch: return
+
+1970 rem pick a random player and highlight them
+1970 pl=9*rnd(0)+1: hl=1: gosub 1950: return
+
 2000 rem show message. param: me$
 2000 print "{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}";me$
 2005 for i=0 to 1000: next
@@ -210,13 +222,10 @@
 5250 print "                  Q        {173}{192}{192}{177}{192}{192}{177}{192}{192}{189}{HOME}";
 5999 return
 
-6000 ba=1: gosub 1700
-6001 ba=2: gosub 1700
-6002 ba=3: gosub 1700
-6003 ba=4: gosub 1700
+6000 rem display diagnostics
+6000 for ba = 1 to 4: gosub 1700: next
 6005 for i = 1 to 500: next
-6010 ba=1: gosub 1800
-6011 ba=2: gosub 1800
-6012 ba=3: gosub 1800
-6013 ba=4: gosub 1800
+6010 for ba = 1 to 4: gosub 1800: next
+6020 for hl = 0 to 1:for t = 0 to 1: for pl = 1 to 9: gosub 1950: next pl: for i = 1 to 500: next i: next t: next hl
+6030 hl=0: t=0: for pl = 1 to 9: gosub 1950: next pl
 6999 return
