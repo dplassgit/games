@@ -1,7 +1,10 @@
-1 print "{cls}": s=rnd(-1)
+1 print "{cls}": s=rnd(-ti)
 5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym"
 6 ix$(1)="1st":ix$(2)="2nd":ix$(3)="3rd"
 7 ht$(1)="single":ht$(2)="double!":ht$(3)="triple!!":ht$(4)="home run!!!"
+8 pp$="{home}         {rvs}{233} a plass program  {223}{roff}"
+9 rem message location
+9 ml$="{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}"
 10 dim h(2), r(2), e(2)
 19 goto 100
 
@@ -11,38 +14,38 @@
 50 if len(h$)<>3 then print "wrong length, sorry!": goto 40
 
 100 rem print field
-100 gosub 5000: gosub 6000
+100 gosub 5000
 120 rem strikes, balls, outs, inning, team (0=vis,1=home)
-120 s=0:b=0:ou=0:in=1:gosub 1620: t=0
+120 s=0:b=0:ou=0:in=1: gosub 1620: t=0
 130 gosub 1200: gosub 1250
 
-200 rem main loop
-200 hit=0: sw=1: gosub 1600: gosub 1000: rem pitch
+200 rem main loop (sw=batter swing status)
+200 hit=0:sw=1: gosub 1600: gosub 1000
 210 on hit+1 goto 500, 220, 300: rem no swing, swing&miss, contact
 
 220 rem strike
-220 me$="strike "+str$(s+1)+"!": gosub 2000
+220 me$="strike"+str$(s+1)+"!": gosub 2000
 230 s=s+1: gosub 1200
 240 if s<3 goto 299: rem else strikeout
 245 me$="strikeout!": gosub 2000
 
-250 rem an out
+250 rem an out; reset count
 250 s=0:b=0:ou=ou+1: gosub 1200
 260 if ou<>3 goto 299
-270 rem 3 outs, switch sides, clear men on base
+270 rem 3 outs, clear men on base, switch sides.
 270 s=0:b=0:ou=0: gosub 1200: for ba=1 to 4: gosub 1800: next
 280 t=1-t: gosub 1250
 285 if t=1 then me$="middle of "+in$: gosub 2000
-290 if t=0 then me$="end of "+in$: gosub 2000: in=in+1: gosub 1620:if in<10 then gosub 1200
-299 rem fix extra innings, end of game, etc.
+290 if t=0 then me$="end of "+in$: gosub 2000: in=in+1: gosub 1620: if in<10 then gosub 1200
+299 rem todo: fix extra innings, end of game, etc.
 299 goto 900
 
-300 rem made contact - may be a hit or an out
-300 if rnd(1) <= 0.5 goto 400: yes this is a really good batting average
-310 rem out
-310 rem line drive = 21%. ground ball = 44%. fly ball=35%. infield fly=11% of the 35%
-315 ot=rnd(1): rem out type
-320 if ot<=0.44 then me$="ground out": gosub 2000: goto 399: rem ground out, oppty for double play
+300 rem made contact - may be a hit or an out (50%, better than average)
+300 if rnd(1)<0.5 goto 400
+310 rem out type: line drive 21%. ground ball 44%. fly ball 35%. infield fly 11% of the 35%
+310 ot=rnd(1)
+320 rem ground out, oppty for double play
+320 if ot<=0.44 then me$="ground out": gosub 2000: goto 399
 330 if ot<=0.65 then me$="line drive out!": gosub 2000: goto 399
 340 if ot>0.99 then me$="infield pop up": gosub 2000: goto 399
 345 if ot>0.98 then me$="fouled out": gosub 2000: goto 399
@@ -50,44 +53,47 @@
 360 me$="fly ball...out!": gosub 2000: goto 399
 399 goto 250
 
-400 rem actual hit
+400 rem hit; nb=num bases
 400 nb=int(4*rnd(1))+1: rem todo: change % of each type of hit
 410 if nb=4 then print "{home}         {rvs}this bud's for you! {roff}"
 420 me$=ht$(nb): gosub 2000
-430 gosub 1300: rem move baserunners
-440 s=0:b=0:h(t)=h(t)+1: gosub 1200: gosub 1250
-450 if nb=4 then print "{home}         {rvs}{233} a plass program  {223}{roff}"
+430 rem move base runners, reset count.
+430 gosub 1300: s=0:b=0:h(t)=h(t)+1: gosub 1200: gosub 1250
+450 rem "A PLASS program"
+450 if nb=4 then print pp$
 499 goto 900
 
-500 rem didn't swing - ball or strike?
-500 if rnd(1) < 0.5 goto 220: rem strike (mlb average 62% strikes)
+500 rem didn't swing - ball or strike? (50/50; mlb average 62% strikes)
+500 if rnd(1)<0.5 goto 220
 510 rem ball
-510 b=b+1: gosub 1200
-520 me$="ball"+str$(b): gosub 2000
-530 if b < 4 goto 599
-540 rem walked
-540 me$="walk": gosub 2000
-550 s=0: b=0: gosub 1200: walk=1:nb=1: gosub 1300: walk=0
+510 b=b+1: gosub 1200: me$="ball"+str$(b): gosub 2000
+530 if b<4 goto 599
+540 rem walked; reset count, move baserunners
+540 me$="walk": gosub 2000: s=0:b=0: gosub 1200: walk=1:nb=1: gosub 1300: walk=0
 599 goto 900
 
 900 rem poke 32769,42: rem temporary wait indicator
-940 rem poke 32769,32:poke 32768,32: rem clear indicators temporary
+950 rem poke 32769,32:poke 32768,32: rem clear indicators temporary
 950 goto 200
 
-1000 rem pitch/bat loop. Sets "hit" (0=no swing, 1=miss, 2..10=hit)
-1000 get c$: if c$ >= "1" and c$ <= "3" goto 1030
+1000 rem pitch/bat loop. Sets "hi(t)" (0=no swing, 1=miss, 2..10=hit)
+1000 get c$: if c$>="1" and c$<="3" goto 1030
 1020 goto 1000
-1030 delay=10+40*(asc(c$)-asc("1"))
-1040 bc=18: rem ball column
-1045 pc=peek(32768+14*40+bc): rem stash prev character (pc)
 
-1050 for br = 0 to 8: rem relative row of ball
+1030 rem delay between moving ball
+1030 de=10+40*(asc(c$)-asc("1"))
+1040 bc=18: rem ball column
+1045 rem stash prev character (pc)
+1045 pc=peek(32768+14*40+bc)
+
+1050 rem relative ball row
+1050 for br=0 to 8
 1060 poke 32768+(14+br)*40+bc, pc
-1070 pc=peek(32768 + (15+br)*40+bc)
+1070 pc=peek(32768+(15+br)*40+bc)
 1080 rem todo: curve ball
 1080 poke 32768+(15+br)*40+bc, 46
-1100 for j = 1 to de: next j
-1120 if sw=1 then get c$: if c$ <> "s" goto 1170
+1100 for j=1 to de: next j
+1120 if sw=1 then get c$: if c$<>"s" goto 1170
 1130 rem swing & if on the right row decide if hit
 1130 rem the br=br+1 is so that the prev char is put back in the right place.
 1130 gosub 1500: if hit>1 then br=br+1: goto 1180
@@ -115,7 +121,7 @@
 1275 poke 32768+(t+22)*40+37,42: poke 32768+(23-t)*40+37,32
 1279 return
 
-1280 rem draw an up-to-2-digit number. params: loc, va
+1280 rem draw an up-to-2-digit number. params: loc, va(lue)
 1280 if va>9 then tens=int(va/10): poke loc,tens+asc("0"): va=va-10*tens
 1285 poke loc+1, va+asc("0"): return
 
@@ -124,7 +130,7 @@
 1305 rem only move players first is occupied
 1305 if m1=-1 then gosub 1400
 1310 rem bb=batter base. light first
-1310 bb=1: ba=1: gosub 1700
+1310 bb=1:ba=1: gosub 1700
 1320 rem move the batter until they've gone the right number of bases
 1320 if bb<>nb then bb=bb+1: gosub 1400: goto 1320
 1340 rem randomly move player home or a player to a next base
@@ -144,7 +150,7 @@
 
 1500 rem swing. param: sw
 1500 if sw<len(bat$) then sw=sw+1: gosub 1600
-1510 rem decide if hit the ball. for now, if s=2 when br=7, it's contact
+1520 rem decide if hit the ball. for now, if s=2 when br=7, it's contact
 1520 rem 1=miss, 2=hit, for now. eventually we'll have different strengths/levels
 1520 hit=1: if sw=2 and br=7 then hit=2
 1599 return
@@ -160,30 +166,32 @@
 1621 in$=str$(in)+"th": return
 
 1700 rem light a base. base number in ba
-1700 b0=233: b1=223: b2=95: b3=105
-1710 if ba=4 then b0=160: b1=160: rem home, override
+1700 b0=233:b1=223:b2=95:b3=105
+1710 rem home, override
+1710 if ba=4 then b0=160:b1=160
 1720 goto 1900
 
 1800 rem unlight a base. base number in ba
-1800 b0=78: b1=77: b2=77: b3=78
-1810 if ba=4 then b0=79: b1=80: rem home, override
+1800 b0=78:b1=77:b2=77:b3=78
+1810 rem home, override
+1810 if ba=4 then b0=79:b1=80
 
 1900 rem light or unlight a base. base in ba, chars in b0-b3.
-1901 if ba=1 then ul=33353: rem: 32768+14*40+25: rem first
-1902 if ba=2 then ul=33066: rem: 32768+ 7*40+18: rem second
-1903 if ba=3 then ul=33339: rem: 32768+14*40+11: rem third
-1904 if ba=4 then ul=33626: rem: 32768+21*40+18: rem home
+1901 if ba=1 then ul=33353: rem 32768+14*40+25
+1902 if ba=2 then ul=33066: rem 32768+ 7*40+18
+1903 if ba=3 then ul=33339: rem 32768+14*40+11
+1904 if ba=4 then ul=33626: rem 32768+21*40+18
 1910 poke ul,b0: poke ul+1,b1: poke ul+40,b2: poke ul+41,b3:return
 
 2000 rem show message. param: me$
-2000 print "{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}";me$
-2005 for i=0 to 1000: next
-2010 print "{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}                 "
+2000 print ml$;me$
+2005 for i=0 to 1000:next
+2010 print ml$;"                 "
 2015 return
 
 5000 print "{clr}"
 5010 print "         {$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}"
-5010 print "         {rvs}{233} a plass program  {223}{off}"
+5010 print pp$
 5020 print "inn: 0  N                    M    b: 0"
 5030 print "       N           Q          M   s: 0"
 5040 print "      N                        M  o: 0"
@@ -214,7 +222,7 @@
 6001 ba=2: gosub 1700
 6002 ba=3: gosub 1700
 6003 ba=4: gosub 1700
-6005 for i = 1 to 500: next
+6005 for i=1 to 500: next
 6010 ba=1: gosub 1800
 6011 ba=2: gosub 1800
 6012 ba=3: gosub 1800
