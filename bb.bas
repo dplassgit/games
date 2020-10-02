@@ -1,4 +1,4 @@
-1 print "{cls}"
+1 print "{cls}": s=rnd(-1)
 5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym"
 6 ix$(1)="1st":ix$(2)="2nd":ix$(3)="3rd"
 7 ht$(1)="single":ht$(2)="double!":ht$(3)="triple!!":ht$(4)="home run!!!"
@@ -38,20 +38,20 @@
 299 goto 900
 
 300 rem made contact - may be a hit or an out
-300 if rnd(0) <= 0.5 goto 400: yes this is a really good batting average
+300 if rnd(1) <= 0.5 goto 400: yes this is a really good batting average
 310 rem out
 310 rem line drive = 21%. ground ball = 44%. fly ball=35%. infield fly=11% of the 35%
-315 ot=rnd(0): rem out type
+315 ot=rnd(1): rem out type
 320 if ot<=0.44 then me$="ground out": gosub 2000: goto 399: rem ground out, oppty for double play
 330 if ot<=0.65 then me$="line drive out!": gosub 2000: goto 399
 340 if ot>0.99 then me$="infield pop up": gosub 2000: goto 399
 345 if ot>0.98 then me$="fouled out": gosub 2000: goto 399
-350 if ou<2 and peek(33339)=233 and rnd(0)<0.75 then me$="sac fly!": gosub 2000: gosub 1610: goto 399
+350 if ou<2 and peek(33339)=233 and rnd(1)<0.75 then me$="sac fly!": gosub 2000: gosub 1610: goto 399
 360 me$="fly ball...out!": gosub 2000: goto 399
 399 goto 250
 
 400 rem actual hit
-400 nb=int(4*rnd(0))+1: rem todo: change % of each type of hit
+400 nb=int(4*rnd(1))+1: rem todo: change % of each type of hit
 410 if nb=4 then print "{home}         {rvs}this bud's for you! {roff}"
 420 me$=ht$(nb): gosub 2000
 430 gosub 1300: rem move baserunners
@@ -60,7 +60,7 @@
 499 goto 900
 
 500 rem didn't swing - ball or strike?
-500 if rnd(0) < 0.5 goto 220: rem strike (mlb average 62% strikes)
+500 if rnd(1) < 0.5 goto 220: rem strike (mlb average 62% strikes)
 510 rem ball
 510 b=b+1: gosub 1200
 520 me$="ball"+str$(b): gosub 2000
