@@ -1,8 +1,8 @@
-1 print "{cls}": s=rnd(-ti)
+1 s=rnd(-ti)
 5 bat$="{$c0}{$ce}{$dd}{$cd}{$dd}{$ce}{$c0}":v$="nyy":h$="nym"
 6 ix$(1)="1st":ix$(2)="2nd":ix$(3)="3rd"
 7 ht$(1)="single":ht$(2)="double!":ht$(3)="triple!!":ht$(4)="home run!!!"
-8 pp$="{home}         {rvs}{233} a plass program  {223}{roff}"
+8 pp$="{home}         {rvs}{233} a {roff}plass{rvs} program  {223}{roff}"
 9 rem message location
 9 ml$="{home}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}{down}"
 10 dim h(2), r(2), e(2)
@@ -21,7 +21,8 @@
 
 200 rem main loop (sw=batter swing status)
 200 hit=0:sw=1: gosub 1600: gosub 1000
-210 on hit+1 goto 500, 220, 300: rem no swing, swing&miss, contact
+210 rem no swing, swing&miss, contact
+210 on hit+1 goto 500, 220, 300
 
 220 rem strike
 220 me$="strike"+str$(s+1)+"!": gosub 2000
@@ -190,7 +191,6 @@
 2015 return
 
 5000 print "{clr}";
-5010 print "         {$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}"
 5010 print pp$
 5020 print "inn: 0  N                    M    b: 0"
 5030 print "       N           Q          M   s: 0"
