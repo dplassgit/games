@@ -189,7 +189,7 @@
 2010 print ml$;"                 "
 2015 return
 
-5000 print "{clr}"
+5000 print "{clr}";
 5010 print "         {$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}{$a4}"
 5010 print pp$
 5020 print "inn: 0  N                    M    b: 0"
