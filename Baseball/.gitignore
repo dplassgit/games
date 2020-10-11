@@ -1,0 +1,4 @@
+*.prg
+*.obj
+*.tmp
+bak/
