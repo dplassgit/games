@@ -88,15 +88,15 @@ maybe_left     CMP #74     ; j
                beq goto_end
                jmp bg_loop 
 
-goto_end       LDY #79
+goto_end       LDY #BG_LENGTH
                sty angle   
                jmp bg_loop 
 
-maybe_right    CMP #76     ; l
+maybe_right     CMP #76     ; l
                bne waiting 
                inc angle   
                lda angle   
-               cmp #80     
+               cmp #BG_LENGTH+1     
                beq done    
                jmp bg_loop 
 
@@ -136,7 +136,8 @@ enemy_loc      = 32768
 enemy          null 'enemy in range'
 
 ; backgrounds
-bg_loc         = 32768+8*40
+bg_loc          = 32768+8*40
+BG_LENGTH       =79
 bg0            null '.UI               .                                                     .     *'
 bg1            null '.JK                             *             .                              .*'
 bg2            null '.   NM     .                          W    NM    .             Q              *'
