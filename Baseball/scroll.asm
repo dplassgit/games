@@ -1,6 +1,7 @@
 *=$0500
 
-; copies from /1 to /2 until a 0 is found at /1
+; Copies from /1 to /2 until a 0 is found at /1
+; Destroys a, y
 defm           COPY0
                LDY #0      
 @nextch        LDA /1,y
@@ -11,9 +12,9 @@ defm           COPY0
 @exitmac
                endm
 
-; copies up to 40 characters from /1 (offset in y) to /2
+; Copies up to 40 characters from /1 (offset in y) to /2
+; Destroys a, x, y
 defm           COPY40
-
                LDX #0      
 @nextch        LDA /1,y
                beq @start_over
@@ -24,7 +25,7 @@ defm           COPY40
                beq @exitmac
                jmp @nextch 
 
-@start_over     ldy #0  ; start from the beginning of the string
+@start_over    ldy #0  ; start from the beginning of the string
                jmp @nextch 
 
 @exitmac        
@@ -81,7 +82,6 @@ akey           CMP #48     ; 0 = reset
 
 maybe_left     CMP #74     ; j
                bne maybe_right
-               pla
                dec angle   
                lda angle   
                cmp #$ff    
