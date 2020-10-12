@@ -5,25 +5,31 @@ defm            COPY0
                 LDY #0
 @nextch         LDA /1,y
                 beq @exitmac
-                sta /2,y 
+                sta /2,y
                 iny
                 jmp @nextch
 @exitmac
                 endm
 
 ; copies up to 40 characters from /1 (offset in y) to /2
-defm           COPY40
-               tya      ; push y
-               pha
+defm            COPY40
+                tya      ; push y
+                pha
+
                 LDX #0
 @nextch         LDA /1,y
-                beq @exitmac
+                beq @start_over
                 sta /2,x
                 iny
                 inx
-                cpx #41
-                bne @nextch
-@exitmac        pla     ; pop y
+                cpx #40
+                beq @exitmac
+                jmp @nextch 
+
+@start_over     ldy #0  ; start from the beginning of the string
+                jmp @nextch
+
+@exitmac        pla     ; restore y
                 tay
                 endm
 
@@ -35,8 +41,8 @@ start
                 COPY0 radar3,radar3_loc
                 COPY0 radar4,radar4_loc
 
-                ldx #40    
-                lda #99 
+                ldx #40
+                lda #99
 horizon_loop    STA hor_loc,x
                 dex
                 bne horizon_loop
@@ -45,10 +51,10 @@ horizon_loop    STA hor_loc,x
                 COPY0 bottom_ret2,bottom_ret2_loc
                 COPY0 bottom_ret3,bottom_ret3_loc
 
-reset_bg        ldy #0      
+reset_bg        ldy #0
 
 bg_loop         tya
-                pha       
+                pha
                 COPY40 bg0,bg_loc
                 COPY40 bg1,bg_loc+40
                 COPY40 bg2,bg_loc+80
@@ -62,34 +68,34 @@ bg_loop         tya
 
 waiting         lda 151
                 cmp #$ff
-                bne akey    
+                bne akey
                 pla
                 tay
                 jmp bg_loop
-akey            cmp #48  ; 0 = reset    
+akey            cmp #48  ; 0 = reset
                 bne maybe_left
                 pla
                 jmp reset_bg
 
-maybe_left      cmp #74  ; j     
+maybe_left      cmp #74  ; j
                 bne maybe_right
                 pla
                 tay
                 dey
-                cpy #$ff       
+                cpy #$ff
                 beq goto_end
                 jmp bg_loop
-goto_end        ldy #39
-                jmp bg_loop 
+goto_end        ldy #79
+                jmp bg_loop
 maybe_right     CMP #76 ; l
                 bne waiting
                 pla
                 tay
                 iny
-                cpy #40     
-                beq done    
-                jmp bg_loop 
-                              
+                cpy #80
+                beq done
+                jmp bg_loop
+                             
 done            jmp reset_bg
                 rts
 
@@ -125,9 +131,9 @@ enemy           null 'enemy in range'
 
 ; backgrounds
 bg_loc         =32768+8*40
-bg0            null '.UI               .                                                     .      '
-bg1            null '.JK                             *             .                              . '
-bg2            null '.   NM     .                          W    NM    .             Q               '
-bg3            null '.  N  MNM               .  NMNM           N  MNM                  NMNM         '
+bg0            null '.UI               .                                                     .     *'
+bg1            null '.JK                             *             .                              .*'
+bg2            null '.   NM     .                          W    NM    .             Q              *'
+bg3            null '.  N  MNM               .  NMNM           N  MNM                  NMNM        *'
 bg4            text '.',99,99,'   N  M     N',99,99,99,'M      N  M M',100,'      N',99,99,'   N  M     N',99,99,99,'M      N  M M',100,'      N',0
-bg5            text '.    N    M   N     ',99,'M   N    M  M NM N     N    M   N     ',99,'M   N    M  M NM N ',0
+bg5            text '.    N    M   N     ',99,'M   N    M  M NM N     N    M   N     ',99,'M   N    M  M NM N*',0
