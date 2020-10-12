@@ -1,103 +1,109 @@
 *=$0500
 
 ; copies from /1 to /2 until a 0 is found at /1
-defm            COPY0
-                LDY #0
-@nextch         LDA /1,y
-                beq @exitmac
-                sta /2,y
-                iny
-                jmp @nextch
+defm           COPY0
+               LDY #0      
+@nextch        LDA /1,y
+               beq @exitmac
+               sta /2,y    
+               iny
+               jmp @nextch 
 @exitmac
-                endm
+               endm
 
 ; copies up to 40 characters from /1 (offset in y) to /2
-defm            COPY40
-                tya      ; push y
-                pha
+defm           COPY40
 
-                LDX #0
-@nextch         LDA /1,y
-                beq @start_over
-                sta /2,x
-                iny
-                inx
-                cpx #40
-                beq @exitmac
-                jmp @nextch 
+               LDX #0      
+@nextch        LDA /1,y
+               beq @start_over
+               sta /2,x    
+               iny
+               inx
+               cpx #40     
+               beq @exitmac
+               jmp @nextch 
 
 @start_over     ldy #0  ; start from the beginning of the string
-                jmp @nextch
+               jmp @nextch 
 
-@exitmac        pla     ; restore y
-                tay
-                endm
+@exitmac        
+               endm
 
 
-start
-                COPY0 enemy, enemy_loc
-                COPY0 radar1,radar1_loc
-                COPY0 radar2,radar2_loc
-                COPY0 radar3,radar3_loc
-                COPY0 radar4,radar4_loc
+start          LDA #0
+               sta angle   
 
-                ldx #40
-                lda #99
-horizon_loop    STA hor_loc,x
-                dex
-                bne horizon_loop
+               COPY0 enemy,enemy_loc
+               COPY0 radar1,radar1_loc
+               COPY0 radar2,radar2_loc
+               COPY0 radar3,radar3_loc
+               COPY0 radar4,radar4_loc
 
-                COPY0 bottom_ret1,bottom_ret1_loc
-                COPY0 bottom_ret2,bottom_ret2_loc
-                COPY0 bottom_ret3,bottom_ret3_loc
+               ldx #40     
+               lda #99     
+horizon_loop   STA hor_loc,x
+               dex
+               bne horizon_loop
 
-reset_bg        ldy #0
+               COPY0 bottom_ret1,bottom_ret1_loc
+               COPY0 bottom_ret2,bottom_ret2_loc
+               COPY0 bottom_ret3,bottom_ret3_loc
 
-bg_loop         tya
-                pha
-                COPY40 bg0,bg_loc
-                COPY40 bg1,bg_loc+40
-                COPY40 bg2,bg_loc+80
-                COPY40 bg3,bg_loc+120
-                COPY40 bg4,bg_loc+160
-                COPY40 bg5,bg_loc+200
+reset_bg       LDY #0
+               sty angle   
 
-                COPY0 top_ret1,top_ret1_loc
-                COPY0 top_ret2,top_ret2_loc
-                COPY0 top_ret3,top_ret3_loc
+bg_loop        LDY angle
+               COPY40 bg0,bg_loc
+               ldy angle   
+               COPY40 bg1,bg_loc+40
+               ldy angle   
+               COPY40 bg2,bg_loc+80
+               ldy angle   
+               COPY40 bg3,bg_loc+120
+               ldy angle   
+               COPY40 bg4,bg_loc+160
+               ldy angle   
+               COPY40 bg5,bg_loc+200
 
-waiting         lda 151
-                cmp #$ff
-                bne akey
-                pla
-                tay
-                jmp bg_loop
-akey            cmp #48  ; 0 = reset
-                bne maybe_left
-                pla
-                jmp reset_bg
+               COPY0 top_ret1,top_ret1_loc
+               COPY0 top_ret2,top_ret2_loc
+               COPY0 top_ret3,top_ret3_loc
 
-maybe_left      cmp #74  ; j
-                bne maybe_right
-                pla
-                tay
-                dey
-                cpy #$ff
-                beq goto_end
-                jmp bg_loop
-goto_end        ldy #79
-                jmp bg_loop
-maybe_right     CMP #76 ; l
-                bne waiting
-                pla
-                tay
-                iny
-                cpy #80
-                beq done
-                jmp bg_loop
-                             
-done            jmp reset_bg
-                rts
+waiting        LDA 151
+               cmp #$ff    
+               bne akey    
+
+               jmp bg_loop 
+akey           CMP #48     ; 0 = reset
+               bne maybe_left
+               jmp reset_bg
+
+maybe_left     CMP #74     ; j
+               bne maybe_right
+               pla
+               dec angle   
+               lda angle   
+               cmp #$ff    
+               beq goto_end
+               jmp bg_loop 
+
+goto_end       LDY #79
+               sty angle   
+               jmp bg_loop 
+
+maybe_right    CMP #76     ; l
+               bne waiting 
+               inc angle   
+               lda angle   
+               cmp #80     
+               beq done    
+               jmp bg_loop 
+
+done           JMP reset_bg
+               rts
+
+angle          byte 0
 
 hor_loc        = 32767+40*14
 
@@ -126,11 +132,11 @@ top_ret1       byte $5D,0
 top_ret2       byte 100,100,93,100,100,0
 top_ret3       byte 101,$20,$20,$20,103,0
 
-enemy_loc       = 32768
-enemy           null 'enemy in range'
+enemy_loc      = 32768
+enemy          null 'enemy in range'
 
 ; backgrounds
-bg_loc         =32768+8*40
+bg_loc         = 32768+8*40
 bg0            null '.UI               .                                                     .     *'
 bg1            null '.JK                             *             .                              .*'
 bg2            null '.   NM     .                          W    NM    .             Q              *'
