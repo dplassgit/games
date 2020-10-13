@@ -1,5 +1,6 @@
 *=$0500
 
+
 ; Copies from /1 to /2 until a 0 is found at /1
 ; Destroys a, y
 defm           COPY0
@@ -8,6 +9,20 @@ defm           COPY0
                beq @exitmac
                sta /2,y    
                iny
+               jmp @nextch 
+@exitmac
+               endm
+
+; Copies from /1 to /2 until a 0 is found at /1
+; If there's a space in the source, does not overwrite output
+defm           COPY0_NOSPACE
+               LDY #0      
+@nextch        LDA /1,y
+               beq @exitmac
+               cmp #32     
+               beq @nexty
+               sta /2,y    
+@nexty         iny
                jmp @nextch 
 @exitmac
                endm
@@ -67,15 +82,17 @@ bg_loop        LDY angle
                ldy angle   
                COPY40 bg5,bg_loc+200
 
-               COPY0 top_ret1,top_ret1_loc
-               COPY0 top_ret2,top_ret2_loc
-               COPY0 top_ret3,top_ret3_loc
+               lda showtop     
+               beq waiting
+               COPY0_NOSPACE top_ret1,top_ret1_loc
+               COPY0_NOSPACE top_ret2,top_ret2_loc
+               COPY0_NOSPACE top_ret3,top_ret3_loc
 
 waiting        LDA 151
                cmp #$ff    
-               bne akey    
+               bne akey
+               jmp bg_loop      ; redraw everything, so we can see the backround under the top reticle
 
-               jmp bg_loop 
 akey           CMP #48     ; 0 = reset
                bne maybe_left
                jmp reset_bg
@@ -92,18 +109,33 @@ goto_end       LDY #BG_LENGTH
                sty angle   
                jmp bg_loop 
 
-maybe_right     CMP #76     ; l
-               bne waiting 
+maybe_right    CMP #76     ; l
+               bne maybe_quit 
                inc angle   
                lda angle   
                cmp #BG_LENGTH+1     
-               beq done    
+               beq jmp_reset_bg    
                jmp bg_loop 
 
-done           JMP reset_bg
-               rts
+maybe_quit     CMP #81  ;q
+               beq quit   
+               
+;maybe_toggle   CMP #84  ;t
+;               bne jmp_bg_loop
+;               sec
+;               lda #1
+;               sbc showtop 
+;               sta showtop
+
+jmp_bg_loop    jmp bg_loop
+jmp_reset_bg   JMP reset_bg
+
+quit          rts
+
+incasm "fixedpoint.asm"
 
 angle          byte 0
+showtop        byte 1
 
 hor_loc        = 32767+40*14
 
@@ -137,10 +169,11 @@ enemy          null 'enemy in range'
 
 ; backgrounds
 bg_loc          = 32768+8*40
-BG_LENGTH       =79
-bg0            null '.UI               .                                                     .     *'
-bg1            null '.JK                             *             .                              .*'
-bg2            null '.   NM     .                          W    NM    .             Q              *'
-bg3            null '.  N  MNM               .  NMNM           N  MNM                  NMNM        *'
-bg4            text '.',99,99,'   N  M     N',99,99,99,'M      N  M M',100,'      N',99,99,'   N  M     N',99,99,99,'M      N  M M',100,'      N',0
-bg5            text '.    N    M   N     ',99,'M   N    M  M NM N     N    M   N     ',99,'M   N    M  M NM N*',0
+BG_LENGTH       = 78
+bgn            null '123456789012345678901234567890123456789012345678901234567890123456789012345678'
+bg0            null 'UI               .                                                     .      '
+bg1            null 'JK                             *             .                              . '
+bg2            null '   NM     .                          W    NM    .                             '
+bg3            null '  N  MNM               .  NMNM           N  MNM               Q  NMNM         '
+bg4            text '',99,99,'   N  M     N',99,99,99,'M      N  M M',100,'      N',99,99,'   N  M     N',99,99,99,'M      N  M M',100,'      N',0
+bg5            text '    N    M   N     ',99,'M   N    M  M NM N     N    M   N     ',99,'M   N    M  M NM N ',0
