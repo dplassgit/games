@@ -89,7 +89,8 @@ bg_loop        LDY angle
                COPY0_NOSPACE top_ret3,top_ret3_loc
 
 waiting        LDA 151
-               cmp #$ff    
+               cmp #$ff
+;               beq waiting
                bne akey
                jmp bg_loop      ; redraw everything, so we can see the backround under the top reticle
 
@@ -159,10 +160,10 @@ bottom_ret3    byte $5d,0
 ; top reticle
 top_ret1_loc   = 32768+9*40+19
 top_ret2_loc   = top_ret1_loc+40-2
-top_ret3_loc   = top_ret2_loc+40
+top_ret3_loc   = top_ret2_loc+39
 top_ret1       byte $5D,0
 top_ret2       byte 100,100,93,100,100,0
-top_ret3       byte 101,$20,$20,$20,103,0
+top_ret3       byte 103,$20,$20,$20,$20,$20,101,0
 
 enemy_loc      = 32768
 enemy          null 'enemy in range'
