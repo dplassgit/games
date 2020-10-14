@@ -1,5 +1,9 @@
 ; Signed multiply x by y and put high byte of value into a
 
+test           LDX #14
+               ldy #$F6    
+               
+
 mpy            STX NUM1
                STY NUM2    
                clc

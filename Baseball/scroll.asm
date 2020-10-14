@@ -47,9 +47,8 @@ defm           COPY40
                endm
 
 
-start          LDA #0
-               sta angle   
-
+start          jmp polar_test    
+               
                COPY0 enemy,enemy_loc
                COPY0 radar1,radar1_loc
                COPY0 radar2,radar2_loc
@@ -131,9 +130,31 @@ maybe_quit     CMP #81  ;q
 jmp_bg_loop    jmp bg_loop
 jmp_reset_bg   JMP reset_bg
 
-quit          rts
+quit                       ; theta in x, radius in y
+
+polar_test     LDA #0
+               sta angle   
+               
+polar_loop     ldx angle
+               ldy #15  ; radius
+               jsr from_polar
+               ldy #0
+               lda angle   
+               sta (polar_result),y
+               clc
+               lda angle   
+               adc #1  
+               sta angle
+               cmp #39
+               bne polar_loop
+
+               lda #42     
+               sta $81f3
+
+               rts
 
 incasm "fixedpoint.asm"
+incasm "trig.asm"
 
 angle          byte 0
 showtop        byte 1
