@@ -130,22 +130,24 @@ maybe_quit     CMP #81  ;q
 jmp_bg_loop    jmp bg_loop
 jmp_reset_bg   JMP reset_bg
 
-quit                       ; theta in x, radius in y
+quit                   
 
-polar_test     LDA #39
-               sta angle   
+polar_test     LDA #40
+               sta angle 
                
-polar_loop     ldx angle
-               ldy #22  ; radius
+polar_loop     LDX angle
+               dex
+               ldy #15 ; radius
+               ; theta in x, radius in y
                jsr from_polar
                ldy #0
-               lda angle   
+               lda #"."   
                sta (polar_result),y
                dec angle
                bne polar_loop
 
-               lda #42     
-               sta $81f3
+               lda #"*"     
+               sta $81f2
 
                rts
 
