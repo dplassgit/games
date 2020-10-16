@@ -4,7 +4,7 @@
 <!-- Project Target : PET 4000/9000 -->
 <Project>
     <Target>8</Target>
-    <Executable>scroll.prg</Executable>
+    <Executable>tankzone.prg</Executable>
     <StartAddress>1025</StartAddress>
     <FilesGlobal>False</FilesGlobal>
     <BatchMode>False</BatchMode>
@@ -15,7 +15,7 @@
     <Comments />
     <Author />
     <Email />
-    <AutoLaunchName>scroll.prg</AutoLaunchName>
+    <AutoLaunchName>tankzone.prg</AutoLaunchName>
     <NoSingleFileBuild>False</NoSingleFileBuild>
     <CreatedWithVersion>CBM prg Studio 3.14.0</CreatedWithVersion>
     <HasGitRepo>False</HasGitRepo>
