@@ -41,7 +41,7 @@
         <PostBuildCommands />
     </BuildEvents>
     <BuildList>
-        <FileName>scroll.asm</FileName>
+        <FileName>main.asm</FileName>
     </BuildList>
     <DetermineBuildOrder>1</DetermineBuildOrder>
     <PaddingByte>0</PaddingByte>
@@ -62,26 +62,15 @@
             <FileOpen>True</FileOpen>
         </SourceFile>
         <SourceFile>
-            <Name>scroll.asm</Name>
+            <Name>main.asm</Name>
             <PrgName />
             <FileType>2</FileType>
             <IncludeInBuild>True</IncludeInBuild>
             <Regions />
             <Breakpoints />
             <Bookmarks />
-            <Topmost>True</Topmost>
-            <FileOpen>True</FileOpen>
-        </SourceFile>
-        <SourceFile>
-            <Name>scroll.bas</Name>
-            <PrgName />
-            <FileType>1</FileType>
-            <IncludeInBuild>False</IncludeInBuild>
-            <Regions />
-            <Breakpoints />
-            <Bookmarks />
             <Topmost>False</Topmost>
-            <FileOpen>False</FileOpen>
+            <FileOpen>True</FileOpen>
         </SourceFile>
         <SourceFile>
             <Name>trig.asm</Name>
@@ -95,15 +84,15 @@
             <FileOpen>True</FileOpen>
         </SourceFile>
         <SourceFile>
-            <Name>tutmixed.bas</Name>
+            <Name>main.bas</Name>
             <PrgName />
             <FileType>1</FileType>
             <IncludeInBuild>True</IncludeInBuild>
             <Regions />
             <Breakpoints />
             <Bookmarks />
-            <Topmost>False</Topmost>
-            <FileOpen>False</FileOpen>
+            <Topmost>True</Topmost>
+            <FileOpen>True</FileOpen>
         </SourceFile>
     </SourceFiles>
 </Project>
