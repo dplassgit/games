@@ -1,3 +1,10 @@
+; ========================================
+; Project   : TankZone
+; Target    : Commodore PET 2001+
+; Comments  : 
+; Author    : David Plass
+; ========================================
+
 *=$0500
 
 start         jmp start_game

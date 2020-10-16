@@ -9,60 +9,63 @@
 ; inputs: theta in x, radius in y
 
 from_polar     STX theta
-               sty radius
+               sty radius  
                lda costab,x
                tax
-               jsr mpy
-                           ; throws out the low byte, which probably causes rounding errors
+               jsr mpy     
+                           ; Note, we discard the low byte because we're doing fixed point.
                lda result+1
                            ; this is scaled 50%, which is wrong
-               sta polarx
+               sta polarx  
 
-               ldx theta
+               ldx theta   
                lda sintab,x
                tax
-               ldy radius
-               jsr mpy
+               ldy radius  
+               jsr mpy     
                lda result+1
                            ; this is scaled 50%, which is wrong
-               sta polary
+               sta polary  
 
                tay
-               ldx #40
+               ldx #40     
                jsr mpy     ; multiply polary by 40
 
                            ; copy 2 byte signed result to polar_result
                lda result+1
                sta polar_result+1
-               lda result
+               lda result  
                sta polar_result
 
                            ; add (signed) polar x to polar result -- this part is
-                           ; annoying since adc doesn't do signed addition...
-               lda polarx
-               beq add32768
-               bpl pos
+                           ; annoying, since I can't figure out how to get the
+                           ; signed add to work when polarx is negative...
+               lda polarx  
+               beq from_polar_exit
+               bpl polar_xpos
+
                            ; negate a:
-               eor #$ff
+               eor #$ff    
                clc
-               adc #$01
+               adc #$01    
                            ; stash updated polarx
-               sta polarx
+               sta polarx  
                            ; subtract polarx from polar_result
                lda polar_result
                sec
-               sbc polarx
+               sbc polarx  
                sta polar_result
-               bcs add32768
+               bcs from_polar_exit
                dec polar_result+1
-               jmp add32768
+               jmp from_polar_exit
 
-pos            ADC polar_result
+polar_xpos     clc
+               ADC polar_result
                sta polar_result
-               bcc add32768
+               bcc from_polar_exit
                inc polar_result+1
 
-add32768       rts
+from_polar_exit rts
 
 
 ; there must be a way to reduce these...
