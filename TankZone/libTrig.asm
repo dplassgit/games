@@ -1,11 +1,10 @@
-; convert from r,theta (0-39) polar to offset from 0 (x+40*y)
+; convert from r, theta (0-78) polar to offset from 0 (x+40*y)
 ; 1. get cos(theta)
 ; 2. multiply r by cos(theta), put high byte in polarx
 ; 3. get sin(theta)
 ; 4. multiply r by sin(theta), put high byte in polary
-; 5. multiply polary by 40, put into polar_result
-; 6. add polarx to polar_result
-; 7. add 32768+12*40 to polar_result ($80 to >polar)
+; 5. multiply polary by 40, put into polar_result (2 bytes)
+; 6. add polarx to polar_result (or subtract if polarx is negative)
 
 ; inputs: theta in x, radius in y
 
