@@ -226,7 +226,7 @@ enemy_right    null 'enemy to right'
 enemy_left     null 'enemy to left'
 enemy_rear     null 'enemy to rear'
 
-score_org      = 32768+40+25
+score_org      = 32768+40+26
 score          null 'score'
 
 ; backgrounds
