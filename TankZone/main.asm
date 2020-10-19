@@ -23,14 +23,13 @@ reset_bg
               sty angle
 
 bg_loop
-              jsr sweep_radar
               jsr draw_background
+              jsr sweep_radar
 
 waiting       LDA 151
               cmp #$ff
-;              beq waiting
-              bne akey
-              jmp bg_loop      ; redraw everything, so we can see the backround under the top reticle
+              beq bg_loop
+;; alternatively: beq waiting
 
 akey          CMP #"0"
               bne maybe_left
@@ -69,7 +68,7 @@ maybe_toggle  CMP #"t"
 
 quit_game     rts
 
-angle          byte 0
-showtop        byte 1
+angle         byte 0
+showtop       byte 1
 
 

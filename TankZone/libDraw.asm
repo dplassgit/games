@@ -8,7 +8,6 @@ draw_hud
                COPY0 radar1,radar1_org
                COPY0 radar2,radar2_org
                COPY0 radar3,radar3_org
-               COPY0 radar4,radar4_org
                
                rts
 
@@ -46,10 +45,9 @@ draw_background
 bg_exit        rts
             
 sweep_radar
-               inc radar_sweep_angle
-               lda radar_sweep_angle
-               ; 0b1100000 - this way it only changes every 96
-               ; ticks
+               inc sweep_angle
+               lda sweep_angle
+               ; 0b1100000 - this way it only changes every 96 ticks
                and #96
                clc
                ror
@@ -58,20 +56,22 @@ sweep_radar
                ror
                ror
                tax
-               lda radar_sweep_chars,x
-               sta radar_sweep_org
+               lda sweep_chars,x
+               sta sweep_org
                rts
                
 horizon_org    = 32767+40*14
 
-radar1_org     = $8011
-radar2_org     = radar1_org+41
-radar3_org     = radar1_org+80
-radar4_org     = radar1_org+162
-radar1         byte $4d,$20,$5d,$20,$4e,0
-radar2         byte $4d,$20,$4e,0
-radar3         byte $40,$20,67,$20,$40,0
-radar4         byte $5d, 0
+radar1_org     = $8013
+radar2_org     = radar1_org+78
+radar3_org     = radar1_org+160
+radar1         byte $5d,0
+radar2         byte $40,$20,67,$20,$40,0
+radar3         =radar1
+
+sweep_org      = radar2_org+2
+sweep_angle    byte 0
+sweep_chars    byte 67,78,$5d,77
 
 enemy_1_org    = 32768
 enemy          null 'enemy in range'
@@ -87,10 +87,6 @@ bottom_ret3_org = bottom_ret2_org+42
 bottom_ret1    byte 101,$20,$20,$20,103,0
 bottom_ret2    byte 99,99,$5D,99,99,0
 bottom_ret3    byte $5d,0
-
-radar_sweep_org  = radar3_org+2
-radar_sweep_angle  byte 0
-radar_sweep_chars  byte 67,78,$5d,77
 
 ; top reticle
 top_ret1_org   = 32768+9*40+19
@@ -114,3 +110,5 @@ bg2            null '   NM     .                          W    NM    .          
 bg3            null '  N  MNM               .  NMNM           N  MNM               Q  NMNM         '
 bg4            text '',99,99,'   N  M     N',99,99,99,'M      N  M M',100,'      N',99,99,'   N  M     N',99,99,99,'M      N  M M',100,'      N',0
 bg5            text '    N    M   N     ',99,'M   N    M  M NM N     N    M   N     ',99,'M   N    M  M NM N ',0
+
+      
