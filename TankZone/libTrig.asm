@@ -55,30 +55,11 @@ polar_to_screen
                lda result  
                sta polar_result
 
-               ; add (signed) polar x to polar result -- this part is
-               ; annoying, since I can't figure out how to get the
-               ; signed add to work when polarx is negative...
+               ; add (signed) polar x to polar result
                lda polarx
-               beq polar_to_screen_exit
-               bpl polar_xpos
-
-               ; negate a:
-               eor #$ff    
-               clc
-               adc #$01    
-               ; stash updated polarx
-               sta polarx  
-               ; subtract polarx from polar_result
-               lda polar_result
-               sec
-               sbc polarx  
-               sta polar_result
-               bcs polar_to_screen_exit
+               bpl xpos
                dec polar_result+1
-               jmp polar_to_screen_exit
-
-; polarx is positive, in 'a'. add to polar_result
-polar_xpos     clc
+xpos           clc
                adc polar_result
                sta polar_result
                bcc polar_to_screen_exit
