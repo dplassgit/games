@@ -1,5 +1,4 @@
-
-;; draw the heads-up display
+;; Draw the heads-up display: enemy, score, radar
 draw_hud
                COPY0 enemy,enemy_1_org
                COPY0 enemy_left,enemy_2_org
@@ -13,7 +12,7 @@ draw_hud
 
 draw_horizon   ldx #40
                lda #99
-horizon_loop   STA horizon_org,x
+horizon_loop   sta horizon_org,x
                dex
                bne horizon_loop
 
@@ -23,7 +22,7 @@ horizon_loop   STA horizon_org,x
                rts
 
 draw_background
-               LDY angle
+               ldy angle
                COPY40 bg0,bg_org
                ldy angle
                COPY40 bg1,bg_org+40
@@ -62,12 +61,12 @@ sweep_radar
                
 horizon_org    = 32767+40*14
 
-radar1_org     = $8013
+radar1_org     = 32768+19
 radar2_org     = radar1_org+78
 radar3_org     = radar1_org+160
 radar1         byte $5d,0
 radar2         byte $40,$20,67,$20,$40,0
-radar3         =radar1
+radar3         = radar1
 
 sweep_org      = radar2_org+2
 sweep_angle    byte 0
@@ -84,9 +83,9 @@ enemy_rear     null 'enemy to rear'
 bottom_ret1_org = 32768+16*40+17
 bottom_ret2_org = bottom_ret1_org+40
 bottom_ret3_org = bottom_ret2_org+42
-bottom_ret1    byte 101,$20,$20,$20,103,0
-bottom_ret2    byte 99,99,$5D,99,99,0
-bottom_ret3    byte $5d,0
+bottom_ret1     byte 101,$20,$20,$20,103,0
+bottom_ret2     byte 99,99,$5D,99,99,0
+bottom_ret3     byte $5d,0
 
 ; top reticle
 top_ret1_org   = 32768+9*40+19

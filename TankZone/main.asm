@@ -13,9 +13,10 @@ incasm "copyMacros.asm"
 incasm "libFixedpoint.asm"
 incasm "libTrig.asm"
 incasm "libDraw.asm"
+incasm "libTest.asm"
                
 start_game
-              JSR draw_hud
+              jsr draw_hud
               jsr draw_horizon
 
 reset_bg
@@ -56,7 +57,7 @@ maybe_right   CMP #"l"
               jmp bg_loop
 
 maybe_quit    CMP #"q"
-              beq quit_game
+              beq quit
 
 maybe_toggle  CMP #"t"
               bne bg_loop
@@ -66,9 +67,7 @@ maybe_toggle  CMP #"t"
               sta showtop
               jmp bg_loop
 
-quit_game     rts
+quit          rts
 
 angle         byte 0
 showtop       byte 1
-
-
