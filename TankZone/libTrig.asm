@@ -1,83 +1,98 @@
-; convert from r, theta (0-78) polar to offset from 0 (x+40*y)
-; 1. get cos(theta)
-; 2. multiply r by cos(theta), put high byte in polarx
+; Convert from r, theta (0-159) polar to x, y
+; Inputs: theta in x, radius in y
+; Outputs: x in x, y in y
+
+; 1. get cos(theta) (8 bits, signed)
+; 2. x = r * cos(theta), stash x
 ; 3. get sin(theta)
-; 4. multiply r by sin(theta), put high byte in polary
-; 5. multiply polary by 40, put into polar_result (2 bytes)
-; 6. add polarx to polar_result (or subtract if polarx is negative)
-
-; inputs: theta in x, radius in y
-
-from_polar     STX theta
-               sty radius  
+; 4. y = r * sin(theta)
+; 5. retrieve x from stack
+polar_to_rect     
+               stx theta
+               sty radius
                lda costab,x
-               tax
-               jsr mpy     
-                           ; Note, we discard the low byte because we're doing fixed point.
+               tax           ; now x=cos(theta)
+               jsr mpy       ; multiply y (radius) by x (cosine)
+
+               ; Discard the low byte because we're doing fixed point.
+               ; This is scaled 50%, which may be wrong.
                lda result+1
-                           ; this is scaled 50%, which is wrong
-               sta polarx  
+               pha      ; stash x result on stack  
 
                ldx theta   
                lda sintab,x
-               tax
-               ldy radius  
-               jsr mpy     
-               lda result+1
-                           ; this is scaled 50%, which is wrong
-               sta polary  
+               tax           ; now x=sin(theta)
+               ldy radius    ; y=radius
+               jsr mpy       ; multiply y (radius) by x(sine)
 
+               ; Discard the low byte because we're doing fixed point.
+               ; This is scaled 50%, which may be wrong.
+               lda result+1
                tay
+
+               pla      ; get x from stack
+               tax                
+               rts
+
+; Convert from r, theta (0-159) polar to offset from 0 (x+40*y)
+; Inputs: theta in x, radius in y
+; Outputs: location in polar_result (word)
+
+; 1. convert r,theta to get x,y
+; 2. multiply y by 40, put into polar_result (2 bytes)
+; 3. add x to polar_result (or subtract if polarx is negative)
+polar_to_screen
+               jsr polar_to_rect ; results in x,y
+               stx polarx
                ldx #40     
                jsr mpy     ; multiply polary by 40
 
-                           ; copy 2 byte signed result to polar_result
+               ; copy 2 byte signed result to polar_result
                lda result+1
                sta polar_result+1
                lda result  
                sta polar_result
 
-                           ; add (signed) polar x to polar result -- this part is
-                           ; annoying, since I can't figure out how to get the
-                           ; signed add to work when polarx is negative...
-               lda polarx  
-               beq from_polar_exit
+               ; add (signed) polar x to polar result -- this part is
+               ; annoying, since I can't figure out how to get the
+               ; signed add to work when polarx is negative...
+               lda polarx
+               beq polar_to_screen_exit
                bpl polar_xpos
 
-                           ; negate a:
+               ; negate a:
                eor #$ff    
                clc
                adc #$01    
-                           ; stash updated polarx
+               ; stash updated polarx
                sta polarx  
-                           ; subtract polarx from polar_result
+               ; subtract polarx from polar_result
                lda polar_result
                sec
                sbc polarx  
                sta polar_result
-               bcs from_polar_exit
+               bcs polar_to_screen_exit
                dec polar_result+1
-               jmp from_polar_exit
+               jmp polar_to_screen_exit
 
+; polarx is positive, in 'a'. add to polar_result
 polar_xpos     clc
-               ADC polar_result
+               adc polar_result
                sta polar_result
-               bcc from_polar_exit
+               bcc polar_to_screen_exit
                inc polar_result+1
 
-from_polar_exit rts
+polar_to_screen_exit
+               rts
 
 
 ; there must be a way to reduce these...
 theta          byte 0
 radius         byte 0
 polarx         byte 0
-polary         byte 0
+
 ; zero page
 polar_result   = $fd
 
-sintab40       byte $0A,$1E,$31,$42,$52,$61,$6C,$75,$7B,$7F,$7F,$7B,$75,$6C,$61,$52,$42,$31,$1E,$0A,$F6,$E2,$CF,$BE,$AE,$9F,$94,$8B,$85,$81,$81,$85,$8B,$94,$9F,$AE,$BE,$CF,$E2,$F6,$0A
-costab40       byte $7F,$7B,$75,$6C,$61,$52,$42,$31,$1E,$0A,$F6,$E2,$CF,$BE,$AE,$9F,$94,$8B,$85,$81,$81,$85,$8B,$94,$9F,$AE,$BE,$CF,$E2,$F6,$0A,$1E,$31,$42,$52,$61,$6C,$75,$7B,$7F,$7f
-
-sintab         byte $04, $0e, $18, $22, $2c, $35, $3e, $47, $4f, $57, $5e, $65, $6a, $70, $74, $78, $7b, $7d, $7e, $7e, $7e, $7d, $7b, $78, $75, $70, $6b, $65, $5f, $58, $50, $48, $40, $37, $2d, $23, $1a, $0f, $05, $fc, $f2, $e8, $de, $d4, $cb, $c2, $b9, $b1, $a9, $a2, $9b, $96, $90, $8c, $88, $85, $83, $82, $82, $82, $83, $85, $88, $8b, $90, $95, $9b, $a1, $a8, $b0, $b8, $c0, $c9, $d3, $dd, $e6, $f1, $fb
-costab         byte $7e, $7e, $7c, $7a, $76, $73, $6e, $68, $62, $5c, $54, $4c, $44, $3b, $32, $28, $1f, $15, $0a, $01, $f7, $ed, $e3, $d9, $cf, $c6, $bd, $b5, $ad, $a5, $9f, $98, $93, $8e, $8a, $87, $84, $83, $82, $82, $82, $84, $86, $8a, $8d, $92, $98, $9e, $a4, $ac, $b4, $bc, $c5, $ce, $d8, $e1, $eb, $f6, $01, $09, $13, $1d, $27, $31, $3a, $43, $4b, $53, $5b, $61, $68, $6d, $72, $76, $79, $7c, $7d, $7e
+sintab byte $02,$07,$0c,$11,$16,$1a,$1f,$24,$29,$2e,$32,$37,$3b,$3f,$44,$48,$4c,$50,$54,$57,$5b,$5e,$61,$65,$68,$6a,$6d,$6f,$72,$74,$76,$77,$79,$7a,$7b,$7c,$7d,$7e,$7e,$7e,$7e,$7e,$7e,$7d,$7d,$7c,$7a,$79,$78,$76,$74,$72,$70,$6d,$6b,$68,$65,$62,$5f,$5b,$58,$54,$50,$4c,$48,$44,$40,$3c,$37,$33,$2e,$29,$25,$20,$1b,$16,$11,$0c,$07,$02,$fe,$f9,$f4,$ef,$ea,$e6,$e1,$dc,$d7,$d2,$ce,$c9,$c5,$c1,$bc,$b8,$b4,$b0,$ac,$a9,$a5,$a2,$9f,$9b,$98,$96,$93,$91,$8e,$8c,$8a,$89,$87,$86,$85,$84,$83,$82,$82,$82,$82,$82,$82,$83,$83,$84,$86,$87,$88,$8a,$8c,$8e,$90,$93,$95,$98,$9b,$9e,$a1,$a5,$a8,$ac,$b0,$b4,$b8,$bc,$c0,$c4,$c9,$cd,$d2,$d7,$db,$e0,$e5,$ea,$ef,$f4,$f9
+costab byte $7e,$7e,$7e,$7d,$7d,$7c,$7a,$79,$78,$76,$74,$72,$70,$6d,$6b,$68,$65,$62,$5f,$5b,$58,$54,$50,$4c,$48,$44,$40,$3c,$37,$33,$2e,$29,$25,$20,$1b,$16,$11,$0c,$07,$02,$fe,$f9,$f4,$ef,$ea,$e6,$e1,$dc,$d7,$d2,$ce,$c9,$c5,$c1,$bc,$b8,$b4,$b0,$ac,$a9,$a5,$a2,$9f,$9b,$98,$96,$93,$91,$8e,$8c,$8a,$89,$87,$86,$85,$84,$83,$82,$82,$82,$82,$82,$82,$83,$83,$84,$86,$87,$88,$8a,$8c,$8e,$90,$93,$95,$98,$9b,$9e,$a1,$a5,$a8,$ac,$b0,$b4,$b8,$bc,$c0,$c4,$c9,$cd,$d2,$d7,$db,$e0,$e5,$ea,$ef,$f4,$f9,$fe,$02,$07,$0c,$11,$16,$1a,$1f,$24,$29,$2e,$32,$37,$3b,$3f,$44,$48,$4c,$50,$54,$57,$5b,$5e,$61,$65,$68,$6a,$6d,$6f,$72,$74,$76,$77,$79,$7a,$7b,$7c,$7d,$7e,$7e
