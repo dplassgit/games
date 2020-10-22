@@ -11,6 +11,7 @@ start         jmp start_game
                
 incasm "copyMacros.asm"
 incasm "libDraw.asm"
+incasm "libTest.asm"
                
 start_game
               jsr draw_hud
@@ -20,13 +21,14 @@ reset_bg
               LDY #0
               sty angle
 
-bg_loop
+bg_loop       jsr polar_one
               jsr draw_background
-              jsr sweep_radar
+bg_loop2      jsr sweep_radar
 
 waiting       LDA 151
               cmp #$ff
-              beq bg_loop
+              ;beq waiting
+              beq bg_loop2
 ;; alternatively: beq waiting
 
 akey          CMP #"0"
