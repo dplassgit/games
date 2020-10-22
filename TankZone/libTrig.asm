@@ -1,3 +1,5 @@
+incasm "libFixedpoint.asm"
+
 ; Convert from r, theta (0-159) polar to x, y
 ; Inputs: theta in x, radius in y
 ; Outputs: x in x, y in y

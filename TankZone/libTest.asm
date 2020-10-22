@@ -1,7 +1,9 @@
-polar_test     LDA #159
-               sta angle2
+incasm "libTrig.asm"
 
-polar_loop     ldx angle2
+polar_test     LDA #159
+               sta testangle
+
+polar_loop     ldx testangle
                dex
                ldy #23 ; radius
                ; theta in x, radius in y
@@ -19,11 +21,11 @@ polar_loop     ldx angle2
                ldy #0
                lda #"."
                sta (polar_result),y
-               dec angle2
+               dec testangle
                bne polar_loop
 
                lda #"*"
                sta $81f3
                rts
                
-angle2 byte 0
+testangle byte 0

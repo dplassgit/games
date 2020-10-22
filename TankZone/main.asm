@@ -10,10 +10,7 @@
 start         jmp start_game
                
 incasm "copyMacros.asm"
-incasm "libFixedpoint.asm"
-incasm "libTrig.asm"
 incasm "libDraw.asm"
-incasm "libTest.asm"
                
 start_game
               jsr draw_hud
