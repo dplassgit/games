@@ -29,7 +29,7 @@ polar_loop     ldx testangle
                rts
                
 polar_one      ldy #23 ;radius
-               ldx angle
+               ldx angle+1
                jsr polar_to_screen
 
                ; For the center, add 32768+12*40+19 = 33267, in hex 81f3
@@ -41,7 +41,7 @@ polar_one      ldy #23 ;radius
                adc polar_result+1
                sta polar_result+1
                ldy #0
-               lda angle
+               lda angle+1
                sta (polar_result),y
                rts
 

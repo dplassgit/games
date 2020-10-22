@@ -22,17 +22,17 @@ horizon_loop   sta horizon_org,x
                rts
 
 draw_background
-               ldy angle
+               ldy angle+1
                COPY40 bg0,bg_org
-               ldy angle
+               ldy angle+1
                COPY40 bg1,bg_org+40
-               ldy angle
+               ldy angle+1
                COPY40 bg2,bg_org+80
-               ldy angle
+               ldy angle+1
                COPY40 bg3,bg_org+120
-               ldy angle
+               ldy angle+1
                COPY40 bg4,bg_org+160
-               ldy angle
+               ldy angle+1
                COPY40 bg5,bg_org+200
 
                lda showtop

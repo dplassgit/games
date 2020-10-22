@@ -1,13 +1,14 @@
-; Signed multiply x by y and put high byte of value into a
 
 test           LDX #14
                ldy #$F6    
-               
 
+; Signed multiply.
+; Inputs: x and y
+; Outputs: high byte of value into a, full 16 bits in RESULT
 mpy            STX NUM1
                STY NUM2    
-               clc
-               clv
+               ;clc
+               ;clv
                LDA NUM1    ;Compute sign of result
                EOR NUM2    
                PHP         ;Save it on the stack
@@ -33,8 +34,9 @@ T2             JSR MUL1BYTE;Do the unsigned multiplication
                LDA #0      
                SBC RESULT+1
                STA RESULT+1
-T3             rts
+T3             RTS
 
+; multiply num1 by num2, result in RESULT
 MUL1BYTE       LDA #$80    ;Preload sentinel bit into RESULT
                STA RESULT  
                ASL A       ;Initialize RESULT hi byte to 0
