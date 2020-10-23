@@ -1,14 +1,14 @@
 ; ========================================
 ; Project   : TankZone
 ; Target    : Commodore PET 2001+
-; Comments  : 
+; Comments  :
 ; Author    : David Plass
 ; ========================================
 
 *=$0500
 
 start         jmp start_game
-               
+
 incasm "copyMacros.asm"
 incasm "libDraw.asm"
 incasm "libTest.asm"
@@ -26,8 +26,9 @@ showtop       byte 1
 start_game
               jsr draw_hud
               jsr draw_horizon
+              jsr polar_test
 
-reset_bg
+reset_angle
               LDY #0
               sty angle
               sty angle+1
@@ -39,19 +40,19 @@ bg_loop2      jsr sweep_radar
 waiting       LDA 151
               cmp #$ff
               ; beq waiting ; will not update radar
-              ; beq bg_loop2; update radar but not background
-              beq bg_loop ; will update background and radar
+              beq bg_loop2; update radar but not background
+              ; beq bg_loop ; will update background and radar
 
 akey          CMP #"0"
               bne maybe_left
-              beq reset_bg
+              beq reset_angle
 
 maybe_left    CMP #"j"
               bne maybe_right
 
               ; Decrement the angle by #ANGLE_INCREMENT.
               ; If it goes negative, reset to 40960 =
-              ; 160 ($A0) in the high byte and 0 in the low byte 
+              ; 160 ($A0) in the high byte and 0 in the low byte
               lda angle
               sec
               sbc #ANGLE_INCREMENT
@@ -83,11 +84,11 @@ maybe_right   CMP #"l"
               INC angle+1
 after_inc     lda angle+1
               cmp #BG_LENGTH
-              beq reset_bg
+              beq reset_angle
               bne bg_loop
 
 maybe_quit    CMP #"q"
-              bne mayble_toggle
+              bne maybe_toggle
               beq quit
 
               ; Toggle the top reticle

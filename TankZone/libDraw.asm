@@ -1,15 +1,20 @@
 ;; Draw the heads-up display: enemy, score, radar
 draw_hud
+               ; The "enemy" messages should change as there are, you know,
+               ; enemies.
                COPY0 enemy,enemy_1_org
                COPY0 enemy_left,enemy_2_org
+
                COPY0 score,score_org
 
+               ; Draw blank radar
                COPY0 radar1,radar1_org
                COPY0 radar2,radar2_org
                COPY0 radar3,radar3_org
-               
+
                rts
 
+;; Draw the horizon from right to left, & the bottom reticle
 draw_horizon   ldx #40
                lda #99
 horizon_loop   sta horizon_org,x
@@ -21,6 +26,8 @@ horizon_loop   sta horizon_org,x
                COPY0 bottom_ret3,bottom_ret3_org
                rts
 
+;; Draw the background at the current angle. Currently uses
+;; the high byte of the angle, wihch maxes out at 160
 draw_background
                ldy angle+1
                COPY40 bg0,bg_org
@@ -42,7 +49,7 @@ draw_background
                COPY0_NOSPACE top_ret3,top_ret3_org
 
 bg_exit        rts
-            
+
 sweep_radar
                inc sweep_angle
                lda sweep_angle
@@ -58,7 +65,7 @@ sweep_radar
                lda sweep_chars,x
                sta sweep_org
                rts
-               
+
 horizon_org    = 32767+40*14
 
 radar1_org     = 32768+19
@@ -85,13 +92,13 @@ bottom_ret2_org = bottom_ret1_org+40
 bottom_ret3_org = bottom_ret2_org+42
 bottom_ret1     byte 101,$20,$20,$20,103,0
 bottom_ret2     byte 99,99,$5D,99,99,0
-bottom_ret3     byte $5d,0
+bottom_ret3     = radar1
 
 ; top reticle
 top_ret1_org   = 32768+9*40+19
 top_ret2_org   = top_ret1_org+40-2
 top_ret3_org   = top_ret2_org+39
-top_ret1       byte $5D,0
+top_ret1       = radar1
 top_ret2       byte 100,100,93,100,100,0
 top_ret3       byte 103,$20,$20,$20,$20,$20,101,0
 
@@ -109,5 +116,3 @@ bg2 text '         .               .   .             .    J',$40,'K           . 
 bg3 text '   .           NMNM                N',$63,'M .        .        NM     .     .              NMNM                N',$63,'M .     .   *    ',$65,'  ',$65,'            NMNM        Q       ',0
 bg4 text '     ',$64,'NM   .  N N  M',$64,'.     -     ',$64,'N   M                 N  V',$63,'M          ',$64,'NM   .     N N  M',$64,'.     W     ',$64,'N   M              N   M    +     ',$64,'N  M M           NM  ',0
 bg5 text '    NN  M    N N     M          N      ',$65,'    NM  NM     N  N M M        NN  M       N N     M          N      ',$65,'    NM      N     M        N     M M   NM    N  M ',0
-
-      

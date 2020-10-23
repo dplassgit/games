@@ -9,7 +9,7 @@ incasm "libFixedpoint.asm"
 ; 3. get sin(theta)
 ; 4. y = r * sin(theta)
 ; 5. retrieve x from stack
-polar_to_rect     
+polar_to_rect
                stx theta
                sty radius
                lda costab,x
@@ -19,9 +19,9 @@ polar_to_rect
                ; Discard the low byte because we're doing fixed point.
                ; This is scaled 50%, which may be wrong.
                lda result+1
-               pha      ; stash x result on stack  
+               pha      ; stash x result on stack
 
-               ldx theta   
+               ldx theta
                lda sintab,x
                tax           ; now x=sin(theta)
                ldy radius    ; y=radius
@@ -33,7 +33,7 @@ polar_to_rect
                tay
 
                pla      ; get x from stack
-               tax                
+               tax
                rts
 
 ; Convert from r, theta (0-159) polar to offset from 0 (x+40*y)
@@ -46,13 +46,13 @@ polar_to_rect
 polar_to_screen
                jsr polar_to_rect ; results in x,y
                stx polarx
-               ldx #40     
+               ldx #40
                jsr mpy     ; multiply polary by 40
 
                ; copy 2 byte signed result to polar_result
                lda result+1
                sta polar_result+1
-               lda result  
+               lda result
                sta polar_result
 
                ; add (signed) polar x to polar result
