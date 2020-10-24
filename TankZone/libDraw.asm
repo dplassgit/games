@@ -2,10 +2,10 @@
 draw_hud
                ; The "enemy" messages should change as there are, you know,
                ; enemies.
-               COPY0 enemy,enemy_1_org
-               COPY0 enemy_left,enemy_2_org
+               COPY0 enemy_in_range_msg,enemy_1_org
+               COPY0 enemy_left_msg,enemy_2_org
 
-               COPY0 score,score_org
+               COPY0 score_msg,score_org
 
                ; Draw blank radar
                COPY0 radar1,radar1_org
@@ -80,11 +80,11 @@ sweep_angle    byte 0
 sweep_chars    byte 67,78,$5d,77
 
 enemy_1_org    = 32768
-enemy          null 'enemy in range'
+enemy_in_range_msg null 'enemy in range'
 enemy_2_org    = 32768+80
-enemy_right    null 'enemy to right'
-enemy_left     null 'enemy to left'
-enemy_rear     null 'enemy to rear'
+enemy_right_msg null 'enemy to right'
+enemy_left_msg  null 'enemy to left'
+enemy_rear_msg  null 'enemy to rear'
 
 ; bottom reticle
 bottom_ret1_org = 32768+16*40+17
@@ -103,7 +103,7 @@ top_ret2       byte 100,100,93,100,100,0
 top_ret3       byte 103,$20,$20,$20,$20,$20,101,0
 
 score_org      = 32768+40+26
-score          null 'score'
+score_msg      null 'score'
 
 ; backgrounds
 bg_org         = 32768+8*40
