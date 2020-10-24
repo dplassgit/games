@@ -24,11 +24,11 @@ angle         word 0
 ;; Whether we should show the top reticle or not. For debugging.
 showtop       byte 1
 
-start_game
-              jsr create_enemies
-              jsr draw_hud
+start_game    jsr draw_hud
               jsr draw_horizon
+              jsr create_enemies
               jsr polar_test
+              jsr plot_enemies
 
 reset_angle
               LDY #0
