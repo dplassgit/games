@@ -1,7 +1,8 @@
 ; ========================================
 ; Project   : TankZone
-; Target    : Commodore PET 2001+
-; Comments  :
+; Target    : Commodore PET 4016+
+; Comments  : For some reason 2001 doesn't load at all, and 3016 doesn't accept
+;           ; keyboard input
 ; Author    : David Plass
 ; ========================================
 
@@ -12,6 +13,7 @@ start         jmp start_game
 incasm "copyMacros.asm"
 incasm "libDraw.asm"
 incasm "libTest.asm"
+incasm "libEnemies.asm"
 
 ;; How much to increment the low byte of "angle" each time we move.
 ANGLE_INCREMENT=16
@@ -22,8 +24,8 @@ angle         word 0
 ;; Whether we should show the top reticle or not. For debugging.
 showtop       byte 1
 
-
 start_game
+              jsr create_enemies
               jsr draw_hud
               jsr draw_horizon
               jsr polar_test
@@ -40,8 +42,8 @@ bg_loop2      jsr sweep_radar
 waiting       LDA 151
               cmp #$ff
               ; beq waiting ; will not update radar
-              beq bg_loop2; update radar but not background
-              ; beq bg_loop ; will update background and radar
+              ; beq bg_loop2; update radar but not background
+              beq bg_loop ; will update background and radar
 
 akey          CMP #"0"
               bne maybe_left
