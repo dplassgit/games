@@ -1,11 +1,9 @@
+;; Based on code from http://nparker.llx.com/a2/mult.html
 
-test           LDX #14
-               ldy #$F6
-
-; Signed multiply.
-; Inputs: x and y
-; Outputs: high byte of value into a, full 16 bits in RESULT
-mpy            STX NUM1
+;; Signed 8-bit multiply.
+;; Inputs: x and y
+;; Outputs: high byte of value into a, full 16 bits in RESULT
+signed_mpy     STX NUM1
                STY NUM2
                LDA NUM1    ;Compute sign of result
                EOR NUM2
@@ -22,7 +20,7 @@ T1             LDA NUM2    ;Is NUM2 negative?
                CLC
                ADC #1
                STA NUM2
-T2             JSR MUL1BYTE;Do the unsigned multiplication
+T2             JSR unsigned_mpy ;Do the unsigned multiplication
                PLP         ;Get sign of result
                BPL T3
                LDA #0      ;If negative, negate result
@@ -34,8 +32,10 @@ T2             JSR MUL1BYTE;Do the unsigned multiplication
                STA RESULT+1
 T3             RTS
 
-; multiply num1 by num2, result in RESULT
-MUL1BYTE       LDA #$80    ;Preload sentinel bit into RESULT
+;; Unsigned 8-bit multiply
+;; Inputs: num1 and NUM2
+;; Output: in RESULT
+unsigned_mpy   LDA #$80    ;Preload sentinel bit into RESULT
                STA RESULT
                ASL A       ;Initialize RESULT hi byte to 0
                DEC NUM1

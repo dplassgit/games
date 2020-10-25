@@ -1,5 +1,30 @@
-; create a random # of enemies and populate the arrays ,below
 incasm "macroMath.asm"
+
+num_enemies     byte 0
+; Whether this enemy exists
+enemy_exists    dcb 10,0
+; The theta is from 0 to $a0
+enemy_theta     dcb 10,0
+; The radius from -127 to +127
+enemy_radius    dcb 10,0
+; Equivalent x & y locations, maybe.
+enemy_x         dcw 10,0
+enemy_y         dcw 10,0
+; Enumeration of enemy types
+NONE=0
+SQUARE_BLOCK=1
+PYRAMID_BLOCK=2
+TANK_ENEMY=3
+UFO_ENEMY=4
+TRIANGULAR_TANK_ENEMY=5
+enemy_type      dcb 10,0
+; Health level of each enemy
+enemy_health    dcb 10,0
+
+;; Create a random # of enemies and populate the arrays
+;; Inputs: none
+;; Outputs: none
+;; Side effects: destroys a, x, y
 
 create_enemies
                 ; pick a random number
@@ -14,11 +39,11 @@ create_enemy
 
                 ; pick a radius
                 RND
-                and #$7  ; only keep lower 4 bits
+                and #$7  ; TEMPORARY: only keep lower 4 bits
                 sta enemy_radius,x
 
                 RND
-                ; change to a random number between 0 and 3
+                ; Change to a random number between 0 and 3
                 and #3
                 clc
                 adc #1 ; now 1-4...ignore type 5 for now.
@@ -34,21 +59,21 @@ store_theta     sta enemy_theta,x
                 bne create_enemy
                 rts
 
-; write the enemies in the polar circle
-; CAREFUL: x and y are parameters to polar_to_screen...
 
+;; Plot all enemies in the polar circle
+;; Inputs: none
+;; Outputs: none
+;; Side effects: destroys a, x, y
 plot_enemies    lda num_enemies
                 pha     ; stack has # enemies
                 tax
 
-next_enemy      ; x is index/must be enemy #
+next_enemy      ; x must be enemy # (index)
                 ldy enemy_radius,x
                 lda enemy_theta,x
                 tax
-
-                ; theta in x, radius in y
+                ; theta in x, radius in y, output in polar_result
                 jsr polar_to_screen
-                ; x,y destroyed
 
                 ; poke it in the fake radar
                 lda #<POLAR_CENTER ; sweep_org
@@ -60,7 +85,7 @@ next_enemy      ; x is index/must be enemy #
                 sta polar_result+1
 
                 ldy #0
-                ; TODO: get the enemy type
+                ; TODO: use the enemy type for the plot
                 lda #'x'
                 sta (polar_result),y
 
@@ -68,28 +93,7 @@ next_enemy      ; x is index/must be enemy #
                 tax ; x has index
                 dex ; go to next index
                 txa ; a has next index
-                pha ; push next index
-                bne next_enemy
-                pla ; whoops don't need it
+                pha ; push next index onto stack
+                bne next_enemy ; (flags from the dex)
+                pla ; whoops didn't need to push it two cycles ago.
                 rts
-
-num_enemies     byte 0
-; whether this enemy exists
-enemy_exists    dcb 10,0
-; the theta is from 0 to $a0
-enemy_theta     dcb 10,0
-; the radius from -127 to +127
-enemy_radius    dcb 10,0
-; Equivalent x & y locations, maybe.
-enemy_x         dcw 10,0
-enemy_y         dcw 10,0
-; Enumeration of enemy types
-NONE=0
-SQUARE_BLOCK=1
-PYRAMID_BLOCK=2
-TANK_ENEMY=3
-UFO_ENEMY=4
-TRIANGULAR_TANK_ENEMY=5
-enemy_type      dcb 10,0
-; Health level of enemy
-enemy_health    dcb 10,0

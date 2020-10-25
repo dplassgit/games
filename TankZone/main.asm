@@ -31,25 +31,25 @@ start_game    jsr draw_hud
               jsr plot_enemies
 
 reset_angle
-              LDY #0
+              ldy #0
               sty angle
               sty angle+1
 
-bg_loop       ;jsr polar_one
+bg_loop       ; jsr polar_one
               jsr draw_background
 bg_loop2      jsr sweep_radar
 
-waiting       LDA 151
+waiting       lda 151   ; gets a character
               cmp #$ff
               ; beq waiting ; will not update radar
               ; beq bg_loop2; update radar but not background
               beq bg_loop ; will update background and radar
 
-akey          CMP #"0"
+akey          cmp #"0"
               bne maybe_left
               beq reset_angle
 
-maybe_left    CMP #"j"
+maybe_left    cmp #"j"
               bne maybe_right
 
               ; Decrement the angle by #ANGLE_INCREMENT.
@@ -67,13 +67,13 @@ maybe_left    CMP #"j"
               bne bg_loop
 
 set_angle_to_max
-              LDY #BG_LENGTH
+              ldy #BG_LENGTH
               sty angle+1
               ldy #0
               sty angle
-              jmp bg_loop
+              beq bg_loop
 
-maybe_right   CMP #"l"
+maybe_right   cmp #"l"
               bne maybe_quit
 
               ; increment the angle. if it reaches $a0 in the high byte
@@ -82,19 +82,19 @@ maybe_right   CMP #"l"
               clc
               adc #ANGLE_INCREMENT
               sta angle
-              BNE after_inc
-              INC angle+1
+              bne after_inc
+              inc angle+1
 after_inc     lda angle+1
               cmp #BG_LENGTH
               beq reset_angle
               bne bg_loop
 
-maybe_quit    CMP #"q"
+maybe_quit    cmp #"q"
               bne maybe_toggle
               beq quit
 
               ; Toggle the top reticle
-maybe_toggle  CMP #"t"
+maybe_toggle  cmp #"t"
               bne bg_loop
               sec
               lda #1

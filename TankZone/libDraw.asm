@@ -1,6 +1,6 @@
 ;; Draw the heads-up display: enemy, score, radar
 draw_hud
-               ; The "enemy" messages should change as there are, you know,
+               ; The "enemy" messages should change when there are, you know,
                ; enemies.
                COPY0 enemy_in_range_msg,enemy_1_org
                COPY0 enemy_left_msg,enemy_2_org
@@ -27,7 +27,7 @@ horizon_loop   sta horizon_org,x
                rts
 
 ;; Draw the background at the current angle. Currently uses
-;; the high byte of the angle, wihch maxes out at 160
+;; the high byte of the angle, which maxes out at 160
 draw_background
                ldy angle+1
                COPY40 bg0,bg_org

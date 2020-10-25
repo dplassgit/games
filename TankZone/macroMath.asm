@@ -1,4 +1,7 @@
-; Puts a random number into A. Preserves x
+; Puts a random number into A. 
+; Inputs: none.
+; Outputs: random number in a
+; Side effects: preserves x, probably destroys y
 defm    RND
         txa
         pha
