@@ -81,7 +81,7 @@
             <Breakpoints />
             <Bookmarks />
             <Topmost>False</Topmost>
-            <FileOpen>False</FileOpen>
+            <FileOpen>True</FileOpen>
         </SourceFile>
         <SourceFile>
             <Name>libEnemies.asm</Name>
@@ -91,8 +91,8 @@
             <Regions />
             <Breakpoints />
             <Bookmarks />
-            <Topmost>False</Topmost>
-            <FileOpen>False</FileOpen>
+            <Topmost>True</Topmost>
+            <FileOpen>True</FileOpen>
         </SourceFile>
         <SourceFile>
             <Name>libFixedpoint.asm</Name>
@@ -103,7 +103,7 @@
             <Breakpoints />
             <Bookmarks />
             <Topmost>False</Topmost>
-            <FileOpen>True</FileOpen>
+            <FileOpen>False</FileOpen>
         </SourceFile>
         <SourceFile>
             <Name>libTest.asm</Name>
@@ -124,14 +124,25 @@
             <Regions />
             <Breakpoints />
             <Bookmarks />
-            <Topmost>True</Topmost>
+            <Topmost>False</Topmost>
             <FileOpen>True</FileOpen>
         </SourceFile>
         <SourceFile>
             <Name>macroMath.asm</Name>
             <PrgName />
             <FileType>2</FileType>
-            <IncludeInBuild>True</IncludeInBuild>
+            <IncludeInBuild>False</IncludeInBuild>
+            <Regions />
+            <Breakpoints />
+            <Bookmarks />
+            <Topmost>False</Topmost>
+            <FileOpen>False</FileOpen>
+        </SourceFile>
+        <SourceFile>
+            <Name>macroSugar.asm</Name>
+            <PrgName />
+            <FileType>2</FileType>
+            <IncludeInBuild>False</IncludeInBuild>
             <Regions />
             <Breakpoints />
             <Bookmarks />
@@ -147,7 +158,7 @@
             <Breakpoints />
             <Bookmarks />
             <Topmost>False</Topmost>
-            <FileOpen>True</FileOpen>
+            <FileOpen>False</FileOpen>
         </SourceFile>
         <SourceFile>
             <Name>main.bas</Name>

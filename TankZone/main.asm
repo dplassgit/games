@@ -11,15 +11,17 @@
 start         jmp start_game
 
 incasm "copyMacros.asm"
+incasm "macroSugar.asm"
 incasm "libDraw.asm"
 incasm "libTest.asm"
 incasm "libEnemies.asm"
 
 ;; How much to increment the low byte of "angle" each time we move.
-ANGLE_INCREMENT=16
+ANGLE_INCREMENT=1
 ;; Represents the "angle"
 ;; Max is $a000 (=40960 = 160*256; 160 is the width of the background)
 angle         word 0
+prev_angle    word $ffff
 
 ;; Whether we should show the top reticle or not. For debugging.
 showtop       byte 1
@@ -35,9 +37,17 @@ reset_angle
               sty angle
               sty angle+1
 
-bg_loop       ; jsr polar_one
+bg_loop       lda angle+1             
+              cmp prev_angle
+              beq bg_loop2
+              ; only draw the background etc, if
+              ; we actually moved.
+              sta prev_angle
+              ; jsr polar_one
               jsr draw_background
-bg_loop2      jsr sweep_radar
+              jsr draw_visible_enemies
+bg_loop2      
+              jsr sweep_radar
 
 waiting       lda 151   ; gets a character
               cmp #$ff
@@ -103,4 +113,6 @@ maybe_toggle  cmp #"t"
 
               jmp bg_loop
 
-quit          rts
+quit          brk
+              jmp bg_loop
+              rts

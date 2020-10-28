@@ -50,6 +50,56 @@ draw_background
 
 bg_exit        rts
 
+
+draw_visible_enemies
+               ; first, clear the enemy "row"
+               ldx #0
+               lda #$20
+clear_enemy_loop
+               sta temp_enemy_org,x
+               inx
+               cpx #40
+               bne clear_enemy_loop
+
+               ; now, draw the visible enemies.
+               ldy num_enemies
+               dey ; off by one...
+
+draw_enemy_loop
+; say enemy_theta is 0
+; and angle+1 is 0.
+
+; we want:
+; enemy_theta >= angle+1  (true: 0 >= 0)
+; enemy_theta < angle+1 plus 40 (true: 0 < 40)
+; =
+; enemy_theta - 40 < angle+1 (true, -40 < 0) ; 
+; SIGNED COMPARISON BUT! angle+1 can go up to 160, which is a0, which looks negative...
+
+               lda enemy_theta,y
+               cmp angle+1
+               blt draw_next_enemy
+
+               sec
+               sbc #40
+               cmp angle+1
+; deal with overflow
+               bcs draw_next_enemy ; a is > angle+1, too big.
+               ; draw it at an offset based on the enemy's relative
+               ; angle to our angle
+               sec
+               lda enemy_theta,y
+               sbc angle+1
+               ; now A has the new angle, but can't index off A; index off x
+               tax
+               tya ; y is the enemy index, it's the value to store
+               sta temp_enemy_org,x
+
+draw_next_enemy
+               dey
+               bne draw_enemy_loop
+               rts
+
 sweep_radar
                inc sweep_angle
                lda sweep_angle
@@ -66,7 +116,10 @@ sweep_radar
                sta sweep_org
                rts
 
+; NOTE, we start at the END of the lines, so we need to start at 32767
 horizon_org    = 32767+40*14
+; this one starts at the beginning of the ine.
+temp_enemy_org = horizon_org+41
 
 radar1_org     = 32768+19
 radar2_org     = radar1_org+78
@@ -107,9 +160,9 @@ score_msg      null 'score'
 
 ; backgrounds
 bg_org         = 32768+8*40
-; bgm            null '         1111111111222222222233333333334444444444555555555566666666667777777777888888888899999999990000000000111111111122222222223333333333444444444455555555556'
-; bgn            null '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890'
 BG_LENGTH      = 160
+;bgm            null '          111111111122222222223333333333444444444455555555556666666666777777777788888888889999999999aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffff'
+;bgn            null '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789'
 bg0 text '    .       .        .  W         .             U',$40,'I         .             Q     *          .            .          UI    .   ',$64,'    .      .                      ',0
 bg1 text '                 +                        *    ',$40,$73,$20,$6B,$40,'                 -                                             JK       N M                 .               ',0
 bg2 text '         .               .   .             .    J',$40,'K           .             .                  .   -             .          ',$65,'  ',$65,'                   .            ',0
