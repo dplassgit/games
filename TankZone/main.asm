@@ -10,11 +10,11 @@
 
 start         jmp start_game
 
-incasm "copyMacros.asm"
+incasm "macroCopy.asm"
 incasm "macroSugar.asm"
+incasm "libEnemies.asm"
 incasm "libDraw.asm"
 incasm "libTest.asm"
-incasm "libEnemies.asm"
 
 ;; How much to increment the low byte of "angle" each time we move.
 ANGLE_INCREMENT=1

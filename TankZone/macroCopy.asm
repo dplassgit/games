@@ -6,7 +6,7 @@ defm           COPY0
                beq @exitmac
                sta /2,y
                iny
-               jmp @nextch
+               bne @nextch
 @exitmac
                endm
 
@@ -21,7 +21,7 @@ defm           COPY0_NOSPACE
                beq @nexty
                sta /2,y
 @nexty         iny
-               jmp @nextch
+               bne @nextch
 @exitmac
                endm
 
@@ -30,16 +30,14 @@ defm           COPY0_NOSPACE
 defm           COPY40
                ldx #0
 @nextch        lda /1,y
-               beq @start_over
-               sta /2,x
+               bne @storeit
+               ldy #0
+               beq @nextch
+@storeit       sta /2,x
                iny
                inx
                cpx #40
-               beq @exitmac
                bne @nextch
-
-@start_over    ldy #0  ; start from the beginning of the string
-               beq @nextch
 
 @exitmac
                endm
