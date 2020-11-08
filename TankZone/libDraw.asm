@@ -54,7 +54,7 @@ bg_exit        rts
 draw_visible_enemies
                ; first, clear the enemy "row"
                ldx #0
-               lda #$20
+               lda #' '
 clear_enemy_loop
                sta temp_enemy_org,x
                inx
@@ -62,41 +62,78 @@ clear_enemy_loop
                bne clear_enemy_loop
 
                ; now, draw the visible enemies.
-               ldy num_enemies
-               dey ; off by one...
+               ldy #0
+
+               lda angle+1
+               sta val1 ; val1 = angle
+               clc
+               adc #40
+               sta val3 ;val3 = angle+40
+
+               ; make angle - 120, put in val4
+               lda angle+1
+               sec
+               sbc #120
+               sta val4
 
 draw_enemy_loop
-; say enemy_theta is 0
-; and angle+1 is 0.
+; 1. if angle > 120 then goto 2a
+; 1a: if angle <= et and et < angle+40 then goto 3a
+; 1b: goto 4
+; 2a: if et > angle then goto 3a
+; 2b: if et < angle-120 then goto 3b
+; 2c: goto 4
+; 3a. x = et-angle. show it. goto 5.
+; 3b. d=160-angle. x = d + et. show it. goto 5
+; 4. skip it
+; 5. next enemy
+               ldx enemy_theta,y
+               lda angle+1
+               cmp #120
+               bgt twoa
 
-; we want:
-; enemy_theta >= angle+1  (true: 0 >= 0)
-; enemy_theta < angle+1 plus 40 (true: 0 < 40)
-; =
-; enemy_theta - 40 < angle+1 (true, -40 < 0) ; 
-; SIGNED COMPARISON BUT! angle+1 can go up to 160, which is a0, which looks negative...
+onea           
+               stx val2 ; val2 = et               
+               jsr is_between   ; is angle (val1) <= et and et < angle+40 (val3)
+               bcc threea       ; carry clear = yes, is between
+               bcs skip_to_drawing_next_enemy   ; else, is not between.
 
-               lda enemy_theta,y
-               cmp angle+1
-               blt draw_next_enemy
+twoa           ; if et(x) > angle, goto 3a
+               cpx angle+1       ; x is et
+               bgt threea
 
+twob           ; if et(x) < angle-120, goto 3b
+               cpx val4
+               blt threeb
+               bge skip_to_drawing_next_enemy
+
+; offset = et - angle
+threea         txa      ; a has et
                sec
-               sbc #40
-               cmp angle+1
-; deal with overflow
-               bcs draw_next_enemy ; a is > angle+1, too big.
-               ; draw it at an offset based on the enemy's relative
-               ; angle to our angle
+               sbc angle+1       ; a has et-angle
+               tax      ; x has offset
+               jmp draw_one_enemy
+
+; x has et. d=160-angle. offset = d + et
+threeb         lda #160
                sec
-               lda enemy_theta,y
                sbc angle+1
-               ; now A has the new angle, but can't index off A; index off x
+               ; need to add a+x but can't, so use val2 as a temp
+               sta val2 ; val2 = 160-angle
+               txa 
+               clc
+               adc val2 ; a = x + (160-angle)
                tax
-               tya ; y is the enemy index, it's the value to store
+
+draw_one_enemy 
+               tya       ; y has enemy #
+               clc
+               adc #1
                sta temp_enemy_org,x
 
-draw_next_enemy
-               dey
+skip_to_drawing_next_enemy
+               iny ; bump it here so we start showing from A not @
+               cpy num_enemies
                bne draw_enemy_loop
                rts
 
@@ -161,8 +198,8 @@ score_msg      null 'score'
 ; backgrounds
 bg_org         = 32768+8*40
 BG_LENGTH      = 160
-;bgm            null '          111111111122222222223333333333444444444455555555556666666666777777777788888888889999999999aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffff'
-;bgn            null '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789'
+;bg0            null '          111111111122222222223333333333444444444455555555556666666666777777777788888888889999999999aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffff'
+;bg1            null '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789'
 bg0 text '    .       .        .  W         .             U',$40,'I         .             Q     *          .            .          UI    .   ',$64,'    .      .                      ',0
 bg1 text '                 +                        *    ',$40,$73,$20,$6B,$40,'                 -                                             JK       N M                 .               ',0
 bg2 text '         .               .   .             .    J',$40,'K           .             .                  .   -             .          ',$65,'  ',$65,'                   .            ',0

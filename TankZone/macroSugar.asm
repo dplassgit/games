@@ -20,3 +20,13 @@ defm    bgt
         bcs /1
 @alreadyequal
 endm
+
+; Branch if true (via carry)
+defm    btrue
+        bcs /1
+endm
+
+; Branch if false (via carry)
+defm    bfalse
+        bcc /1
+endm
