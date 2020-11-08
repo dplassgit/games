@@ -70,50 +70,31 @@ clear_enemy_loop
                adc #40
                sta val3 ;val3 = angle+40
 
-               ; make angle - 120, put in val4
-               lda angle+1
-               sec
-               sbc #120
-               sta val4
-
 draw_enemy_loop
-; 1. if angle > 120 then goto 2a
-; 1a: if angle <= et and et < angle+40 then goto 3a
-; 1b: goto 4
-; 2a: if et > angle then goto 3a
-; 2b: if et < angle-120 then goto 3b
-; 2c: goto 4
-; 3a. x = et-angle. show it. goto 5.
-; 3b. d=160-angle. x = d + et. show it. goto 5
-; 4. skip it
+; 1a. if angle <= et and et < angle+40 then goto 3a
+; 1b. else if et < 95, if angle <= et+160 < angle+40 then goto 3b
+; 1c. else out of range, goto 4
+
+; 3a. x = et-angle. goto 3c
+; 3b. d=160-angle. x = d + et. 
+; 3c draw it. goto 5
+
+; 4. skip_to_drawing_next_enemy
 ; 5. next enemy
                ldx enemy_theta,y
-               lda angle+1
-               cmp #120
-               bgt twoa
+               stx val2
+               jsr is_between
+               bcc threea       ; yes
 
-onea           
-               stx val2 ; val2 = et               
-               jsr is_between   ; is angle (val1) <= et and et < angle+40 (val3)
-               bcc threea       ; carry clear = yes, is between
-               bcs skip_to_drawing_next_enemy   ; else, is not between.
-
-twoa           ; if et(x) > angle, goto 3a
-               cpx angle+1       ; x is et
-               bgt threea
-
-twob           ; if et(x) < angle-120, goto 3b
-               cpx val4
-               blt threeb
+oneb           cpx #95
                bge skip_to_drawing_next_enemy
-
-; offset = et - angle
-threea         txa      ; a has et
-               sec
-               sbc angle+1       ; a has et-angle
-               tax      ; x has offset
-               jmp draw_one_enemy
-
+               txa
+               clc
+               adc #160
+               sta val2
+               jsr is_between
+               bcs skip_to_drawing_next_enemy ; not between
+               
 ; x has et. d=160-angle. offset = d + et
 threeb         lda #160
                sec
@@ -124,6 +105,13 @@ threeb         lda #160
                clc
                adc val2 ; a = x + (160-angle)
                tax
+               jmp draw_one_enemy
+
+; offset = et - angle
+threea         txa      ; a now has et
+               sec
+               sbc angle+1       ; a has et-angle
+               tax      ; x has offset
 
 draw_one_enemy 
                tya       ; y has enemy #

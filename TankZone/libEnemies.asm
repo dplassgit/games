@@ -28,7 +28,7 @@ enemy_health    dcb 10,0
 
 create_enemies
                 ; pick a random number
-                ldx #10  ; decided by fair dice roll
+                ldx #8  ; decided by fair dice roll
                 stx num_enemies
                 ldx #0
 
