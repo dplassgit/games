@@ -28,7 +28,7 @@ enemy_health    dcb 10,0
 
 create_enemies
                 ; pick a random number
-                ldx #5  ; decided by fair dice roll
+                ldx #10  ; decided by fair dice roll
                 stx num_enemies
                 ldx #0
 
@@ -39,13 +39,13 @@ create_enemy
                 sta enemy_health,x
 
                 ; pick a radius
-      ;          RND
-                txa
-                asl
-                asl
-                asl
-                asl
-                asl     ; * 32
+                RND
+                ;txa
+                ;asl
+                ;asl
+                ;asl
+                ;asl
+                ;asl     ; * 32
                 sta enemy_radius,x
 
                 RND
@@ -55,12 +55,13 @@ create_enemy
                 adc #1 ; now 1-4...ignore type 5 for now.
                 sta enemy_type,x
 
-     ;           RND
-                txa
-                asl
-                asl
-                asl
-                asl     ; * 16
+                ; pick theta
+                RND
+                ;txa
+                ;asl
+                ;asl
+                ;asl
+                ;asl     ; * 16
                 ; can only go from 0 to 160, so if it's too big, truncate
                 cmp #161
                 blt store_theta
