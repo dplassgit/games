@@ -28,7 +28,7 @@ enemy_health    dcb 10,0
 
 create_enemies
                 ; pick a random number
-                ldx #8  ; decided by fair dice roll
+                ldx #12  ; decided by fair dice roll
                 stx num_enemies
                 ldx #0
 
@@ -84,7 +84,6 @@ plot_enemies    lda #0  ; enemy #
 
 next_enemy      ; x must be enemy # (index)
                 lda enemy_radius,x
-                lsr
                 lsr
                 lsr
                 lsr

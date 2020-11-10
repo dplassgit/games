@@ -44,9 +44,11 @@ bg_loop       lda angle+1
               ; only draw the background etc, if
               ; we actually moved.
               sta prev_angle
-              ; jsr polar_one
               jsr draw_background
               jsr draw_visible_enemies
+              ;jsr polar_test    ;; TEMPORARY
+              ;jsr polar_one     ;; TEMPORARY
+              ;jsr plot_enemies  ;; TEMPORARY
 bg_loop2      
               jsr sweep_radar
 

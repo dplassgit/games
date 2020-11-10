@@ -1,6 +1,11 @@
 incasm "libTrig.asm"
 
-POLAR_CENTER=$8325
+
+TEST_RADIUS=13 ; this is actually the diameter, shrug.
+; For the center of the screen, start at 32768+12*40+19 = 33267, in hex 81f3
+; For the lower left, start at 32768+20*40+5=33573, in hex 0x8325
+POLAR_CENTER=32768+19*40+7 ; $8325
+
 
 testangle byte 0
 
@@ -13,7 +18,7 @@ polar_test     lda #BG_LENGTH
 
 polar_loop     ldx testangle
                dex
-               ldy #10 ; radius
+               ldy #TEST_RADIUS
                ; theta in x, radius in y
                jsr polar_to_screen
 
@@ -38,16 +43,17 @@ polar_loop     ldx testangle
                rts
 
 ;; Draws a single point centered at POLAR_CENTER, at the angle at angle=1
-;; with radius 10
+;; with radius #TEST_RADIUS
 ;; Inputs: angle (effectively)
 ;; Outputs: none
 ;; Side effects: destroys a, x, y
-polar_one      ldy #10 ;radius
-               ldx angle+1
+polar_one      ldy #TEST_RADIUS
+               lda angle+1
+               clc
+               adc #$10
+               tax
                jsr polar_to_screen
 
-               ; For the center of the screen, start at 32768+12*40+19 = 33267, in hex 81f3
-               ; For the lower left, start at 32768+20*40+5=33573, in hex 0x8325
                clc
                lda #<POLAR_CENTER
                adc polar_result
