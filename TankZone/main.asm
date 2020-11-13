@@ -12,6 +12,7 @@ start         jmp start_game
 
 incasm "macroCopy.asm"
 incasm "macroSugar.asm"
+incasm "libCopy.asm"
 incasm "libEnemies.asm"
 incasm "libDraw.asm"
 incasm "libMath.asm"

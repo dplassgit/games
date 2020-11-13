@@ -41,3 +41,12 @@ defm           COPY40
 
 @exitmac
                endm
+
+; Copies the word at /1 to /2
+; Side effects: destroys a
+defm           COPY_WORD
+               lda #</1
+               sta /2
+               lda #>/1
+               sta /2+1
+               endm

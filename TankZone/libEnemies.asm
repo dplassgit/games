@@ -131,3 +131,18 @@ update_enemy_angles
 ;; 4. profit!
 update_enemy_radii
                 rts
+
+far_tank1       text 100,61,'O',99,'M',100,0
+far_tank2       text 'M',99,99,99,99,'N',0
+far_tank3       text ' ',99,99,99,99,0
+far_tank_end    byte 0
+
+near_tank1      text '  FFO',99,99,99,'M',0
+near_tank2      text 100,100,99,99,165,'    M,100,100,0
+near_tank3      text 'M ',99,99,99,99,99,99,99,99,' N',0
+near_tank4      text ' M        N',0
+near_tank5      text '  ',99,99,99,99,99,99,99,99,0
+near_tank_end   byte 0
+
+
+

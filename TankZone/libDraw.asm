@@ -58,7 +58,7 @@ draw_visible_enemies
 clear_enemy_loop
                sta temp_enemy_org,x
                inx
-               cpx #40
+               cpx #120 ; 3 lines (!)
                bne clear_enemy_loop
 
                ; now, draw the visible enemies.
@@ -81,11 +81,14 @@ draw_enemy_loop
 
 ; 4. skip_to_drawing_next_enemy
 ; 5. next enemy
+
+; 1a. if angle <= et and et < angle+40 then goto 3a
                ldx enemy_theta,y
                stx val2
                jsr is_between
                bcc threea       ; yes
 
+; 1b. else if et < 95, if angle <= et+160 < angle+40 then goto 3b
 oneb           cpx #95
                bge skip_to_drawing_next_enemy
                txa
@@ -93,6 +96,7 @@ oneb           cpx #95
                adc #160
                sta val2
                jsr is_between
+; 1c. else out of range, goto 4
                bcs skip_to_drawing_next_enemy ; not between
                
 ; x has et. d=160-angle. offset = d + et
@@ -111,13 +115,24 @@ threeb         lda #160
 threea         txa      ; a now has et
                sec
                sbc angle+1       ; a has et-angle
-               tax      ; x has offset
+               tax      ; x now has offset
 
-draw_one_enemy 
-               tya       ; y has enemy #
+draw_one_enemy
+               ; prepare to draw a tank
+               ; TODO:
+               ; 1. pick right sprite based on enemy type
+               ; 2. pick right sprite size
+               COPY_WORD far_tank1,copysrc
+               COPY_WORD temp_enemy_org,copydst
+               ; Add x to destination
+               txa
                clc
-               adc #1
-               sta temp_enemy_org,x
+               adc copydst
+               sta copydst      ; copydst+=x
+               bcc draw_one_enemy2
+               inc copydst+1
+draw_one_enemy2
+               jsr copy_sprite
 
 skip_to_drawing_next_enemy
                iny ; bump it here so we start showing from A not @
