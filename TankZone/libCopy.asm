@@ -36,7 +36,7 @@ lineloop
 charloop
                 lda (copysrc),y
                 beq nextdstline
-                cmp #20
+                cmp #$20
                 beq skipspace
                 sta (copydst),y
 skipspace       iny

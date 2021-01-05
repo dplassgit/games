@@ -22,7 +22,7 @@ incasm "libTest.asm"
 ANGLE_INCREMENT=1
 ;; Represents the "angle"
 ;; Max is $a000 (=40960 = 160*256; 160 is the width of the background)
-angle         word 0
+angle         dcb 0,4
 prev_angle    word $ffff
 
 ;; Whether we should show the top reticle or not. For debugging.
@@ -45,8 +45,8 @@ bg_loop       lda angle+1
               ; only draw the background etc, if
               ; we actually moved.
               sta prev_angle
-              jsr draw_background
               jsr draw_visible_enemies
+              jsr draw_background
               ;jsr polar_test    ;; TEMPORARY
               ;jsr polar_one     ;; TEMPORARY
               ;jsr plot_enemies  ;; TEMPORARY

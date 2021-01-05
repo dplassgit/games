@@ -1,10 +1,10 @@
 incasm "libTrig.asm"
 
 
-TEST_RADIUS=10 ; this is actually the diameter, shrug.
+TEST_RADIUS=8 ; this is actually the diameter, shrug.
 ; For the center of the screen, start at 32768+12*40+19 = 33267, in hex 81f3
 ; For the lower left, start at 32768+20*40+5=33573, in hex 0x8325
-POLAR_CENTER=$8325 ; 32768+19*40+7 ; $8325
+POLAR_CENTER=32768+4*40+19 ; $8325
 
 
 testangle byte 0
