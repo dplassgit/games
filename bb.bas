@@ -77,7 +77,7 @@
 950 rem poke 32769,32:poke 32768,32: rem clear indicators temporary
 950 goto 200
 
-1000 rem pitch/bat loop. Sets "hi(t)" (0=no swing, 1=miss, 2..10=hit)
+1000 rem pitch/bat loop. Sets hi(t) (0=no swing, 1=miss, 2..10=contact)
 1000 get c$: if c$>="1" and c$<="3" goto 1030
 1020 goto 1000
 
@@ -89,15 +89,15 @@
 
 1050 rem relative ball row
 1050 for br=0 to 8
-1060 poke 32768+(14+br)*40+bc, pc
-1070 pc=peek(32768+(15+br)*40+bc)
-1080 rem todo: curve ball
-1080 poke 32768+(15+br)*40+bc, 46
-1100 for j=1 to de: next j
-1120 if sw=1 then get c$: if c$<>"s" goto 1170
-1130 rem swing & if on the right row decide if hit
-1130 rem the br=br+1 is so that the prev char is put back in the right place.
-1130 gosub 1500: if hit>1 then br=br+1: goto 1180
+1060 :poke 32768+(14+br)*40+bc, pc
+1070 :pc=peek(32768+(15+br)*40+bc)
+1080 :rem todo: curve ball
+1080 :poke 32768+(15+br)*40+bc, 46
+1100 :for j=1 to de: next j
+1120 :if sw=1 then get c$: if c$<>"s" goto 1170
+1130 :rem swing & if on the right row decide if hit
+1130 :rem the br=br+1 is so that the prev char is put back in the right place.
+1130 :gosub 1500: if hit>1 then br=br+1: goto 1180
 1170 next br
 
 1180 rem pitch is over
@@ -105,7 +105,7 @@
 1190 sw=1: gosub 1600: rem reset bat
 1199 return
 
-1200 rem update in,b,s,o
+1200 rem update in(ning),b(alls),s(trikes),o(uts)
 1200 print "{home}{down}{right}{right}{right}{right}";in
 1205 poke 32845,b+asc("0"):  rem poke 32768+   40+37,b+asc("0")
 1210 poke 32885,s+asc("0"):  rem poke 32768+ 2*40+37,s+asc("0")

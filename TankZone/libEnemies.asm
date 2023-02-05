@@ -1,15 +1,20 @@
 incasm "macroMath.asm"
 
+MAX_ENEMIES = 12
+
 num_enemies     byte 0
 ; Whether this enemy exists
-enemy_exists    dcb 10,0
-; The theta is from 0 to $a0
-enemy_theta     dcb 10,0
+enemy_exists    dcb MAX_ENEMIES,0
+; The theta delta from where the player is faicng from 0 to $a0
+enemy_theta     dcb MAX_ENEMIES,0
 ; The radius from -127 to +127
-enemy_radius    dcb 10,0
+enemy_radius    dcb MAX_ENEMIES,0
+; The direction the enemy is facing, 0 to $a0
+enemy_direction dcb MAX_ENEMIES,0
 ; Equivalent x & y locations, maybe.
-enemy_x         dcw 10,0
-enemy_y         dcw 10,0
+enemy_x         dcw MAX_ENEMIES,0
+enemy_y         dcw MAX_ENEMIES,0
+
 ; Enumeration of enemy types
 NONE=0
 SQUARE_BLOCK=1
@@ -17,9 +22,9 @@ PYRAMID_BLOCK=2
 TANK_ENEMY=3
 UFO_ENEMY=4
 TRIANGULAR_TANK_ENEMY=5
-enemy_type      dcb 10,0
+enemy_type      dcb MAX_ENEMIES,0
 ; Health level of each enemy
-enemy_health    dcb 10,0
+enemy_health    dcb MAX_ENEMIES,0
 
 ;; Create a random # of enemies and populate the arrays
 ;; Inputs: none
@@ -28,7 +33,7 @@ enemy_health    dcb 10,0
 
 create_enemies
                 ; pick a random number
-                ldx #12  ; decided by fair dice roll
+                ldx #6  ; decided by fair dice roll
                 stx num_enemies
                 ldx #0
 
@@ -88,6 +93,8 @@ next_enemy      ; x must be enemy # (index)
                 lsr
                 lsr
                 lsr
+                lsr
+                lsr
                 tay     ; radius in y
                 lda enemy_theta,x
                 tax
@@ -95,11 +102,11 @@ next_enemy      ; x must be enemy # (index)
                 jsr polar_to_screen
 
                 ; poke it in the fake radar
-                lda #<POLAR_CENTER ; sweep_org
+                lda #<sweep_org ;POLAR_CENTER ; sweep_org
                 clc
                 adc polar_result
                 sta polar_result
-                lda #>POLAR_CENTER ; sweep_org
+                lda #>sweep_org ; POLAR_CENTER ; sweep_org
                 adc polar_result+1
                 sta polar_result+1
 
@@ -132,7 +139,8 @@ update_enemy_angles
 update_enemy_radii
                 rts
 
-far_tank1       text 100,61,'O',99,'M',100,0
+; far_tank1       text 100,61,'O',99,'M',100,0
+far_tank1       text ' ',61,'O',99,'M',100,0
 far_tank2       text 'M',99,99,99,99,'N',0
 far_tank3       text ' ',99,99,99,99,0
 far_tank_end    byte 0
@@ -144,5 +152,8 @@ near_tank4      text ' M        N',0
 near_tank5      text '  ',99,99,99,99,99,99,99,99,0
 near_tank_end   byte 0
 
-
-
+;far_tank1 text '  ',100,100,0
+;far_tank2 text 100,61,'L',122,100,0
+;far_tank3 text 'MWWWN',0
+;far_tank4 text ' ',99,99,99,0
+;far_tank_end   byte 0
