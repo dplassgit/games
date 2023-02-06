@@ -1,3 +1,4 @@
+0 rem first version, always draws the car
 10 cls:L=10:c=15:w=10:r=rnd(val(right$(time$,2)))
 20 fori=1to100:?space$(l);"*";space$(c-l-1);"C";space$(L+w-C-1);"*";
 30 ifimod10=0thenw=w+(i<50):?" Checkpt ";i\10:else?
