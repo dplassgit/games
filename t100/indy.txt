@@ -1,0 +1,8 @@
+1. Open http://bitchin100.com/CloudT/#!/M100Display for the simulator
+2. Scroll down and click "Choose File" 
+3. Pick the "INDY.DO" file from your computer
+4. Click in the big gray box; the cursor should be on BASIC. If not, use your keyboard to highlight BASIC and hit enter
+5. Type RUN"CAS:indy" (including the quotes) and hit ENTER
+6. The program should load and start
+7. Use the a and d keys to move the car left and right. Careful - the track gets smaller and smaller until checkpoint 10!
+8. Make it through all 10 checkpoints to win!
