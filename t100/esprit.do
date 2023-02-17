@@ -1,7 +1,7 @@
 0 goto 5000
 
 9 rem print the current cell. inputs: c,r. priority is string, then if it has a formula, print the value.
-10 if s$(r,c)<>"" then ?using"\   \";s$(r,c) else if f$(r,c)<>"" then ?using"#.###";v#(r,c) else ?"     "
+10 if s$(r,c)<>"" then ?using"\   \";s$(r,c); else if f$(r,c)<>"" then ?using"#.###";v#(r,c); else ?"     ";
 11 return
 
 99 rem main loop:
@@ -24,6 +24,7 @@
 1040 r=pr:c=pc:gosub10
 
 1100 rem ?@0,"cr=";cr;"cc=";cc
+1105 rem this is where we would adjust the origin coords
 1110 IF CR<0 THEN CR=0 else IF CR>25 THEN CR=25
 1130 IF CC<0 THEN CC=0 else IF CC>25 THEN CC=25 : rem 25=z
 1150 rem ?@20,"ncr=";cr;"ncc=";cc
@@ -39,7 +40,7 @@
 1279 rem print location in upper left. i don't love this.
 1280 ?@40,chr$(65+cc);:if cr<9then?using"#";cr+1;: ?" ";else ?using"##";cr+1
 1289 rem print the formula or value in the top row. 
-1290 ?@8,space$(31);:?@8,"";:if s$(cr,cc)<>"" then ?s$(cr,cc) else if f$(cr,cc)<>"" then ?f$(cr,cc)
+1290 ?@7,space$(31);:?@7,"";:if s$(cr,cc)<>"" then ?s$(cr,cc) else if f$(cr,cc)<>"" then ?f$(cr,cc)
 
 1400 PC=CC: PR=CR: rem save cursor location
 1500 rem todo: if origin moved, redraw the headers 
@@ -47,8 +48,9 @@
 
 2000 PRINT @45,"";: REM redraw the headers
 2010 FOR C=RC TO RC+6:PRINT rv$;"  ";CHR$(65+C);"  ";:NEXT
-2020 PRINT @80,"";:FOR R=RR TO RR+5:PRINTusing" ##  ";r+1:NEXT
-2030 PRINT nv$
+2030 FOR R=RR TO RR+5:?@80+(r-rr)*40,rv$;: ? using" ##  ";r+1;:?nv$;
+2040 for c=rc to rc+6:gosub10: next : rem print each cell
+2050 next
 2100 RETURN
 
 5000 DEFINT A-Z:rv$=chr$(27)+"p":nv$=chr$(27)+"q": rem reverse, normal video
@@ -59,10 +61,11 @@
 5060 RC=0:RR=0: rem origin col, row (zero-based)
 5065 cls
 5070 PRINT @0,"Value:"
-5080 GOSUB 2000: rem draw the indexes
 5100 rem temporarily fill cells
 5110 f$(0,0)="=a2+1":v#(0,0)=2.2:f$(0,1)="1.2":v#(0,1)=1.2:s$(1,0)="Hello"
-5800 gosub 1200: rem draw the initial cursor
+5120 s$(2,2)="hi":s$(3,2)="Hello there a very long value"
+5800 GOSUB 2000: rem draw the indexes
+5810 gosub 1200: rem draw the initial cursor
 5900 goto 100
 
 9000 PRINT nv$
