@@ -41,7 +41,7 @@
 
 1999 rem redraw the whole screen: headers first
 2000 PRINT@45,"";:FOR C=RC TO RC+6:PRINT rv$"  "CHR$(65+C)"  ";:NEXT
-2030 FOR R=RR TO RR+5:?@80+(r-rr)*40,rv$;:? using" ##  ";r+1:?nv$;
+2030 FOR R=RR TO RR+5:?@80+(r-rr)*40,rv$;:? using" ##  ";r+1;:?nv$;
 2040 for c=rc to rc+6:gosub10:next:next:RETURN
 
 2999 rem this is a little inefficient
