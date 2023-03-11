@@ -1,0 +1,92 @@
+BOUNCE!
+=======
+Written by David Plass for the BASIC 10-liner Contest 2023
+
+Language: TRS-80 Model 100 BASIC
+Category: PUR-80
+
+This and other games are available in my GitHub repo at 
+https://github.com/dplassgit/games
+
+All code in that repo is released under the MIT License.
+
+
+THE GAME:
+=========
+It's Breakout.
+
+You get 5 paddles to bounce the ball and destroy as many of the blocks as you
+can. You earn 10 points per block destroyed, and if you clear all the blocks,
+the field resets and the game continues.
+
+Control your paddle using the "f" key to move it left and the "j" key for
+right. Any other key will stop the paddle.
+
+
+PROGRAM DESCRIPTION:
+====================
+Source code is in BOUNCE.DO. It will only run on a Tandy 100 or Tandy 102
+laptop or emulator.
+
+NOTE: Some of the characters in this description may look funny, but in
+the .DO or .BA file, they are correct.
+
+<pre>0 R=RND(1+PEEK(63795)):CLS:?CHR$(27)"VBounce!":?"S:"S:B$=STRING$(20,"ÿ"):?"P:</pre>
+
+Set up the random number generator and the score and paddle count. 
+B$ is a string that holds a whole line of blocks for printing.
+
+<pre>1 V%=-512:C=0:P=20:FORI=0TO7:?@9+40*I,"ê"TAB(30)"é":NEXT:?@50,B$:?@90,B$</pre>
+
+V%: base of video memory
+C:  count of blocks left
+P:  horizontal location of the paddle
+
+Then, draw the field: 7 rows of vertical lines, and two lines of blocks (B$).
+
+<pre>2 A=P:B=6:X=.5+RND(1)/4:Y=-X:?@82,5-L:IFL=5THEN?@175,"Game over":END</pre>
+
+A&B: The X&Y location of the ball
+X&Y: The X&Y velocity of the ball.
+Print the # of paddles left (5-L)
+If the # of paddles used is 5, game over.
+
+<pre>3 IFP<>QTHEN?@280+Q,"    </pre>
+
+Erase where the paddle might have been (variable Q)
+
+<pre>4 ?@280+P,"çççç":?@FIX(A)+40*FIX(B)," ":A=A+X:B=B+Y:IFB<0THENB=0:Y=-Y</pre>
+
+Draw the paddle in its current location (P)
+Erase the old location of the ball (A,B)
+Update the location of the ball (A,B) using its velocities (X,Y)
+If the ball tries to go off the top, bounce (Y=-Y)
+
+<pre>5 IFA<10THENA=10:X=-XELSEIFA>29THENA=29:X=-X</pre>
+
+If the ball tries to go off the left or right of the field, bounce (X=-X)
+
+<pre>6 IFB>6THENB=6:IFA>=PANDA<P+5THENY=-Y:X=X+D/8ELSEL=L+1:GOTO2</pre>
+
+If the ball tries to go off the bottom of the field, and it has hit the paddle,
+its Y direction is reversed (bounce), and its X direction is augmented by the
+direction of the paddle (D). If it hasn't hit the paddle, you lose a life, back to line 2.
+
+<pre>7 N%=A+40*FIX(B):IFPEEK(V%+N%)=255THENY=-Y:S=S+10:?@42,S:C=C+1:IFC=40THEN0</pre>
+
+Figure out the new location of the ball on the screen (N%)
+If it has hit a block (255), bounce in the Y direciton (Y=-Y), increase the score, and update the score
+Increment the # of blocks hit (C=C+1), and if all blocks have been cleared, restart. (Note, the
+score and # of lives is not reset)
+
+<pre>8 ?@N%,"":K$=INKEY$:D=-(K$="")*D+(K$="f")-(K$="j"):Q=P:P=P+D</pre>
+
+Draw the ball at its new locationh
+Get a key. If the key is f, set the paddle direction D=-1; if it is j, set D=1; otherwise, D=0
+Remember the old location of the paddle in Q, and update the paddle location P using its velocity.
+
+<pre>9 D=D*((P>26ORP<10)+1):P=P+(P>26)-(P<10):GOTO3</pre>
+
+If the paddle has reached one of the edges (26 or 10), set its direction (D) to 0,
+and don't let it go out of the field. Jump back to line 3, which is the main loop.
+
