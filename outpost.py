@@ -140,7 +140,7 @@ class Outpost:
         print("")
         print("ENEMY 1   2   3   4")
         print("TYPE  ",end='')
-        for G in range(1,5):
+        for G in range(1,5): # note, range 1-5 not 1-6 for the HUD
             if self.shipType[G]==0: print( "---",end=' ')
             if self.shipType[G]==1: print( "LGT",end=' ')
             if self.shipType[G]==2: print( "MDM",end=' ')
@@ -170,7 +170,7 @@ class Outpost:
                     ship ='O'
                 else:
                     ship = '+'
-                for G in range(1,5):
+                for G in range(1,6): # note range 1-6 for the main
                     if y != self.EY[G]: continue
                     if x != self.EX[G]: continue
                     if G!=5:
@@ -221,7 +221,7 @@ class Outpost:
     # 3400 GOTO 3010
 
     def move(self):
-        for G in range(1, 5):
+        for G in range(1, 6):
             if self.shipType[G] > 0:
                 if G < 5 and randint(9) > 5: continue
                 #    move towards 6,6
@@ -234,7 +234,7 @@ class Outpost:
                 if self.EY[G] < 6:
                     self.EY[G] +=1
                 if self.shipType[G]==5 and self.EY[5]==6 and self.EX[5]==6:
-                    recharge() #the supply ship got here
+                    self.recharge() #the supply ship got here
                 else:
                     if self.EY[G]==6 and self.EX[G]==6: return 1 # die, he got me
                 # enemy killed supply ship
@@ -260,7 +260,7 @@ class Outpost:
     #  4210 GOTO 4020
     def enemy_attack(self):
         print("ENEMY FIRING & MOVING")
-        for G in range(1, 4):
+        for G in range(1, 5):
             if self.shipType[G] != 0:
                 if randint(99) > (self.enemy_energy[G]+randint(30)) or self.enemy_energy[G]<10: continue
                 self.energy -= randint(5)*self.shipType[G]  #decrease our energy by randomness * this enemy's energy
