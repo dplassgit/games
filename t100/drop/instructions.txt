@@ -1,0 +1,5 @@
+1. Open the simulator at http://bitchin100.com/CloudT/#!/M100Display
+2. Scroll down and click "Choose File" 
+3. Pick the "DROP.DO" source file from your computer
+4. Click in the big gray box; the cursor should be on BASIC. If not, use your keyboard to highlight BASIC and hit Enter
+5. Type run"cas:drop" (including the quotes) and hit ENTER. The program should load and start

@@ -1,0 +1,16 @@
+0: Clear the screen. Seed random number generator with the time. F=random plane speed. W=random wind. B%=random barrel location
+
+1: X, Y: location of the package. C=column of the plane. Draw barrel, score (S) , lives (L), wind (W).
+
+2: Move the plane, draw new location. If there's a package, clear its last location and and move it, goto 6.
+
+4: If the space bar was hit and no package is in flight, drop it from the plane. Double the plane's speed (since now we're drawing the plane and the package every iteration.)
+
+5: If the plane got to the right side of the screen, erase it, goto 2
+
+6: If the package Y value is not on the bottom line, draw it, goto 4
+
+7: (The package is on the bottom line): If the package X value is between the barrel and its width (E), it's a hit. Increase the score (S) by the width of the barrel, and make the barrel width smaller. Goto 0
+
+8: (It's a miss): Bump the # of lives used. If less than 5, show "MISS" and  wait for a key. Go back to 0. If not, Game over.
+
