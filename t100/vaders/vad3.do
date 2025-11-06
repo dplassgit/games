@@ -1,4 +1,4 @@
-0 cls:n=9:fori=0ton:a(i)=4*(imod4)+40*(i\4)+52:next:c$=chr$(144):?3-l;s
+0 cls:n=8:fori=0ton:a(i)=4*(imod4)+40*(i\4)+52:next:c$=chr$(144):?3-l;s
 10 ?@a(j)+x," ":?@a(j)+x+1,c$:remd=(d=0)*a(i)*(rnd(1)>.5):ifd<>0then?@d+40+x-1,"v"
 20 ifb=0then50elseifpeek(b-512)=42then?@b," ":b=b-40:ifb<40thenb=0:goto50
 30 ifpeek(b-512)=32then?@b,"*":goto50:else?@b,"x":fori=0ton

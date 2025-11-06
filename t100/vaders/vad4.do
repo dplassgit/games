@@ -8,4 +8,3 @@
 7 h=peek(u+65024):ifh>48andh<57thena(h-49)=-1:n=n-1:s=s+10:u=0:goto1
 8 ?@u,"^":ou=u:u=u-40:ifu<40thenu=0elseifou>0then?@ou," ":goto1else1
 9 ifd=c or a(0)>280then?"Died!":k$=inkey$:l=l-1:goto1else1
-
