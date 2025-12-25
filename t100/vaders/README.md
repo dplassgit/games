@@ -4,6 +4,8 @@
 
 12 aliens, graphical tank, shoots stars, does not stop when hits an alien
 
+NOTE: vad0.ba is binary, not text.
+
 ## vad1
 
 8 aliens, text tank, shoots stars, does not stop when hits an alien
