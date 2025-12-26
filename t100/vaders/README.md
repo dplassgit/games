@@ -1,10 +1,10 @@
 # Space Invaders in 10 lines of code
 
+All .do files are untokenized (text) BASIC.
+
 ## vad0
 
 12 aliens, graphical tank, shoots stars, does not stop when hits an alien
-
-NOTE: vad0.ba is binary, not text.
 
 ## vad1
 
