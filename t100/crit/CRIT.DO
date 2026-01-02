@@ -1,7 +1,7 @@
 0 CLS:T=RND(-VAL(RIGHT$(TIME$,2))):INPUT"Players (1/2)";N:IFN>2ORN<1THENBEEP:GOTO0
 5 IFN=1THENINPUT"Difficulty (1=easy, 2=medium, 3=difficult)";LV:IFLV<1ORLV>3THEN5
 10 DIMV(6,6),P(6,6),M(6,6): REM value, player, max
-20 DIMQX(199),QY(199):N=0: REM queue
+20 DIMQX(399),QY(399):N=0: REM queue
 30 C$(0)=CHR$(27)+"q":C$(1)=C$(0):C$(2)=CHR$(27)+"p": REM color per player
 35 SC=1-(PEEK(1)=171): REM scale (i.e., Tandy 200=2, everything else=1)
 40 ?"Setting up...":FORR=0TO6:FORC=0TO6:M(R,C)=4+((R=0)OR(R=6))+((C=0)OR(C=6)):NEXT:NEXT
@@ -20,17 +20,18 @@
 300 IFP(Y,X)=3-TTHENBEEP:RETURN: REM no available
 310 IFP(Y,X)=0THENS(T)=S(T)+1:P(Y,X)=T
 320 V(Y,X)=V(Y,X)+1:XX=X:YY=Y:GOSUB2000
-340 IFV(Y,X)<M(Y,X)THEN490: REM boom
+340 IFV(Y,X)<M(Y,X)THEN490
+349 REM boom
 350 S(T)=S(T)-1:P(Y,X)=0:V(Y,X)=0
 359 REM seed queue
 360 N=0:GOSUB5000:GOSUB2000:NN=0
 399 REM process queue
 400 IFNN=NTHEN490
-410 XX=QX(NN):YY=QY(NN)
-415 IFP(YY,XX)<>TTHENS(T)=S(T)+1: REM we captured one
-420 IFP(YY,XX)=3-TTHENS(3-T)=S(3-T)-1: REM they lost one
+410 XX=QX(NN):YY=QY(NN):SS=0: REM show score
+415 IFP(YY,XX)<>TTHENS(T)=S(T)+1:SS=1: REM we captured one
+420 IFP(YY,XX)=3-TTHENS(3-T)=S(3-T)-1:SS=1: REM they lost one
 425 P(YY,XX)=T:V(YY,XX)=V(YY,XX)+1
-430 GOSUB2000
+430 GOSUB2000:IFSSTHENGOSUB500:GOSUB550
 440 IFV(YY,XX)>=M(YY,XX)THENV(YY,XX)=0:P(YY,XX)=0:S(T)=S(T)-1:GOSUB5000:GOSUB2000
 480 NN=NN+1:GOTO400
 490 T=3-T:GOSUB500:GOSUB550:RETURN: REM switch turns, print score, test for win
@@ -41,9 +42,10 @@
 520 ?"Black:"S(2)C$(0)
 530 RETURN
 549 REM Test for Win (if at least one piece has been played)
-550 IFS(1)>0ANDS(2)=0AND(S(1)+S(2))>1THEN?@145,"White wins!":END
-560 IFS(2)>0ANDS(1)=0AND(S(1)+S(2))>1THEN?@145,"Black wins!":END
-570 RETURN
+550 ?@145,"";
+560 IFS(1)>0ANDS(2)=0AND(S(1)+S(2))>1THEN?"White wins!":END
+570 IFS(2)>0ANDS(1)=0AND(S(1)+S(2))>1THEN?"Black wins!":END
+580 RETURN
 999 REM print the empty board
 1000 IFSC=1THEN1050
 1009 REM t200 board
@@ -54,8 +56,8 @@
 1100 ?"+-+-+-+-+-+-+-+":RETURN
 1999 REM print value at its spot xx,yy
 2000 C=32-14*(SC=1):IFP(YY,XX)>0THENC=48+V(YY,XX)
-2010 V$=C$(P(YY,XX))+CHR$(C)+C$(0):GOSUB4000:RETURN
-3999 REM Print v$ at xx, yy scaled by sc
+2010 V$=C$(P(YY,XX))+CHR$(C)+C$(0): REM fall through, then return
+3999 REM print v$ at xx, yy scaled by sc
 4000 ?@(XX*SC+1+YY*(SC*40)+40*(SC-1)),V$
 4100 RETURN
 4999 REM enqueue xx,yy
