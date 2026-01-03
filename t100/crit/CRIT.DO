@@ -1,11 +1,12 @@
-0 CLS:T=RND(-VAL(RIGHT$(TIME$,2))):INPUT"Players (1/2)";N:IFN>2ORN<1THENBEEP:GOTO0
-5 IFN=1THENINPUT"Difficulty (1=easy, 2=medium, 3=difficult)";LV:IFLV<1ORLV>3THEN5
-10 DIMV(6,6),P(6,6),M(6,6): REM value, player, max
-20 DIMQX(399),QY(399):N=0: REM queue
-30 C$(0)=CHR$(27)+"q":C$(1)=C$(0):C$(2)=CHR$(27)+"p": REM color per player
-35 SC=1-(PEEK(1)=171): REM scale (i.e., Tandy 200=2, everything else=1)
-40 ?"Setting up...":FORR=0TO6:FORC=0TO6:M(R,C)=4+((R=0)OR(R=6))+((C=0)OR(C=6)):NEXT:NEXT
-50 X=0:Y=0:T=1:CLS:GOSUB1000:GOSUB500: REM draw board, scors
+0 CLS:R=RND(-VAL(RIGHT$(TIME$,2))):DEFINTA-Z
+10 INPUT"Players (1/2)";N:IFN>2ORN<1THENBEEP:GOTO10
+20 IFN=1THENINPUT"Difficulty (1=easy, 2=medium, 3=difficult)";LV:IFLV<1ORLV>3THEN20
+30 DIMV(6,6),P(6,6),M(6,6): REM value, player, max
+40 DIMQX(399),QY(399):N=0: REM queue
+50 C$(0)=CHR$(27)+"q":C$(1)=C$(0):C$(2)=CHR$(27)+"p": REM color per player
+60 SC=1-(PEEK(1)=171): REM scale (i.e., Tandy 200=2, everything else=1)
+70 ?"Setting up...":FORR=0TO6:FORC=0TO6:M(R,C)=4+((R=0)OR(R=6))+((C=0)OR(C=6)):NEXT:NEXT
+80 X=0:Y=0:T=1:CLS:GOSUB1000:GOSUB500: REM draw board, scores
 100 IFLV>0ANDT=2THENGOSUB6000:X=CX:Y=CY:GOSUB300: REM pick computer spot, update value
 110 XX=X:YY=Y:V$="*":GOSUB4000
 120 A$=INKEY$:GOSUB2000: REM draw at location
@@ -69,13 +70,13 @@
 6000 REM AI subroutine (written mostly by Google Gemini)
 6010 IFS(1)+S(2)=49THENRETURN: REM check for full board
 6020 IFLV>1THEN6050
-6030 CX=INT(7*RND(1)):CY=INT(7*RND(1))
+6030 CX=7*RND(1):CY=7*RND(1)
 6040 IFP(CY,CX)=1THEN6030: REM Re-try if owned by human
 6045 RETURN
 6050 MS=-999:CX=0:CY=0:FORI=0TO6:FORJ=0TO6:IFP(I,J)=1THEN6130
 6069 REM Pick near the edge and even better if it's almost critical
-6070 S=(4-M(I,J))*10+V(I,J)*2:IFV(I,J)+1>=M(I,J)THENS=S+50
-6080 IFLV<3THEN6120: REM don't consider adjacent cells
+6070 S=(4-M(I,J))*10+V(I,J)*2-50*(V(I,J)+1>=M(I,J))
+6080 IFLV<3THEN6120: REM for level 2, don't consider adjacent cells
 6089 REM Don't place next to human if it is almost critical
 6090 IFJ>0THENIFP(I,J-1)=1ANDV(I,J-1)=M(I,J-1)-1THENS=S-60
 6100 IFJ<6THENIFP(I,J+1)=1ANDV(I,J+1)=M(I,J+1)-1THENS=S-60
@@ -83,4 +84,4 @@
 6115 IFI<6THENIFP(I+1,J)=1ANDV(I+1,J)=M(I+1,J)-1THENS=S-60
 6119 REM pick best value
 6120 IFS>MSTHENMS=S:CX=J:CY=I
-6130 NEXT:NEXT:RETURN
+6130 NEXT:?@65,C$(2)CHR$(32-10*((IMOD2)=1)):NEXT:RETURN
