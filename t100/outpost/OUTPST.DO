@@ -53,7 +53,7 @@
 3240 IF ET(5)=5 AND EY(5)=6 AND EX(5) = 6 THEN GOSUB2000: REM supply ship got to you.
 3250 IF EY(G)=6 AND EX(G)=6 THEN 9500 : REM you died
 3265 IF G<5 AND EX(G)=EX(5) AND EY(G)=EY(5) THEN ET(5)=0:EX(5)=0:EY(5)=0
-3300 ED(G)=INT(SQR((EX(G)-6)^2+(EY[G]-6)^2))
+3300 ED(G)=INT(SQR((EX(G)-6)^2+(EY(G)-6)^2))
 3330 EH(G)=INT(1/(ED(G))*100+(C/2)):IF EH(G)>99 THEN EH(G)=99
 3400 NEXT:RETURN
 3999 REM enemy attack (moving is really in 3k)
@@ -80,8 +80,8 @@
 5190 IF A=2 THEN EY(G)=11
 5200 IF A=3 THEN EX(G)=11
 5210 IF A=4 THEN EX(G)=1
-5300 ED(G)=INT(SQR((EX(G)-6)^2+(EY[G]-6)^2))
-5320 EH(G)=INT(1/(ED[G])*100+(C/2)): IF EH(G)>99 THEN EH(G)=99
+5300 ED(G)=INT(SQR((EX(G)-6)^2+(EY(G)-6)^2))
+5320 EH(G)=INT(1/(ED(G))*100+(C/2)): IF EH(G)>99 THEN EH(G)=99
 5400 RETURN
 5999 REM Get input and fire weapon
 6000 ?@M1,"WEAPON (M/S/T/C):   ";
