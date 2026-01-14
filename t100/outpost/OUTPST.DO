@@ -1,5 +1,5 @@
 0 CLS:M1=520:M2=560:?"  OUTPOST":Z=RND(-VAL(RIGHT$(TIME$,2)))
-10 REM Based on outpost.prg https://www.commodoregames.net/Outpost_Commodore_PET_437.html
+10 REM Based on outpost.prg https://www.commodoregames.net/CommodorePET/Outpost-437.html
 11 REM Original author unknown
 12 REM T200 Version Copyright 2026 David Plass
 13 GOTO50
