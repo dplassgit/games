@@ -2,7 +2,8 @@
 
 Ported from Commodore PET BASIC. Currently only for Tandy 200
 
-Based on outpost.prg https://www.commodoregames.net/Outpost_Commodore_PET_437.html
+Based on outpost.prg
+https://www.commodoregames.net/CommodorePET/Outpost-437.html
 
 Original author unknown.
 
