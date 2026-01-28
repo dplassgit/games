@@ -9,6 +9,7 @@ Use the "j" key to go left and the "l" key to go right.
 Inspired by [Pac-Line](https://sizescape.itch.io/pac-line) and
 [Paku Paku](https://abagames.github.io/crisp-game-lib-11-games/?pakupaku)
 
+...and all done in 10 lines of 80 characters or less!
 
 ## PAC1.DO
 
