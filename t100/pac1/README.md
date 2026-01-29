@@ -15,11 +15,11 @@ Inspired by [Pac-Line](https://sizescape.itch.io/pac-line) and
 
 For Tandy 100/102 only:
 
-![Screenshot of PAC1 on Tandy 100/102](.images/pac1.png)
+![Screenshot of PAC1 on Tandy 100/102](./images/pac1.png)
 
 
 ## PAC200
 
 For Tandy 200 only:
 
-![Screenshot of PAC1 on Tandy 200](.images/pac200.png)
+![Screenshot of PAC1 on Tandy 200](./images/pac200.png)
