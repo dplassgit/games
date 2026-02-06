@@ -7,7 +7,7 @@
 50 DIM M%(11,11): REM map; value (Y,X) contains the asc of the ship number there.
 60 FORY=1TO11: FORX=1TO11: M%(Y,X)=46: NEXT: NEXT: M%(6,6)=157: REM outpost
 70 C=99: G=1: GOSUB5110: GOSUB2000: REM start off with one ship (G=1); give initial supply
-80 E$(0)="---": E$(1)="LGT": E$(2)="MDM": E$(3)="HVY"
+80 E$(0)="---": E$(1)="LGT": E$(2)="MDM": E$(3)="HVY
 90 CL$=CHR$(13)+SPACE$(39)+CHR$(13)			   ' Clear Line
 200 GOSUB5000: GOSUB1000: GOSUB6000: GOSUB3000: GOSUB4000: REM main loop
 210 GOTO200
@@ -16,7 +16,7 @@
 1010 ?@P,"---------------------": P=P+40
 1020 ?@P,"TYPE: ";
 1030 FOR G=1 TO 4: ?E$(ET(G))" ";: NEXT
-1100 P=P+40: ?@P,"DIST:": P=P+40: ?@P,"PROB:": P=P+40: ?@P,"ENGY:";
+1100 P=P+40: ?@P,"DIST:": P=P+40: ?@P,"PROB:": P=P+40: ?@P,"ENGY:
 1120 FOR G=1 TO 4
 1125 P=135+G*4: ?@P,ED(G): REM distance
 1130 P=P+40: ?@P,EH(G): REM proability
@@ -32,7 +32,7 @@
 1350 ?@P,"MAIN:"M: P=P+40
 1360 ?@P,"SECN:"S: P=P+40
 1370 ?@P,"TORP:"T: P=P+40
-1380 ?@40,"";
+1380 ?@40,;
 1500 FORY=1TO11: FORX=1TO11: ?CHR$(M%(Y,X));: NEXT: ?: NEXT
 1600 RETURN
 1999 REM resupply/recharge
@@ -40,7 +40,7 @@
 2020 T=T+5: IF T>9 THEN T=9
 2030 RETURN
 2999 REM Move ship positions, test for supply ship, test for die
-3000 ?@M1,CL$;"ENEMY FIRING & MOVING";
+3000 ?@M1,CL$;"ENEMY FIRING & MOVING
 3010 ?@M2,CL$
 3020 FOR G=1 TO 5: IF ET(G)=0 THEN 3400: REM no ship at this index
 3030 Z=9: GOSUB20: IF G<5 AND FA>5 THEN 3340: REM didn't move
@@ -97,7 +97,7 @@
 6120 ?B$" ";:B=VAL(B$): IF ET(B)=0 OR ET(B)=5 THEN ?"BAD DATA!";: FORZ=1TO500: NEXT: GOTO6000
 6130 FOR ZZ=1 TO 3: FOR Z=1 TO 50: NEXT: ?". ";: NEXT ZZ
 6200 Z=99: GOSUB20: IF FA>EH(B) THEN ?"MISSED!";: GOTO 6240
-6210 ?"TARGET HIT!";
+6210 ?"TARGET HIT!
 6215 Z=15: GOSUB20: EE(B)=INT(EE(B)-((A*FA)/ET(B)))
 6220 IF EE(B)<1 THEN6500
 6230 Z=5: GOSUB20: E=E-FA: REM reduce our energy by a random amount
@@ -107,7 +107,7 @@
 6500 M%(EY(B),EX(B))=46: VP=VP+ET(B): EX(B)=0: EY(B)=0: ET(B)=0: EH(B)=0: ED(B)=0: EE(B)=0
 6520 FOR Z=1 TO 1000: NEXT: ?@M3,CL$;"TARGET DESTROYED!";
 6540 GOTO 6240
-9500 ?@M2,CL$;"YOU ARE DESTROYED!!!!!"
+9500 ?@M2,CL$;"YOU ARE DESTROYED!!!!!
 9510 ?"SCORE ="VP: ?
 9520 IF VP>HS THEN HS=VP
 9530 ?"****************
