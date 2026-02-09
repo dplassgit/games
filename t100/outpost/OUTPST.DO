@@ -1,4 +1,4 @@
-0 CLS: DEFINTA-Z: M1=520: M2=560: ?"  OUTPOST": Z=RND(-VAL(RIGHT$(TIME$,2)))
+0 CLS: DEFINTA-Z: M1=520: M2=560: M3=600: ?"  OUTPOST": Z=RND(-VAL(RIGHT$(TIME$,2)))
 1 REM Based on outpost.prg https://www.commodoregames.net/CommodorePET/Outpost-437.html
 2 REM Original author unknown
 3 REM T200 Version Copyright 2026 David Plass
@@ -7,9 +7,11 @@
 50 DIM M%(11,11): REM map; value (Y,X) contains the asc of the ship number there.
 60 FORY=1TO11: FORX=1TO11: M%(Y,X)=46: NEXT: NEXT: M%(6,6)=157: REM outpost
 70 C=99: G=1: GOSUB5110: GOSUB2000: REM start off with one ship (G=1); give initial supply
-80 E$(0)="---": E$(1)="LGT": E$(2)="MDM": E$(3)="HVY"
+80 E$(0)="---": E$(1)="LGT": E$(2)="MDM": E$(3)="HVY
+90 CL$=CHR$(13)+SPACE$(39)+CHR$(13)			   ' Clear Line
 200 GOSUB5000: GOSUB1000: GOSUB6000: GOSUB3000: GOSUB4000: REM main loop
 210 GOTO200
+999 REM Redraw screen
 1000 P=13: ?@P,"ENEMY  1   2   3   4": P=P+40
 1010 ?@P,"---------------------": P=P+40
 1020 ?@P,"TYPE: ";
@@ -30,16 +32,16 @@
 1350 ?@P,"MAIN:"M: P=P+40
 1360 ?@P,"SECN:"S: P=P+40
 1370 ?@P,"TORP:"T: P=P+40
-1380 ?@40,"";
+1380 ?@40,;
 1500 FORY=1TO11: FORX=1TO11: ?CHR$(M%(Y,X));: NEXT: ?: NEXT
-1600 ?@M1,SPACE$(39): RETURN
+1600 RETURN
 1999 REM resupply/recharge
 2000 ET(5)=0: EX(5)=0: EY(5)=0: E=99: M=99: S=99: C=99
 2020 T=T+5: IF T>9 THEN T=9
 2030 RETURN
 2999 REM Move ship positions, test for supply ship, test for die
-3000 ?@M1,"ENEMY FIRING & MOVING    
-3010 ?@M2,SPACE$(39)
+3000 ?@M1,CL$;"ENEMY FIRING & MOVING
+3010 ?@M2,CL$
 3020 FOR G=1 TO 5: IF ET(G)=0 THEN 3400: REM no ship at this index
 3030 Z=9: GOSUB20: IF G<5 AND FA>5 THEN 3340: REM didn't move
 3100 M%(EY(G), EX(G))=46: REM clear this spot /dot
@@ -80,34 +82,37 @@
 5330 M%(EY(G), EX(G))=48+G-30*(G=5)
 5400 RETURN
 5999 REM Get input and fire weapon
-6000 ?@M1,"WEAPON (M/S/T/C):    
+6000 ?@M1,CL$"WEAPON (M/S/T/C): ";
 6010 A$=INKEY$: IF A$="" THEN6010
-6020 ?A$;:A=0: IF (A$="M" OR A$="m") AND M>0 THEN A=6: Z=5: GOSUB20: M=M-FA: IF M<0 THEN M=0
-6025 IF A$="C" OR A$="c" THEN Z=20: GOSUB20: E=E+FA: IF E>99 THEN E=99
-6030 IF A$="C" OR A$="c" THEN RETURN
-6035 IF (A$="S" OR A$="s") AND S>0 THEN A=4: Z=5: GOSUB20: S=S-FA: IF S<0 THEN S=0
-6040 IF (A$="T" OR A$="t") AND T>0 THEN A=9: T=T-1
-6060 IF A<3 THEN ?@M1,"BAD INPUT!       ": FORZ=1TO500: NEXT: GOTO6000
-6100 ?@M1,"TARGET NO:          
+6015 A=0
+6020 IF (A$="M" OR A$="m") AND M>0 THEN ?"MAIN BATTERY": A=6: Z=5: GOSUB20: M=M-FA: IF M<0 THEN M=0
+
+6025 IF A$="C" OR A$="c" THEN ?"CHARGING": Z=20: GOSUB20: E=E+FA: IF E>99 THEN E=99
+6030 IF A$="C" OR A$="c" THEN GOSUB1000: RETURN
+6035 IF (A$="S" OR A$="s") AND S>0 THEN ?"SECONDARY BATTERY": A=4: Z=5: GOSUB20: S=S-FA: IF S<0 THEN S=0
+6040 IF (A$="T" OR A$="t") AND T>0 THEN ?"TORPEDO": A=9: T=T-1
+6060 IF A<3 THEN ?@M1,CL$"BAD INPUT!": FORZ=1TO500: NEXT: GOTO6000
+6100 ?@M2,CL$"TARGET NO: ";
 6110 B$=INKEY$: IF B$="" THEN6110
-6120 ?B$;:B=VAL(B$): IF ET(B)=0 OR ET(B)=5 THEN ?@M1,"BAD DATA!    ": FORZ=1TO500: NEXT: GOTO6000
-6200 Z=99: GOSUB20: IF FA>EH(B) THEN ?@M2,"MISSED!    ": GOTO 6240
-6210 ?@M2,"TARGET HIT!         
+6120 ?B$" ";:B=VAL(B$): IF ET(B)=0 OR ET(B)=5 THEN ?"BAD DATA!": FORZ=1TO500: NEXT: GOTO6000
+6130 FOR ZZ=1 TO 3: FOR Z=1 TO 50: NEXT: ?". ";: NEXT ZZ
+6200 Z=99: GOSUB20: IF FA>EH(B) THEN ?"MISSED!": GOTO 6240
+6210 ?"TARGET HIT!
 6215 Z=15: GOSUB20: EE(B)=INT(EE(B)-((A*FA)/ET(B)))
 6220 IF EE(B)<1 THEN6500
 6230 Z=5: GOSUB20: E=E-FA: REM reduce our energy by a random amount
-6240 FOR Z=1 TO 1000: NEXT: ?@M2,SPACE$(39)
+6240 GOSUB1000: FOR Z=1 TO 1000: NEXT: ?@M1,CL$:?@M2,CL$:?@M3,CL$;
 6300 RETURN
 6499 REM Enemy # B was destroyed
 6500 M%(EY(B),EX(B))=46: VP=VP+ET(B): EX(B)=0: EY(B)=0: ET(B)=0: EH(B)=0: ED(B)=0: EE(B)=0
-6520 FOR Z=1 TO 1000: NEXT: ?@M2,"TARGET DESTROYED!
+6520 FOR Z=1 TO 1000: NEXT: ?@M3,CL$"TARGET DESTROYED!";
 6540 GOTO 6240
-9500 ?@M2,"YOU ARE DESTROYED!!!!!
+9500 ?@M2,CL$"YOU ARE DESTROYED!!!!!
 9510 ?"SCORE ="VP: ?
 9520 IF VP>HS THEN HS=VP
 9530 ?"****************
 9540 ?"HIGH SCORE ="HS
 9550 ?"****************
-9600 ?"ANOTHER GAME?
+9600 ?"ANOTHER GAME?";
 9610 A$=INKEY$: IF A$="" THEN 9610
 9620 IF A$="Y" OR A$="y" THEN RUN
