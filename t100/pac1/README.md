@@ -1,8 +1,8 @@
 # PAC1
 
 A 1-D version of that famous arcade game where you run around eating pellets
-and avoiding ghoulish baddies. If you eat a "power" pellet, the gholish
-baddie becomes temporarily vulnerable, and then you can eat HIM!
+and avoiding ghoulish baddies. If you eat a "power" pellet, the ghoulish 
+baddie becomes temporarily vulnerable, and then you can eat THEM!
 
 Clear the board and you get an extra life. Can you beat your high score?
 
@@ -15,7 +15,7 @@ Use the `j` key to go left and the `l` (lower case `L`) key to go right.
 ## Scoring
 
 Get 1 point for eating a pellet, 10 for a power pellet, and 20 for
-eating the baddie when he's vulnerable.
+eating the baddie when they're vulnerable.
 
 ## Versions
 
