@@ -11,12 +11,13 @@ Can you get to 5000 points in 10 rolls or less?
 
 Each turn consists of several rolls using six dice:
 1. Initial Roll: Roll all six dice. 
-1. Select at least one "scoring" die (like a 1 or a 5). Use the 1 through 6 keys to select (or deselect) dice.
+1. Select at least one "scoring" die. Use the 1 through 6 keys to select (or deselect) dice.
 1. The Decision: After setting aside scoring dice, you have two choices:
-   1. Bank: Stop rolling and add your current turn's running total to your permanent score.
-   1. Roll: Roll the remaining dice to increase your running total.
-1. Farkling: If you roll and no scoring combinations are possible from the dice on the table, you "Farkle." You lose all points in the running total during that specific turn.
+   1. Bank ("b" key): Stop rolling and add your current turn's running total to your permanent score. Includes all "selected" dice.
+   1. Roll ("r" key): Keep selected dice, and re-roll the unselected dice to increase your running total.
+1. FARKLE: If you roll and no scoring combinations are possible from the dice on the table, you "Farkle." You lose all points in the running total during that specific turn.
 
+Note: You must select at least one die to "re-roll", and you must have a non-zero running total to "bank".
 
 ## Scoring
 
