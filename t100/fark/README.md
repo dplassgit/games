@@ -1,10 +1,11 @@
-# Farkle (FARK)
+# Farkle (FARK) for Tandy 200
 
 Play the classic dice game on your Tandy 200!
 
 Can you get to 5000 points in 10 rolls or less?
 
 ![Screenshot of Farkle on Tandy 200](./images/fark.png)
+
 
 ## Gameplay
 
@@ -19,19 +20,20 @@ Each turn consists of several rolls using six dice:
 
 ## Scoring
 
-* 1: 100
-* 5: 50
+* 1: 100 each (when not part of a larger meld)
+* 5: 50 each (when not part of a larger meld)
 * 111: 1000
 * 222: 200
 * 333: 300
 * 444: 400
 * 555: 500
 * 666: 600
-* 4 of a kind: 1000
-* 5 of a kind: 2000
-* 6 of a kind: 3000
+* Four of a kind: 1000
+* Four of a kind and one pair: 1500
+* Five of a kind: 2000
+* Six of a kind: 3000
 * Three pairs: 1500
-* Two triples: 1500
+* Two triples: 2500
 * Straight (123456): 1500
 
 
@@ -40,4 +42,4 @@ Each turn consists of several rolls using six dice:
 These are bugs:
 
 * You can "keep" dice that are not part of a meld
-* You can play forever; there is no turn limit
+* You can play forever; there is no turn limit yet
