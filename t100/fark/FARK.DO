@@ -1,18 +1,20 @@
 0 REM FARKLE! for Tandy 200 by David Plass
-10 CLS:DEFINTA-Z:?@6,CHR$(27)"p F A R K L E !"CHR$(27)"q":Z=RND(-VAL(RIGHT$(TIME$,2)))
-20 DIMC(6),D(6),D$(6),H(6),S(6),T(6): REM die count, count count, dice strings, hand dice, selected dice, table dice
-30 NT=6:NH=0:S=0:RT=0:ST=0: REM number on table, number in hand, score, running total (not banked), selected total
-40 FORI=0TO6:READD$(I):NEXT: REM read dice strings
-50 ?@360,CHR$(27)"VKept:":L=189:FORI=1TO12:READS$:?@L,S$:L=L+40:NEXT: REM scoring values (display only)
+10 R$=CHR$(27)+"p":N$=CHR$(27)+"q": REM reverse, normal video
+20 CLS:DEFINTA-Z:?@6,R$" F A R K L E !"N$:Z=RND(-VAL(RIGHT$(TIME$,2)))
+30 DIMC(6),D(6),D$(6),H(6),S(6),T(6): REM die count, count count, dice strings, hand dice, selected dice, table dice
+40 NT=6:NH=0:S=0:RT=0:ST=0:R=1: REM number on table, number in hand, score, running total, selected total, # rolls
+50 FORI=0TO6:READD$(I):NEXT: REM read dice strings
+60 ?@360,CHR$(27)"VKept:":L=189:FORI=1TO12:READS$:?@L,S$:L=L+40:NEXT: REM scoring values (display only)
 99 REM main loop
 100 GOSUB600: GOSUB650: REM draw scores
-110 FORI=1TO6:S(I)=0:NEXT:GOSUB2000:D=0:L=80:FORI=1TO6:GOSUB1000:NEXT: REM draw indexes, erase table dice
-120 L=80:FORI=1TONT:T(I)=INT(6*RND(1)+1):D=T(I):GOSUB1000:NEXT: REM randomize the first nt dice
-130 A=1:GOSUB5000:F=ST:ST=0:A=0:IFF=0THEN?@280,"FARKLE!!"SPACE$(17):FORT=1TO1000:NEXT:RT=0:NT=6:NH=0:GOSUB3000:GOTO100
+110 IFR=11THEN700
+120 FORI=1TO6:S(I)=0:NEXT:GOSUB2000:D=0:L=80:FORI=1TO6:GOSUB1000:NEXT: REM draw indexes, erase table dice
+130 L=80:FORI=1TONT:T(I)=INT(6*RND(1)+1):D=T(I):GOSUB1000:NEXT: REM randomize the first nt dice
+140 A=1:GOSUB5000:F=ST:ST=0:A=0:IFF=0THENGOSUB800:GOTO100
 199 REM Input loop
-200 ?@280,"Keep (1-"CHR$(48+NT)"), Roll, Bank:  ";
+200 ?@280,"Keep ("R$"1"N$"-"R$CHR$(48+NT)N$"), "R$"R"N$"oll, "R$"B"N$"ank:  ";
 210 K$=INKEY$:IFK$=""THEN210
-220 ?@304,K$;:K=VAL(K$):IFK>0ANDK<=NTTHENGOSUB500: REM selected a key
+220 ?@304,K$;:K=VAL(K$):IFK>0ANDK<=NTTHEN500: REM selected a die
 230 IFK$="r"ORK$="R"THEN300: REM roll
 240 IFK$="b"ORK$="B"THEN400: REM bank
 290 GOTO200
@@ -25,14 +27,23 @@
 390 GOTO100
 399 REM Bank: NOT A SUBROUTINE
 400 IFRT+ST=0THENBEEP:GOTO200: REM If no running total, cannot bank
-410 S=S+ST+RT:ST=0:RT=0:NT=6:NH=0:GOSUB3000: REM bump score, clear hand
+410 S=S+ST+RT:ST=0:RT=0:NT=6:NH=0:R=R+1:GOSUB3000: REM bump score, clear hand
 420 GOTO100
-499 REM Toggle selected die from the table. Draw indexes, calc potential score
+499 REM Toggle selected die from the table. Draw indexes, calc potential score. NOT A SUBROUTINE
 500 S(K)=1-S(K):GOSUB2000:GOSUB5000:GOSUB600
-510 RETURN
+510 GOTO200
 599 REM Draw scores subroutine
 600 ?@600,"Running total:"ST+RT"  ":RETURN
-650 ?@28,CHR$(27)"pSCORE:"SCHR$(27)"q":RETURN
+650 ?@26,R$" SCORE:"S:?@66," ROLLS:"R;N$:RETURN
+699 REM game over
+700 ?@280,R$"GAME OVER!"N$SPACE$(17)
+710 ?:?R$"YOU ";:IFS<5000THEN?"LOST!"ELSE?"WON!"
+720 ?CHR$(27)"W"N$;
+790 END
+799 REM farkle subroutine
+800 ?@280,"FARKLE!!"SPACE$(17):FORT=1TO1000:NEXT
+810 R=R+1:RT=0:NT=6:NH=0:GOSUB3000: REM bump # of rolls, clear stuff, erase hand.
+890 RETURN
 999 REM draw die D at location L. updates L=L+5
 1000 D$=D$(D):?@L,LEFT$(D$,3):?@L+40,MID$(D$,4,3):?@L+80,RIGHT$(D$,3)
 1010 L=L+5:RETURN

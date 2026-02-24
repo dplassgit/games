@@ -43,4 +43,3 @@ Note: You must select at least one die to "re-roll", and you must have a non-zer
 These are bugs:
 
 * You can "keep" dice that are not part of a meld
-* You can play forever; there is no turn limit yet
