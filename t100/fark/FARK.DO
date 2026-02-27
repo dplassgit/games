@@ -16,7 +16,7 @@
 70 L=200:FORI=1TO6:?@L,"";:L=L+5:IFI>NTTHEN?"  "ELSE?CHR$(32+10*S(I))CHR$(48+I): REM space or star if selected, then index
 71 NEXT:RETURN
 79 REM Draw die D at location L. Updates L=L+5
-80 D$=D$(D):?@L,;:GOSUB 30100:?@L+40,;:GOSUB30200:?@L+80,;:GOSUB30300: L=L+5: RETURN
+80 ?@L,;:GOSUB 30100:?@L+40,;:GOSUB30200:?@L+80,;:GOSUB30300: L=L+5: RETURN
 99 REM Main loop: show score, roll dice
 100 GOSUB60:?@26,R$" SCORE:"S:?@66," ROLLS:"R;N$
 110 IFR=11THEN700: REM Game over
@@ -52,7 +52,7 @@
 1000 CLS:DEFINTA-Z:R$=CHR$(27)+"p":N$=CHR$(27)+"q": REM reverse, normal video
 1010 NS$=CHR$(27)+"V": SC$=CHR$(27)+"W": REM no scroll, scrolling last line
 1020 ?@6,R$" F A R K L E !"N$:Z=RND(-VAL(RIGHT$(TIME$,2))):A=0:B=0:D=0: REM local variables
-1030 DIMC(6),D(6),D$(6),H(6),S(6),T(6): REM die count, count count, dice strings, hand dice, selected dice, table dice
+1030 DIMC(6),D(6),H(6),S(6),T(6): REM die count, count count, hand dice, selected dice, table dice
 1040 NT=6:NH=0:S=0:RT=0:ST=0:R=1: REM number on table, number in hand, score, running total, selected total, # rolls
 1060 ?@360,NS$"Kept:";:L=189:FORI=1TO12:READS$:?@L,S$;:L=L+40:NEXT:?@0,SC$: REM Print scoring values
 1070 ?@600,"Running total:";
