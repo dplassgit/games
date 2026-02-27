@@ -11,7 +11,7 @@
 47 IFC(I)<=2THENST=ST-C(I)*(50*(I=5)+100*(I=1)): REM 1, 11, 5, 55
 48 NEXT:RETURN
 59 REM Draw running total subroutine
-60 ?@614,ST+RT"  ":RETURN
+60 ?@614,ST+RT"  ";:RETURN
 69 REM Draw indexes subroutine. Erases numbers after NT
 70 L=200:FORI=1TO6:?@L,"";:L=L+5:IFI>NTTHEN?"  "ELSE?CHR$(32+10*S(I))CHR$(48+I): REM space or star if selected, then index
 71 NEXT:RETURN
@@ -40,7 +40,7 @@
 399 REM Bank subroutine
 400 IFRT+ST=0THENBEEP:RETURN: REM If no running total, cannot bank
 410 S=S+ST+RT:ST=0:RT=0:NT=6:NH=0:R=R+1:GOSUB900:B=1:RETURN: REM bump score, clear hand, roll all
-700 ?@280,R$CHR$(27)"WGAME OVER!"N$SPACE$(17)
+700 ?@280,R$"GAME OVER!"N$SPACE$(17)
 710 ?:?R$"YOU ";:IFS<5000THEN?"LOST!"N$ELSE?"WON!"N$
 790 END
 799 REM Farkle subroutine
@@ -50,12 +50,13 @@
 900 L=440:FORI=1TO6:D=-H(I)*(I<=NH):GOSUB80:NEXT:RETURN
 999 REM set up
 1000 CLS:DEFINTA-Z:R$=CHR$(27)+"p":N$=CHR$(27)+"q": REM reverse, normal video
-1020 ?@6,R$CHR$(27)"V F A R K L E !"N$:Z=RND(-VAL(RIGHT$(TIME$,2))):A=0:B=0:D=0: REM local variables
+1010 NS$=CHR$(27)+"V": SC$=CHR$(27)+"W": REM no scroll, scrolling last line
+1020 ?@6,R$" F A R K L E !"N$:Z=RND(-VAL(RIGHT$(TIME$,2))):A=0:B=0:D=0: REM local variables
 1030 DIMC(6),D(6),D$(6),H(6),S(6),T(6): REM die count, count count, dice strings, hand dice, selected dice, table dice
 1040 NT=6:NH=0:S=0:RT=0:ST=0:R=1: REM number on table, number in hand, score, running total, selected total, # rolls
 1050 FORI=0TO6:READD$(I):NEXT: REM read dice strings (0th entry is blank)
-1060 ?@360,"Kept:":L=189:FORI=1TO12:READS$:?@L,S$:L=L+40:NEXT: REM Print scoring values
-1070 ?@600,"Running total:
+1060 ?@360,NS$"Kept:";:L=189:FORI=1TO12:READS$:?@L,S$;:L=L+40:NEXT:?@0,SC$: REM Print scoring values
+1070 ?@600,"Running total:";
 1080 P$="Keep ("+R$+"1"+N$+"-"+R$:Q$=N$+"), "+R$+"R"+N$+"oll, "+R$+"B"+N$+"ank:  "
 1090 RETURN
 2000 DATA"         ","    o    ","o       o","o   o   o","o o   o o","o o o o o","o oo oo o"
