@@ -1,7 +1,7 @@
 0 REM FARKLE! for Tandy 200 by David Plass
 5 GOSUB1000:GOTO100: REM Set up
 39 REM Calculate "Selected total" in ST. If A=1 then all table dice are counted, otherwise just selected dice in S()
-40 ST=0:FORI=1TO6:C(I)=0:D(I)=0:NEXT:FORI=1TONT:IFAORS(I)THENC(T(I))=C(T(I))+1:NEXTELSENEXT
+40 ST=0:FORI=1TO6:C(I)=0:D(I)=0:NEXT:FORI=1TONT:IFAORS(I)THENT=T(I):C(T)=C(T)+1:NEXTELSENEXT
 41 FORI=1TO6:D(C(I))=D(C(I))+1:NEXT: REM D(I)=how many of each count, i.e., D(2) is how many doubles
 42 IFD(1)=6ORD(2)=3OR(D(2)ANDD(4))THENST=ST+1500:RETURN: REM straight, xxyyzz, xxxxyy
 43 IFD(3)=2THENST=ST+2500:RETURN: REM xxxyyy
@@ -18,7 +18,7 @@
 79 REM Draw die D at location L. Updates L=L+5
 80 D$=D$(D):?@L,LEFT$(D$,3):?@L+40,MID$(D$,4,3):?@L+80,RIGHT$(D$,3):L=L+5:RETURN
 99 REM Main loop: show score, roll dice
-100 GOSUB60:?@26,R$" SCORE:"S:?@66," ROLLS:"R;N$
+100 ?@614,ST+RT"  ";:?@26,R$" SCORE:"S:?@66," ROLLS:"R;N$
 110 IFR=11THEN700: REM Game over
 120 FORI=1TO6:S(I)=0:NEXT:GOSUB70:D=0:L=80:FORI=1TO6:GOSUB80:NEXT: REM clear selected, draw indexes, erase table dice
 130 L=80:FORI=1TONT:T(I)=INT(6*RND(1)+1):D=T(I):GOSUB80:NEXT: REM randomize the first nt dice
