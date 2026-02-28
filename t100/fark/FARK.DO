@@ -5,6 +5,11 @@
 41 FORI=1TO6:D(C(I))=D(C(I))+1:NEXT: REM D(I)=how many of each count, i.e., D(2) is how many doubles
 42 IFD(1)=6ORD(2)=3OR(D(2)ANDD(4))THENST=ST+1500:RETURN: REM straight, xxyyzz, xxxxyy
 43 IFD(3)=2THENST=ST+2500:RETURN: REM xxxyyy
+44 IFD(6)THENST=ST+3000:RETURN: REM 6 of a kind
+45 ST=ST+1000*D(4)+2000*D(5): REM 4, 5 of a kind
+47 FORI=1TO6:IFC(I)=3THENST=ST+I*100-900*(I=1): REM xxx (111 scores 1000)
+48 IFC(I)<=2THENST=ST-C(I)*(50*(I=5)+100*(I=1)): REM 1, 11, 5, 55
+49 NEXT:RETURN
 79 REM Draw die D at location L. Updates L=L+5
 80 D$=D$(D):?@L,LEFT$(D$,3):?@L+40,MID$(D$,4,3):?@L+80,RIGHT$(D$,3):L=L+5:RETURN
 99 REM Main loop: show score, roll dice
