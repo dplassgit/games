@@ -2,6 +2,9 @@
 
 All .do files are untokenized (text) BASIC.
 
+> [!WARNING]
+> This is a work in progress and none of the versions are fully functional.
+
 ## vad0
 
 12 aliens, graphical tank, shoots stars, does not stop when hits an alien
