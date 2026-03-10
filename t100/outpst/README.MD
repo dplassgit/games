@@ -1,4 +1,4 @@
-# Outpost
+# Outpost (OUTPST.DO) for Tandy 200
 
 Ported from Commodore PET BASIC. Currently only for Tandy 200
 
