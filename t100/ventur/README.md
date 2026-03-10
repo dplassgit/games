@@ -3,8 +3,19 @@
 Welcome to the USS Ventur! You are an ensign who must, among other things, figure out how to get dressed, get around
 the ship, and save the day!
 
+Tandy 100/102:
+
+![Screenshot of VENTUR on Tandy 100/102](./images/ventur100.png)
+
+
+Tandy 200:
+
+![Screenshot of VENTUR on Tandy 200](./images/ventur200.png)
+
 
 ## Installing
+
+The game works on the Tandy 100/102 and the 200.
 
 There are three versions:
   * [venmax.do](venmax.do) - Verbose source code text, with comments
