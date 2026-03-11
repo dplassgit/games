@@ -33,12 +33,12 @@
 1110next:ifr>=13andr<=19then?c$"viewscreen":n$="":ifs(11)=7then?"All the consoles on the bridge are dark.";
 1120?n$:return
 
-1200ifo$=""then1100 elseifob=0then?"I don't know what that is.":return
+1200ifo$=""then1100elseifob=0then?"I don't know what that is.":return
 1210?"You look at the "o$".":ifs(ob)=5then?"It looks like it can be opened.":return
-1215ifob=2ands(2)=6ands(3)=1then3200
+1215ifob=2ands(2)=6ands(3)=1andl(3)=1then3200
 1220ifs(ob)=6andob>=15andob<=18then3100
 1225if(ob=12orob=13orob=14)ands(11)=7then?"It is offline.":return
-1230ifs(ob)=6then?"It is open." elseifs(ob)=7then?"It is deactivated.":return
+1230ifs(ob)=6then?"It is open.":returnelseifs(ob)=7then?"It is deactivated.":return
 1235ifob=9orob=10then?"You see billions and billions of stars.":return
 1240ifob=4then?"On top you see a power level button.":return
 1245ifob=5ands(11)=7then?"It shows 'No connection'. The computer":?"must still be offline...":return
@@ -80,9 +80,9 @@
 1900ifo$=""then?"Say something!":return
 1910ifr<>12then1590
 1920ifo$<>"help"ando$<>"directory"then1950
-1930?"The turbolift says 'You are ";:d=d(12,1):ifd=7then?"on deck 3"; elseifd=13then?"the bridge"; elseifd=31then?"on deck 2"; elseifd=20then?"in engineering";
+1930?"The turbolift says 'You are ";:d=d(12,1):ifd=7then?"on deck 3";elseifd=13then?"the bridge";elseifd=31then?"on deck 2";elseifd=20then?"in engineering";
 1940?". You can go to the bridge, deck 2, deck 3, or engineering'.":return
-1950f=0:ifo$="deck 3"thenf=1:d(12,1)=7 elseifo$="deck 2"thenf=1:d(12,1)=31 elseifo$="engineering"thenf=1:d(12,1)=20
+1950f=0:ifo$="deck 3"thenf=1:d(12,1)=7elseifo$="deck 2"thenf=1:d(12,1)=31elseifo$="engineering"thenf=1:d(12,1)=20
 1960ifo$="bridge"thenif(q2*q3)=0then?"The turbolift says 'You are not (yet)":?"authorized to go to the bridge.'":returnelsef=1:d(12,1)=13
 1970ifu=0andf=1thens=s+10:u=1
 1980iffthen?"The doors swish close. You feel the":?"turbolift move. A few seconds later the doors swish open.":return
@@ -98,14 +98,14 @@
 2200gosub3000:iffthenreturn
 2210ifs(ob)=6then?"It's already open.":return
 2220ifs(ob)<>5then?"You can't open that!":return
-2230s(ob)=6:?"You open the "o$".":ifob=2thens(3)=1:goto3200
+2230s(ob)=6:?"You open the "o$".":ifob=2thenifs(3)=0thens(3)=1:goto3200else?"It is empty.":return
 2240ifob>=15andob<=18thens(ob+4)=2:goto3100
 2250ifob=23thens=s-1000:?"Antimatter shoots out, annihilating":?"everything in its path! The ship blows":?"up! Everybody dies!":goto9500
 2290return
 2300gosub3000:iffthenreturn
 2310ifs(ob)=5then?"It's already closed.":return
 2320ifs(ob)<>6then?"You can't close that.":return
-2330s(ob)=5:?"You close the "o$".":ifob=2thens(3)=0
+2330s(ob)=5:?"You close the "o$".":ifob=2ands(3)=1andl(3)=1thens(3)=0
 2350ifob>=15andob<=18thens(ob+4)=0
 2390return
 2400a=1-a:?"Auto-look turned o";:ifathen?"n."else?"ff.

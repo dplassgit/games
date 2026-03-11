@@ -35,10 +35,10 @@
 1200 rem "look" This subroutine needs to be reworked because is so specific to each item and its state...
 1200 if o$="" then 1100 else if ob=0 then ?"I don't know what that is.":return: rem look at everything, unknown object
 1210 ?"You look at the "o$".": if s(ob)=5 then ?"It looks like it can be opened.":return
-1215 if ob=2ands(2)=6ands(3)=1 then 3200: rem desk/combadge
+1215 if ob=2ands(2)=6ands(3)=1andl(3)=1 then 3200: rem desk/combadge
 1220 if s(ob)=6andob>=15andob<=18 then 3100: rem EPS manifold inside the access panel
 1225 if (ob=12orob=13orob=14)ands(11)=7 then ?"It is offline.":return: rem bridge console
-1230 if s(ob)=6 then ?"It is open." else if s(ob)=7 then ?"It is deactivated.":return
+1230 if s(ob)=6 then ?"It is open.":return else if s(ob)=7 then ?"It is deactivated.":return
 1235 if ob=9orob=10 then ?"You see billions and billions of stars.":return
 1240 if ob=4 then ?"On top you see a power level button.":return
 1245 if ob=5ands(11)=7 then ?"It shows 'No connection'. The computer":?"must still be offline...":return
@@ -98,14 +98,14 @@
 2200 gosub3000:iff then return:rem open
 2210 if s(ob)=6 then ?"It's already open.":return
 2220 if s(ob)<>5 then ?"You can't open that!":return
-2230 s(ob)=6:?"You open the "o$".":if ob=2 then s(3)=1:goto3200: rem open desk, see combadge
+2230 s(ob)=6:?"You open the "o$".":if ob=2 then if s(3)=0 then s(3)=1:goto 3200 else ?"It is empty.":return: rem open desk, see combadge if it's there
 2240 if ob>=15andob<=18 then s(ob+4)=2:goto3100: rem eps manifold inside the access panel
 2250 if ob=23 then s=s-1000:?"Antimatter shoots out, annihilating":?"everything in its path! The ship blows":?"up! Everybody dies!":goto9500
 2290 return
 2300 gosub3000:iff then return:rem close
 2310 if s(ob)=5 then ?"It's already closed.":return
 2320 if s(ob)<>6 then ?"You can't close that.":return
-2330 s(ob)=5:?"You close the "o$".":if ob=2 then s(3)=0: rem desk; toggle combadge visibility
+2330 s(ob)=5:?"You close the "o$".":if ob=2ands(3)=1andl(3)=1 then s(3)=0: rem desk; toggle combadge visibility
 2350 if ob>=15andob<=18 then s(ob+4)=0: rem access panel; toggle power conduit visibility
 2390 return
 2400 a=1-a:?"Auto-look turned o";:if a then ?"n." else ?"ff.
