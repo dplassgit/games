@@ -1,5 +1,5 @@
 0 rem number of: rooms, aliases, verbs, objects, blockages
-0 cls:?"Initializing...":definta-z:nr=35:na=9:nv=20:no=28:nb=5:gosub10000:cls:r=1:e$=chr$(27):?e$"pUSS Ventur NCC-73209"e$"q
+5 cls:?"Initializing...":definta-z:nr=35:na=10:nv=20:no=28:nb=5:gosub10000:cls:r=1:e$=chr$(27):?e$"pUSS Ventur NCC-73209"e$"q
 10 ?:?"Yellow alert. The Ventur is dead in":?"space. We must make repairs and --":?a$:?:?"Hit a key to start...
 15 if inkey$="" then 15
 20 ?:?e$"p"r$(r)e$"q":if q1=0 then ?a$: rem show location in reverse; if still in quarters, show "red alert"
@@ -12,7 +12,7 @@
 199 rem subroutine converts i$ to ou$ via direction aliases
 200 for ii=1 to na:if i$=a$(ii,jj) then ou$=a$(ii,1-jj):return
 210 next:ou$=i$:return
-500 rem look up shortcut. break d$ into verb v$ and object o$. Sets verb # in v and optional object # in ob
+499 rem look up shortcut. break d$ into verb v$ and object o$. Sets verb # in v and optional object # in ob
 500 v=0:o$="":ob=0:for i=1 to na:if d$=a$(i,0)ord$=a$(i,1) then v=1:o$=a$(i,0):return: rem "go" verb, short direction
 510 next:for i=1 to nv:v$=v$(i):j=instr(d$,v$):ifj<>1 then next:v$=d$:return: rem if never found then just return.
 529 rem found the verb. optionally look up the object.
@@ -32,7 +32,7 @@
 1105 ?:?"You see: ";:n$="Nothing special.":c$="":for i=1 to no:if l(i)=rands(i) then ?c$o$(i);:c$=", ":n$=""
 1110 next:if r>=13andr<=19 then ?c$"viewscreen":n$="":if s(11)=7 then ?"All the consoles on the bridge are dark.";
 1120 ?n$:return
-1200 rem "look" This subroutine needs to be reworked because is so specific to each item and its state...
+1199 rem "look" This subroutine needs to be reworked because is so specific to each item and its state...
 1200 if o$="" then 1100 else if ob=0 then ?"I don't know what that is.":return: rem look at everything, unknown object
 1210 ?"You look at the "o$".": if s(ob)=5 then ?"It looks like it can be opened.":return
 1215 if ob=2ands(2)=6ands(3)=1andl(3)=1 then 3200: rem desk/combadge
@@ -67,7 +67,7 @@
 1550 if ob=5andr=16 then s=s+10:?"The coordinates are copied to the PADD.":pc=1:return: rem pc=indicates PADD has the coordinates
 1560 if ob=5andr=19andpc=1 then ?"The coordinates are sent from the PADD":?"to Starbase 73. The Ventur is saved! Youwin!":s=s+1000:goto9500
 1590 ?"Nothing happens.":return: rem this line # is used in many places
-1600 rem use hypospray or phaser on a Borg drone
+1599 rem use hypospray or phaser on a Borg drone
 1600 if ob=8andh=2 then ?"The hypospray is empty.":return
 1610 for b=24 to 27:if l(b)=rands(b)=2 then 1630: rem live drone is here
 1620 next:?"There is nothing to shoot at here.":return
@@ -87,7 +87,7 @@
 1970 if u=0andf=1 then s=s+10:u=1: rem first time using turbolift, you get 10 points.
 1980 if f then ?"The doors swish close. You feel the":?"turbolift move. A few seconds later the doors swish open.":return
 1990 ?"The turbolift says '"o$" is not a valid destination'.":return
-2100 rem tap
+2099 rem tap
 2100 if o$<>"" then ?"You tap the "o$"." else 1590: rem "Nothing happens"
 2110 if ob=28ands(4)=3andpp<4 then pp=pp+1:?"The power level increases to"pp:return
 2120 if ob=28ands(4)=3 then ?"The power level is already at maximum.":return
@@ -122,16 +122,16 @@
 3090 return
 3100 ?"You see an EPS manifold inside.":return: rem inside access panel
 3200 ?"You see a combadge inside.":return: rem inside desk
-4000 rem "use" hypospray or phaser
+3999 rem "use" hypospray or phaser
 4000 if r=25ands(18)=6ands(22)=2 then ?"It reports 'Plasma detected'.":return: rem TODO randomize this location
 4090 ?"It reports 'No plasma detected'.":return
-4500 rem show a quest based on existing quests: q2=get phaser, q3=fix plasma leak, q4=fix computer
+4499 rem show a quest based on existing quests: q2=get phaser, q3=fix plasma leak, q4=fix computer
 4500 if (q2*q3*q4)=0then?"Your combadge beeps. 'Ensign, report to
 4510 if q2=0 then ?"the armory on deck 2. PREPARE TO REPEL":?"BOARDERS!'":return
 4520 if q3=0 then ?"engineering to fix a plasma leak in":?"an EPS manifold.'":return
 4530 if q4=0 then ?"the bridge.'
 4590 return
-5000 rem "use" hyperspanner
+4999 rem "use" hyperspanner
 5000 if r=25ands(18)=6ands(22)=2 then q3=1:s(22)=4:s=s+100:?"The hyperspanner seals the EPS manifold.The plasma leak is fixed!":goto4500
 5090 goto1590: rem "Nothing happens"
 9500 ?:?"Game over. Final score:"s:end
@@ -142,27 +142,28 @@
 10070 for i=1 to no:read o$(i):next:for i=1 to no:read l(i):next:for i=1 to no:read s(i):next:rem object name, location, status
 10100 for i=1 to nb:read b(i),b$(i,0),b$(i,1):next:rem blockages, direction, what to say
 10110 a$="RED ALERT! PREPARE TO REPEL BOARDERS!":pp=1:pr=1:return: rem phaser power, power required
-20000 rem 35 rooms: name, number of exits, direction, destination #n
-20000 data Your Quarters,3,i,4,p,2,sb,3,Closet,1,sb,1,Head,1,p,1,Passageway,3,o,1,cw,5,ccw,11,Passageway,2,cw,6,ccw,4
+19999 rem 35 rooms: name, number of exits, direction, destination #n
+20000 data Your Quarters,3,i,4,p,2,s,3,Closet,1,s,1,Head,1,p,1,Passageway,3,o,1,cw,5,ccw,11,Passageway,2,cw,6,ccw,4
 20010 data Passageway,2,cw,7,ccw,5,Deck 3 Lobby,3,i,12,cw,8,ccw,6,Passageway,2,cw,9,ccw,7,Passageway,2,cw,10,ccw,8,Passageway,2,cw,11,ccw,9
-20020 data Passageway,2,cw,4,ccw,10,Turbolift,1,out,7,Bridge/Command Dais,4,f,14,p,18,sb,19,a,12,Bridge/Center,3,p,15,sb,16,a,13
-20030 data Bridge/Helm,2,sb,14,a,18,Bridge/Navigation,2,p,14,a,19,Unused,1,p,17,Bridge/Ops,2,f,15,sb,13,Bridge/Comms,2,p,13,f,16
-20040 data Main Engineering,2,f,12,a,21,Warp core,3,f,20,p,22,sb,24,Jeffries Tube,2,sb,21,p,23,Jeffries Tube,1,sb,22
-20050 data Jeffries Tube,2,p,21,sb,25,Jeffries Tube,1,p,24,Armory,1,o,29,Sick bay,1,i,28,Passageway,3,o,27,cw,29,ccw,35
+20020 data Passageway,2,cw,4,ccw,10,Turbolift,1,out,7,Bridge/Command Dais,4,f,14,p,18,s,19,a,12,Bridge/Center,3,p,15,s,16,a,13
+20030 data Bridge/Helm,2,s,14,a,18,Bridge/Navigation,2,p,14,a,19,Unused,1,p,17,Bridge/Ops,2,f,15,s,13,Bridge/Comms,2,p,13,f,16
+20040 data Main Engineering,2,f,12,a,21,Warp core,3,f,20,p,22,s,24,Jeffries Tube,2,s,21,p,23,Jeffries Tube,1,s,22
+20050 data Jeffries Tube,2,p,21,s,25,Jeffries Tube,1,p,24,Armory,1,o,29,Sick bay,1,i,28,Passageway,3,o,27,cw,29,ccw,35
 20060 data Passageway,3,i,26,cw,30,ccw,28,Passageway,2,cw,31,ccw,29,Deck 2 Lobby,3,i,12,cw,32,ccw,30,Passageway,2,cw,33,ccw,31
 20070 data Passageway,2,cw,34,ccw,32,Passageway,2,cw,35,ccw,33,Passageway,2,cw,28,ccw,34
-21000 rem 20 verbs
+20999 rem 20 verbs
 21000 data go,look,examine,get,take,drop,leave,use,fire,shoot,say,tap,open,close,inv,inventory,help,autolook,score,quit
-22000 rem 9 direction aliases
-22000 data cw,clockwise,ccw,counterclockwise,i,inboard,o,outboard,p,port,sb,starboard,a,aft,f,forward,out,out
-23000 rem 28 objects
+21998 rem 10 direction aliases. Both sb and starboard map back to s. But since the short-to-long aliases are read
+21999 rem left to right (line 1100), s only maps to starboard.
+22000 data cw,clockwise,ccw,counterclockwise,i,inboard,o,outboard,p,port,s,starboard,a,aft,f,forward,out,out,s,sb
+22999 rem 28 objects
 23000 data uniform,desk,combadge,phaser,PADD,hyperspanner,tricorder,hypospray,porthole,viewscreen,computer console,nav console
 23010 data helm console,comms console,access panel,access panel,access panel,access panel,EPS manifold,EPS manifold
 23020 data EPS manifold,EPS manifold,warp core,Borg drone,Borg drone,Borg drone,Borg drone,power level
-23100 rem 28 object initial locations
+23099 rem 28 object initial locations
 23100 data 2,1,1,26,15,20,21,27,1,,18,16,15,19,22,23,24,25,22,23,24,25,21,29,13,16,20,
-23200 rem 28 object status: 0=invisible,1=visible&gettable,2=visible&not gettable,3=gotten,4=used,5=openable,6=open,7=dead
+23199 rem 28 object status: 0=invisible,1=visible&gettable,2=visible&not gettable,3=gotten,4=used,5=openable,6=open,7=dead
 23200 data 1,5,,1,1,1,1,1,2,2,7,7,7,7,5,5,5,5,,,,,5,2,2,2,2,
-24000 rem 4 blockages: from room, direction, message
+23999 rem 4 blockages: from room, direction, message
 24000 data 1,i,You need to be in full uniform first!,29,i,A Borg drone blocks your path!,13,p,A Borg drone blocks your path.
 24010 data 16,a,A Borg drone blocks your path...,20,a,A Borg drone blocks your path!
