@@ -20,10 +20,10 @@
 540 t$=mid$(d$,len(v$)+1):if left$(t$,1)<>" " then v=0:return else o$=mid$(t$,2): rem strip leading space if there is one.
 560 if o$=o$(10)andr>=13andr<=19 then ob=10:return: rem special case for viewscreen because you can see it from multiple places
 568 rem TODO: make "parent/child" relationships so it's easier to deal with the phaser/power button and other relationships
-569 rem the (j=28 and s(4)=3) means "if power button and you have the phaser"
-570 for j=1 to no:if o$(j)=o$and(l(j)=rors(j)=3or(j=28ands(4)=3)) then ob=j:return else next: rem else object must be in this room or in inventory
-580 for j=1 to oa:jj=oa(j):if oa$(j)=o$and(l(jj)=rors(jj)=3or(jj=28ands(4)=3)) then ob=jj:o$=o$(ob):return else next: rem look in aliases
-590 return
+569 rem the (j=28 and f) means "if power button and you have the phaser"
+570 f=-(s(4)=3):for j=1 to no:if o$(j)=o$ then if l(j)=rors(j)=3or(j=28andf) then ob=j:return: rem else object must be in this room or in inventory
+580 next:for j=1 to oa:if oa$(j)=o$ then k=oa(j):if l(k)=rors(k)=3or(k=28andf) then ob=k:o$=o$(ob):return: rem look in aliases
+590 next:return
 999 rem "go" subroutine. expects destination direction in o$
 1000 i$=o$:jj=1:gosub200:i$=ou$:d=0:for i=1 to nd(r):ifi$=d$(r,i) then d=d(r,i) else next: rem look up direction
 1010 if d=0 then ?"You can't go that way.":return
@@ -73,7 +73,7 @@
 1610 for b=24 to 27:if l(b)=rands(b)=2 then 1630: rem live drone is here
 1620 next:?"There is nothing to shoot at here.":return
 1630 if ob=4andpp<pr then ?"You shoot the drone but nothing happens.The Borg have adapted to the phaser's":?"power level!":return
-1640 if ob=4 then pr=pr+1:s=s+100*pp:?"You shoot the drone with the phaser.
+1640 if ob=4 then pr=pr+1:s=s+100*pr:?"You shoot the drone with the phaser.
 1650 if ob=8 then s=s+100:h=h+1:?"You inject the drone with the hypospray.";
 1660 s(b)=7:o$(b)="a deactivated Borg drone":?"The drone is deactivated and collapses.
 1670 for i=1 to nb:if b(i)=r then b(i)=0:return:rem remove blockage at this location (ignores direction)
@@ -114,7 +114,7 @@
 2600 t=val(o$):if t>0andt<=nr then r=t:?"Transporting to "r$(t):return
 2610 ?"Commands: ":for i=1 to nv:?v$(i)" ";:next:?:return
 2700 ?"Current score:"s:return
-2999 rem double check ob. TODO: make this better, so we can deal with power button
+2999 rem double check ob. TODO: make this better, so we can more easily deal with power button
 3000 f=0:if (ob=0ando$<>"")or(ob<>0ands(ob)=0) then ?"I don't know what that is.":f=1:return: rem bad object or invisible
 3010 if ob=0 then ?"You must '"v$"' something!":f=1:return: rem no object
 3090 return

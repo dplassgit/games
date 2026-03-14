@@ -15,9 +15,9 @@
 530v=i:iflen(v$)>=len(d$)thenreturn
 540t$=mid$(d$,len(v$)+1):ifleft$(t$,1)<>" "thenv=0:returnelseo$=mid$(t$,2)
 560ifo$=o$(10)andr>=13andr<=19thenob=10:return
-570forj=1tono:ifo$(j)=o$and(l(j)=rors(j)=3or(j=28ands(4)=3))thenob=j:returnelsenext
-580forj=1tooa:jj=oa(j):ifoa$(j)=o$and(l(jj)=rors(jj)=3or(jj=28ands(4)=3))thenob=jj:o$=o$(ob):returnelsenext
-590return
+570f=-(s(4)=3):forj=1tono:ifo$(j)=o$thenifl(j)=rors(j)=3or(j=28andf)thenob=j:return
+580next:forj=1tooa:ifoa$(j)=o$thenk=oa(j):ifl(k)=rors(k)=3or(k=28andf)thenob=k:o$=o$(ob):return
+590next:return
 1000i$=o$:jj=1:gosub200:i$=ou$:d=0:fori=1tond(r):ifi$=d$(r,i)thend=d(r,i)elsenext
 1010ifd=0then?"You can't go that way.":return
 1020fori=1tonb:ifb(i)=randb$(i,0)=i$then?b$(i,1):returnelsenext
@@ -64,7 +64,7 @@
 1610forb=24 to 27:ifl(b)=rands(b)=2then1630
 1620next:?"There is nothing to shoot at here.":return
 1630ifob=4andpp<prthen?"You shoot the drone but nothing happens.The Borg have adapted to the phaser's":?"power level!":return
-1640ifob=4thenpr=pr+1:s=s+100*pp:?"You shoot the drone with the phaser.
+1640ifob=4thenpr=pr+1:s=s+100*pr:?"You shoot the drone with the phaser.
 1650ifob=8thens=s+100:h=h+1:?"You inject the drone with the hypospray.";
 1660s(b)=7:o$(b)="a deactivated Borg drone":?"The drone is deactivated and collapses.
 1670fori=1tonb:ifb(i)=rthenb(i)=0:return
