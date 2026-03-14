@@ -1,5 +1,5 @@
-0 rem number of: rooms, aliases, verbs, objects, blockages
-5 cls:?"Initializing...":definta-z:nr=35:na=10:nv=20:no=28:nb=5:gosub10000:cls:r=1:e$=chr$(27):?e$"pUSS Ventur NCC-73209"e$"q
+0 rem number of: rooms, aliases, verbs, objects, blockages, object aliases. r=current room #
+5 cls:?"Initializing...":definta-z:nr=35:na=10:nv=20:no=28:nb=5:oa=11:gosub10000:cls:r=1:e$=chr$(27):?e$"pUSS Ventur NCC-73209"e$"q
 10 ?:?"Yellow alert. The Ventur is dead in":?"space. We must make repairs and --":?a$:?:?"Hit a key to start...
 15 if inkey$="" then 15
 20 ?:?e$"p"r$(r)e$"q":if q1=0 then ?a$: rem show location in reverse; if still in quarters, show "red alert"
@@ -18,9 +18,11 @@
 529 rem found the verb. optionally look up the object.
 530 v=i:if len(v$)>=len(d$) then return: rem too small
 540 t$=mid$(d$,len(v$)+1):if left$(t$,1)<>" " then v=0:return else o$=mid$(t$,2): rem strip leading space if there is one.
-550 if o$=o$(28)ands(4)=3 then ob=28:return: rem special case for power level because you can't take it
 560 if o$=o$(10)andr>=13andr<=19 then ob=10:return: rem special case for viewscreen because you can see it from multiple places
-570 for j=1 to no:if o$(j)=o$and(l(j)=rors(j)=3) then ob=j else next: rem else object must be in this room or in inventory
+568 rem TODO: make "parent/child" relationships so it's easier to deal with the phaser/power button and other relationships
+569 rem the (j=28 and s(4)=3) means "if power button and you have the phaser"
+570 for j=1 to no:if o$(j)=o$and(l(j)=rors(j)=3or(j=28ands(4)=3)) then ob=j:return else next: rem else object must be in this room or in inventory
+580 for j=1 to oa:jj=oa(j):if oa$(j)=o$and(l(jj)=rors(jj)=3or(jj=28ands(4)=3)) then ob=jj:o$=o$(ob):return else next: rem look in aliases
 590 return
 999 rem "go" subroutine. expects destination direction in o$
 1000 i$=o$:jj=1:gosub200:i$=ou$:d=0:for i=1 to nd(r):ifi$=d$(r,i) then d=d(r,i) else next: rem look up direction
@@ -32,12 +34,12 @@
 1105 ?:?"You see: ";:n$="Nothing special.":c$="":for i=1 to no:if l(i)=rands(i) then ?c$o$(i);:c$=", ":n$=""
 1110 next:if r>=13andr<=19 then ?c$"viewscreen":n$="":if s(11)=7 then ?"All the consoles on the bridge are dark.";
 1120 ?n$:return
-1199 rem "look" This subroutine needs to be reworked because is so specific to each item and its state...
-1200 if o$="" then 1100 else if ob=0 then ?"I don't know what that is.":return: rem look at everything, unknown object
-1210 ?"You look at the "o$".": if s(ob)=5 then ?"It looks like it can be opened.":return
+1200 if o$="" then 1100: rem "look". TODO: Refactor this; it's so specific to each item and its state..
+1205 gosub3000:iff then return
+1210 if s(ob)=5 then ?"It looks like it can be opened.":return
 1215 if ob=2ands(2)=6ands(3)=1andl(3)=1 then 3200: rem desk/combadge
 1220 if s(ob)=6andob>=15andob<=18 then 3100: rem EPS manifold inside the access panel
-1225 if (ob=12orob=13orob=14)ands(11)=7 then ?"It is offline.":return: rem bridge console
+1225 if ob>=12andob<=14ands(11)=7 then ?"It is offline.":return: rem bridge console
 1230 if s(ob)=6 then ?"It is open.":return else if s(ob)=7 then ?"It is deactivated.":return
 1235 if ob=9orob=10 then ?"You see billions and billions of stars.":return
 1240 if ob=4 then ?"On top you see a power level button.":return
@@ -53,10 +55,9 @@
 1320 ?"You take the "o$".":l(ob)=0:s(ob)=3:if ob=1 then ?"You put it on.
 1340 if ob=3ands(1)=3 then ?"You attach the combadge to your uniform.
 1350 if (ob=1orob=3)ands(1)=3ands(3)=3 then f=1:b(1)=0:s=s+10:q1=1:goto4500:rem remove blockage (now that we're in full uniform)
-1360 if ob=4andq2=0 then q2=1:s=s+10:goto4500: rem got the phaser: quest 2 done
+1360 if ob=4andq2=0 then s(28)=2:q2=1:s=s+10:goto4500: rem got the phaser: make button visible; quest 2 done
 1390 return
 1400 gosub3000:iff then return:rem drop
-1410 if s(ob)<>3 then ?"You don't have that.":return
 1420 ?"You drop the "o$".":l(ob)=r:s(ob)=1:if (ob=1orob=3)and(s(1)<>3ors(3)<>3) then b(1)=1:s=s-10:rem add blockage (not in full uniform)
 1490 return
 1500 gosub3000:iff then return:rem use, shoot, fire
@@ -66,19 +67,19 @@
 1540 if ob=6ands(6)=3 then gosub5000:return: rem use hyperspanner
 1550 if ob=5andr=16 then s=s+10:?"The coordinates are copied to the PADD.":pc=1:return: rem pc=indicates PADD has the coordinates
 1560 if ob=5andr=19andpc=1 then ?"The coordinates are sent from the PADD":?"to Starbase 73. The Ventur is saved! Youwin!":s=s+1000:goto9500
-1590 ?"Nothing happens.":return: rem this line # is used in many places
+1590 ?"Nothing happens.":return: rem NOTE: this line # is used in many places
 1599 rem use hypospray or phaser on a Borg drone
 1600 if ob=8andh=2 then ?"The hypospray is empty.":return
 1610 for b=24 to 27:if l(b)=rands(b)=2 then 1630: rem live drone is here
 1620 next:?"There is nothing to shoot at here.":return
 1630 if ob=4andpp<pr then ?"You shoot the drone but nothing happens.The Borg have adapted to the phaser's":?"power level!":return
-1640 if ob=4 then pr=pp+1:s=s+100*pp:?"You shoot the drone with the phaser.
+1640 if ob=4 then pr=pr+1:s=s+100*pp:?"You shoot the drone with the phaser.
 1650 if ob=8 then s=s+100:h=h+1:?"You inject the drone with the hypospray.";
 1660 s(b)=7:o$(b)="a deactivated Borg drone":?"The drone is deactivated and collapses.
 1670 for i=1 to nb:if b(i)=r then b(i)=0:return:rem remove blockage at this location (ignores direction)
 1690 next:return
-1900 if o$="" then ?"Say something!":return
-1910 if r<>12 then 1590: rem not in turbolift, does nothing.
+1900 if o$="" then ?"Say something!":return: rem "say"
+1910 if r<>12 then 1590
 1920 if o$<>"help"ando$<>"directory" then 1950
 1930 ?"The turbolift says 'You are ";:d=d(12,1):if d=7 then ?"on deck 3"; else if d=13 then ?"the bridge"; else if d=31 then ?"on deck 2"; else if d=20 then ?"in engineering";
 1940 ?". You can go to the bridge, deck 2, deck 3, or engineering'.":return
@@ -87,11 +88,9 @@
 1970 if u=0andf=1 then s=s+10:u=1: rem first time using turbolift, you get 10 points.
 1980 if f then ?"The doors swish close. You feel the":?"turbolift move. A few seconds later the doors swish open.":return
 1990 ?"The turbolift says '"o$" is not a valid destination'.":return
-2099 rem tap
-2100 if o$<>"" then ?"You tap the "o$"." else 1590: rem "Nothing happens"
+2100 gosub3000:iff then return: rem tap
 2110 if ob=28ands(4)=3andpp<4 then pp=pp+1:?"The power level increases to"pp:return
 2120 if ob=28ands(4)=3 then ?"The power level is already at maximum.":return
-2130 if ob=28ands(4)<>3 then ?"I don't know what that is.":return
 2140 if r=18andob=11ands(11)=7andq3 then ?"All the consoles around the bridge come to life!":s(11)=2:s(12)=2:s(13)=2:s(14)=2:return
 2150 if r=18andob=11ands(11)=7andq3=0 then ?"Nothing happens. Perhaps there is an":?"issue in engineering?":return
 2190 goto1590: rem "Nothing happens"
@@ -115,14 +114,13 @@
 2600 t=val(o$):if t>0andt<=nr then r=t:?"Transporting to "r$(t):return
 2610 ?"Commands: ":for i=1 to nv:?v$(i)" ";:next:?:return
 2700 ?"Current score:"s:return
+2999 rem double check ob. TODO: make this better, so we can deal with power button
 3000 f=0:if (ob=0ando$<>"")or(ob<>0ands(ob)=0) then ?"I don't know what that is.":f=1:return: rem bad object or invisible
 3010 if ob=0 then ?"You must '"v$"' something!":f=1:return: rem no object
-3020 if s(ob)=3or(ob=10andr>=13andr<=19) then return: rem in inventory or viewscreen
-3030 if l(ob)<>r then ?"That's not here.":f=1
 3090 return
 3100 ?"You see an EPS manifold inside.":return: rem inside access panel
 3200 ?"You see a combadge inside.":return: rem inside desk
-3999 rem "use" hypospray or phaser
+3999 rem "use" tricorder
 4000 if r=25ands(18)=6ands(22)=2 then ?"It reports 'Plasma detected'.":return: rem TODO randomize this location
 4090 ?"It reports 'No plasma detected'.":return
 4499 rem show a quest based on existing quests: q2=get phaser, q3=fix plasma leak, q4=fix computer
@@ -136,10 +134,11 @@
 5090 goto1590: rem "Nothing happens"
 9500 ?:?"Game over. Final score:"s:end
 10000 dim nd(nr),d(nr,4),d$(nr,4),r$(nr),a$(na,1),v$(nv):rem number exits,path(source,direciton),direction names,rooms,aliases,verbs
-10010 dim o$(no),l(no),s(no),b(nb),b$(nb,1):rem objects,locations,status,blockage,blockage direction,description
+10010 dim o$(no),l(no),s(no),b(nb),b$(nb,1),oa$(oa),oa(oa):rem objects,locations,status,blockage,blockage direction,description,object aliases
 10030 for i=1 to nr:read r$(i),nd(i):for j=1 to nd(i):read d$(i,j),d(i,j):next:next: rem room name, number of exits, exit direction, destination
 10050 for i=1 to nv:read v$(i):next:for i=1 to na:read a$(i,0),a$(i,1):next:rem verbs, directional aliases
-10070 for i=1 to no:read o$(i):next:for i=1 to no:read l(i):next:for i=1 to no:read s(i):next:rem object name, location, status
+10070 for i=1 to no:read o$(i):next:for i=1 to oa: read oa$(i),oa(i):next: rem objects, object aliases
+10080 for i=1 to no:read l(i):next:for i=1 to no:read s(i):next:rem object location, status
 10100 for i=1 to nb:read b(i),b$(i,0),b$(i,1):next:rem blockages, direction, what to say
 10110 a$="RED ALERT! PREPARE TO REPEL BOARDERS!":pp=1:pr=1:return: rem phaser power, power required
 19999 rem 35 rooms: name, number of exits, direction, destination #n
@@ -160,10 +159,13 @@
 23000 data uniform,desk,combadge,phaser,PADD,hyperspanner,tricorder,hypospray,porthole,viewscreen,computer console,nav console
 23010 data helm console,comms console,access panel,access panel,access panel,access panel,EPS manifold,EPS manifold
 23020 data EPS manifold,EPS manifold,warp core,Borg drone,Borg drone,Borg drone,Borg drone,power level
-23099 rem 28 object initial locations
-23100 data 2,1,1,26,15,20,21,27,1,,18,16,15,19,22,23,24,25,22,23,24,25,21,29,13,16,20,
-23199 rem 28 object status: 0=invisible,1=visible&gettable,2=visible&not gettable,3=gotten,4=used,5=openable,6=open,7=dead
-23200 data 1,5,,1,1,1,1,1,2,2,7,7,7,7,5,5,5,5,,,,,5,2,2,2,2,
+23099 rem 11 object aliases: alias, object id
+23100 data communicator,3,padd,5,hyper-spanner,6,hypo-spray,8,computer,11,power level button,28,power button,28
+23110 data panel,15,panel,16,panel,17,panel,18
+23199 rem 28 object initial locations
+23200 data 2,1,1,26,15,20,21,27,1,,18,16,15,19,22,23,24,25,22,23,24,25,21,29,13,16,20,
+23299 rem 28 object status: 0=invisible,1=visible&gettable,2=visible&not gettable,3=gotten,4=used,5=openable,6=open,7=dead
+23300 data 1,5,,1,1,1,1,1,2,2,7,7,7,7,5,5,5,5,,,,,5,2,2,2,2,
 23999 rem 4 blockages: from room, direction, message
 24000 data 1,i,You need to be in full uniform first!,29,i,A Borg drone blocks your path!,13,p,A Borg drone blocks your path.
 24010 data 16,a,A Borg drone blocks your path...,20,a,A Borg drone blocks your path!
