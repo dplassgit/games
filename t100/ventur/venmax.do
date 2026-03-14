@@ -133,7 +133,7 @@
 5000 if r=25ands(18)=6ands(22)=2 then q3=1:s(22)=4:s=s+100:?"The hyperspanner seals the EPS manifold.The plasma leak is fixed!":goto4500
 5090 goto1590: rem "Nothing happens"
 9500 ?:?"Game over. Final score:"s:end
-10000 dim nd(nr),d(nr,4),d$(nr,4),r$(nr),a$(na,1),v$(nv):rem number exits,path(source,direciton),direction names,rooms,aliases,verbs
+10000 dim nd(nr),d(nr,4),d$(nr,4),r$(nr),a$(na,1),v$(nv):rem number exits,path(source,direction),direction names,rooms,aliases,verbs
 10010 dim o$(no),l(no),s(no),b(nb),b$(nb,1),oa$(oa),oa(oa):rem objects,locations,status,blockage,blockage direction,description,object aliases
 10030 for i=1 to nr:read r$(i),nd(i):for j=1 to nd(i):read d$(i,j),d(i,j):next:next: rem room name, number of exits, exit direction, destination
 10050 for i=1 to nv:read v$(i):next:for i=1 to na:read a$(i,0),a$(i,1):next:rem verbs, directional aliases
@@ -151,7 +151,7 @@
 20060 data Passageway,3,i,26,cw,30,ccw,28,Passageway,2,cw,31,ccw,29,Deck 2 Lobby,3,i,12,cw,32,ccw,30,Passageway,2,cw,33,ccw,31
 20070 data Passageway,2,cw,34,ccw,32,Passageway,2,cw,35,ccw,33,Passageway,2,cw,28,ccw,34
 20999 rem 20 verbs
-21000 data go,look,examine,get,take,drop,leave,use,fire,shoot,say,tap,open,close,inv,inventory,help,autolook,score,quit
+21000 data go,look,examine,get,take,drop,leave,use,fire,shoot,say,tap,open,close,inventory,inv,help,autolook,score,quit
 21998 rem 10 direction aliases. Both sb and starboard map back to s. But since the short-to-long aliases are read
 21999 rem left to right (line 1100), s only maps to starboard.
 22000 data cw,clockwise,ccw,counterclockwise,i,inboard,o,outboard,p,port,s,starboard,a,aft,f,forward,out,out,s,sb

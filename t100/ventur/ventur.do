@@ -136,7 +136,7 @@
 20050dataJeffries Tube,2,p,21,s,25,Jeffries Tube,1,p,24,Armory,1,o,29,Sick bay,1,i,28,Passageway,3,o,27,cw,29,ccw,35
 20060dataPassageway,3,i,26,cw,30,ccw,28,Passageway,2,cw,31,ccw,29,Deck 2 Lobby,3,i,12,cw,32,ccw,30,Passageway,2,cw,33,ccw,31
 20070dataPassageway,2,cw,34,ccw,32,Passageway,2,cw,35,ccw,33,Passageway,2,cw,28,ccw,34
-21000datago,look,examine,get,take,drop,leave,use,fire,shoot,say,tap,open,close,inv,inventory,help,autolook,score,quit
+21000datago,look,examine,get,take,drop,leave,use,fire,shoot,say,tap,open,close,inventory,inv,help,autolook,score,quit
 22000datacw,clockwise,ccw,counterclockwise,i,inboard,o,outboard,p,port,s,starboard,a,aft,f,forward,out,out,s,sb
 23000datauniform,desk,combadge,phaser,PADD,hyperspanner,tricorder,hypospray,porthole,viewscreen,computer console,nav console
 23010datahelm console,comms console,access panel,access panel,access panel,access panel,EPS manifold,EPS manifold
