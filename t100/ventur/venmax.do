@@ -40,15 +40,16 @@
 1215 if ob=2ands(2)=6ands(3)=1andl(3)=1 then 3200: rem desk/combadge
 1220 if s(ob)=6andob>=15andob<=18 then 3100: rem EPS manifold inside the access panel
 1225 if ob>=12andob<=14ands(11)=7 then ?"It is offline.":return: rem bridge console
-1230 if s(ob)=6 then ?"It is open.":return else if s(ob)=7 then ?"It is deactivated.":return
-1235 if ob=9orob=10 then ?"You see billions and billions of stars.":return
-1240 if ob=4 then ?"On top you see a power level button.":return
-1245 if ob=5ands(11)=7 then ?"It shows 'No connection'. The computer":?"must still be offline...":return
-1250 if s(11)<>7and((ob=5andpc=0)orob=11orb=13) then ?"It shows a typical L-CARS interface.":return
+1230 if ob=11 then if s(11)=7 then ?"It displays 'Tap here to start'.":return: rem computer
+1235 if s(ob)=6 then ?"It is open.":return else if s(ob)=7 then ?"It is deactivated.":return: rem any random thing that is open or dead
+1240 if ob=9orob=10 then ?"You see billions and billions of stars.":return
+1245 if ob=4 then ?"On top you see a power level button.":return
+1250 if ob=5ands(11)=7 then ?"It shows 'No connection'. The computer":?"must still be offline...":return
 1255 if ob=5andpc then ?"It displays the coordinates of the USS":?"Ventur.":return
 1260 if ob=14ands(11)<>7 then ?"It displays: 'USS Ventur, Starbase 73":?"acknowledges your SOS. Transmit your":?"coordinates and we will send a rescue":?"team.'":return
-1265 if ob=12ands(11)<>7 then ?"It shows a bunch of data, including the Ventur's coordinates. The location is":?"too complicated to remember; maybe you":?"can use a PADD to record it?":return
-1270 if ob=7 then ?"It is set to 'Detect plasma'.":return
+1265 if ob=12ands(11)<>7andpc=0 then ?"It shows a bunch of data, including the Ventur's coordinates. The location is":?"too complicated to remember; maybe you":?"can use a PADD to record it?":return
+1270 if s(11)<>7and((ob=5andpc=0)or(ob>=11andob<=14)) then ?"It shows a typical L-CARS interface.":return
+1275 if ob=7 then ?"It is set to 'Detect plasma'.":return
 1290 ?"It looks like a standard-issue "o$".":return
 1300 gosub3000:iff then return:rem take
 1310 if s(ob)<>1 then ?"You can't take that!":return
@@ -65,7 +66,7 @@
 1520 if (ob=8orob=4)ands(ob)=3 then gosub1600:return: rem use hypospray or phaser
 1530 if ob=7ands(7)=3 then gosub4000:return: rem use tricorder
 1540 if ob=6ands(6)=3 then gosub5000:return: rem use hyperspanner
-1550 if ob=5andr=16 then s=s+10:?"The coordinates are copied to the PADD.":pc=1:return: rem pc=indicates PADD has the coordinates
+1550 if ob=5andr=16ands(11)<>7 then s=s+10:?"The coordinates are copied to the PADD.":pc=1:return: rem pc=indicates PADD has the coordinates
 1560 if ob=5andr=19andpc=1 then ?"The coordinates are sent from the PADD":?"to Starbase 73. The Ventur is saved! Youwin!":s=s+1000:goto9500
 1590 ?"Nothing happens.":return: rem NOTE: this line # is used in many places
 1599 rem use hypospray or phaser on a Borg drone
@@ -91,7 +92,7 @@
 2100 gosub3000:iff then return: rem tap
 2110 if ob=28ands(4)=3andpp<4 then pp=pp+1:?"The power level increases to"pp:return
 2120 if ob=28ands(4)=3 then ?"The power level is already at maximum.":return
-2140 if r=18andob=11ands(11)=7andq3 then ?"All the consoles around the bridge come to life!":s(11)=2:s(12)=2:s(13)=2:s(14)=2:return
+2140 if r=18andob=11ands(11)=7andq3 then s=s+50:?"All the consoles on the bridge come to life!":s(11)=2:s(12)=2:s(13)=2:s(14)=2:return
 2150 if r=18andob=11ands(11)=7andq3=0 then ?"Nothing happens. Perhaps there is an":?"issue in engineering?":return
 2190 goto1590: rem "Nothing happens"
 2200 gosub3000:iff then return:rem open
@@ -130,7 +131,7 @@
 4530 if q4=0 then ?"the bridge.'
 4590 return
 4999 rem "use" hyperspanner
-5000 if r=25ands(18)=6ands(22)=2 then q3=1:s(22)=4:s=s+100:?"The hyperspanner seals the EPS manifold.The plasma leak is fixed!":goto4500
+5000 if r=25ands(18)=6ands(22)=2 then q3=1:s(22)=4:s=s+200:?"The hyperspanner seals the EPS manifold.The plasma leak is fixed!":goto4500
 5090 goto1590: rem "Nothing happens"
 9500 ?:?"Game over. Final score:"s:end
 10000 dim nd(nr),d(nr,4),d$(nr,4),r$(nr),a$(na,1),v$(nv):rem number exits,path(source,direction),direction names,rooms,aliases,verbs

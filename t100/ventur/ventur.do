@@ -32,15 +32,16 @@
 1215ifob=2ands(2)=6ands(3)=1andl(3)=1then3200
 1220ifs(ob)=6andob>=15andob<=18then3100
 1225ifob>=12andob<=14ands(11)=7then?"It is offline.":return
-1230ifs(ob)=6then?"It is open.":returnelseifs(ob)=7then?"It is deactivated.":return
-1235ifob=9orob=10then?"You see billions and billions of stars.":return
-1240ifob=4then?"On top you see a power level button.":return
-1245ifob=5ands(11)=7then?"It shows 'No connection'. The computer":?"must still be offline...":return
-1250ifs(11)<>7and((ob=5andpc=0)orob=11orb=13)then?"It shows a typical L-CARS interface.":return
+1230ifob=11thenifs(11)=7then?"It displays 'Tap here to start'.":return
+1235ifs(ob)=6then?"It is open.":returnelseifs(ob)=7then?"It is deactivated.":return
+1240ifob=9orob=10then?"You see billions and billions of stars.":return
+1245ifob=4then?"On top you see a power level button.":return
+1250ifob=5ands(11)=7then?"It shows 'No connection'. The computer":?"must still be offline...":return
 1255ifob=5andpcthen?"It displays the coordinates of the USS":?"Ventur.":return
 1260ifob=14ands(11)<>7then?"It displays: 'USS Ventur, Starbase 73":?"acknowledges your SOS. Transmit your":?"coordinates and we will send a rescue":?"team.'":return
-1265ifob=12ands(11)<>7then?"It shows a bunch of data, including the Ventur's coordinates. The location is":?"too complicated to remember; maybe you":?"can use a PADD to record it?":return
-1270ifob=7then?"It is set to 'Detect plasma'.":return
+1265ifob=12ands(11)<>7andpc=0then?"It shows a bunch of data, including the Ventur's coordinates. The location is":?"too complicated to remember; maybe you":?"can use a PADD to record it?":return
+1270ifs(11)<>7and((ob=5andpc=0)or(ob>=11andob<=14))then?"It shows a typical L-CARS interface.":return
+1275ifob=7then?"It is set to 'Detect plasma'.":return
 1290?"It looks like a standard-issue "o$".":return
 1300gosub3000:iffthenreturn
 1310ifs(ob)<>1then?"You can't take that!":return
@@ -57,7 +58,7 @@
 1520if(ob=8orob=4)ands(ob)=3thengosub1600:return
 1530ifob=7ands(7)=3thengosub4000:return
 1540ifob=6ands(6)=3thengosub5000:return
-1550ifob=5andr=16thens=s+10:?"The coordinates are copied to the PADD.":pc=1:return
+1550ifob=5andr=16ands(11)<>7thens=s+10:?"The coordinates are copied to the PADD.":pc=1:return
 1560ifob=5andr=19andpc=1then?"The coordinates are sent from the PADD":?"to Starbase 73. The Ventur is saved! Youwin!":s=s+1000:goto9500
 1590?"Nothing happens.":return
 1600ifob=8andh=2then?"The hypospray is empty.":return
@@ -82,7 +83,7 @@
 2100gosub3000:iffthenreturn
 2110ifob=28ands(4)=3andpp<4thenpp=pp+1:?"The power level increases to"pp:return
 2120ifob=28ands(4)=3then?"The power level is already at maximum.":return
-2140ifr=18andob=11ands(11)=7andq3then?"All the consoles around the bridge come to life!":s(11)=2:s(12)=2:s(13)=2:s(14)=2:return
+2140ifr=18andob=11ands(11)=7andq3thens=s+50:?"All the consoles on the bridge come to life!":s(11)=2:s(12)=2:s(13)=2:s(14)=2:return
 2150ifr=18andob=11ands(11)=7andq3=0then?"Nothing happens. Perhaps there is an":?"issue in engineering?":return
 2190goto1590
 2200gosub3000:iffthenreturn
@@ -117,7 +118,7 @@
 4520ifq3=0then?"engineering to fix a plasma leak in":?"an EPS manifold.'":return
 4530ifq4=0then?"the bridge.'
 4590return
-5000ifr=25ands(18)=6ands(22)=2thenq3=1:s(22)=4:s=s+100:?"The hyperspanner seals the EPS manifold.The plasma leak is fixed!":goto4500
+5000ifr=25ands(18)=6ands(22)=2thenq3=1:s(22)=4:s=s+200:?"The hyperspanner seals the EPS manifold.The plasma leak is fixed!":goto4500
 5090goto1590
 9500?:?"Game over. Final score:"s:end
 10000dimnd(nr),d(nr,4),d$(nr,4),r$(nr),a$(na,1),v$(nv)
