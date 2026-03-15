@@ -1,6 +1,6 @@
 # Games
 
-Baseball, Tankzone, and maybe others.
+Original and ported games for the Commodore PET, Tandy 100/102/200, and others.
 
 A [PLASS] Program
 
@@ -11,7 +11,3 @@ git clone git@github.com:dplassgit/games.git
 ## To upload
 
 git push origin trunk
-
-## To test
-
-https://www.masswerk.at/pet/
