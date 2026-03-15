@@ -24,7 +24,7 @@
 1030r=d:jj=0:gosub200:?"You go "ou$".":return
 1100?"You can go: ";:fori=1tond(r):jj=0:i$=d$(r,i):gosub200:?ou$" ";:next
 1105?:?"You see: ";:n$="Nothing special.":c$="":fori=1tono:ifl(i)=rands(i)then?c$o$(i);:c$=", ":n$=""
-1110next:ifr>=13andr<=19then?c$"viewscreen":n$="":ifs(11)=7then?"All the consoles on the bridge are dark.";
+1110next:ifr>=13andr<=19then?c$"viewscreen":n$="":ifs(11)=7then?:?"All the consoles on the bridge are dark.The computer must still be offline.";
 1120?n$:return
 1200ifo$=""then1100
 1205gosub3000:iffthenreturn
@@ -83,7 +83,7 @@
 2100gosub3000:iffthenreturn
 2110ifob=28ands(4)=3andpp<4thenpp=pp+1:?"The power level increases to"pp:return
 2120ifob=28ands(4)=3then?"The power level is already at maximum.":return
-2140ifr=18andob=11ands(11)=7andq3thens=s+50:?"All the consoles on the bridge come to life!":s(11)=2:s(12)=2:s(13)=2:s(14)=2:return
+2140ifr=18andob=11ands(11)=7andq3thens=s+50:?"All the consoles on the bridge come to":?"life! You hear an urgent beeping from":?"the comms station.":s(11)=2:s(12)=2:s(13)=2:s(14)=2:return
 2150ifr=18andob=11ands(11)=7andq3=0then?"Nothing happens. Perhaps there is an":?"issue in engineering?":return
 2190goto1590
 2200gosub3000:iffthenreturn
@@ -116,7 +116,7 @@
 4500if(q2*q3*q4)=0then?"Your combadge beeps. 'Ensign, report to
 4510ifq2=0then?"the armory on deck 2. PREPARE TO REPEL":?"BOARDERS!'":return
 4520ifq3=0then?"engineering to fix a plasma leak in":?"an EPS manifold.'":return
-4530ifq4=0then?"the bridge.'
+4530ifq4=0then?"the bridge and re-establish comms with":?"Starbase 73.'
 4590return
 5000ifr=25ands(18)=6ands(22)=2thenq3=1:s(22)=4:s=s+200:?"The hyperspanner seals the EPS manifold.The plasma leak is fixed!":goto4500
 5090goto1590

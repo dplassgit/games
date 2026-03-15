@@ -32,7 +32,7 @@
 1030 r=d:jj=0:gosub200:?"You go "ou$".":return: rem convert from short to long
 1100 ?"You can go: ";:for i=1 to nd(r):jj=0:i$=d$(r,i):gosub200:?ou$" ";:next: rem convert from short to long
 1105 ?:?"You see: ";:n$="Nothing special.":c$="":for i=1 to no:if l(i)=rands(i) then ?c$o$(i);:c$=", ":n$=""
-1110 next:if r>=13andr<=19 then ?c$"viewscreen":n$="":if s(11)=7 then ?"All the consoles on the bridge are dark.";
+1110 next:if r>=13andr<=19 then ?c$"viewscreen":n$="":if s(11)=7 then ?:?"All the consoles on the bridge are dark.The computer must still be offline.";
 1120 ?n$:return
 1200 if o$="" then 1100: rem "look". TODO: Refactor this; it's so specific to each item and its state..
 1205 gosub3000:iff then return
@@ -92,21 +92,21 @@
 2100 gosub3000:iff then return: rem tap
 2110 if ob=28ands(4)=3andpp<4 then pp=pp+1:?"The power level increases to"pp:return
 2120 if ob=28ands(4)=3 then ?"The power level is already at maximum.":return
-2140 if r=18andob=11ands(11)=7andq3 then s=s+50:?"All the consoles on the bridge come to life!":s(11)=2:s(12)=2:s(13)=2:s(14)=2:return
+2140 if r=18andob=11ands(11)=7andq3 then s=s+50:?"All the consoles on the bridge come to":?"life! You hear an urgent beeping from":?"the comms station.":s(11)=2:s(12)=2:s(13)=2:s(14)=2:return
 2150 if r=18andob=11ands(11)=7andq3=0 then ?"Nothing happens. Perhaps there is an":?"issue in engineering?":return
 2190 goto1590: rem "Nothing happens"
 2200 gosub3000:iff then return:rem open
 2210 if s(ob)=6 then ?"It's already open.":return
 2220 if s(ob)<>5 then ?"You can't open that!":return
 2230 s(ob)=6:?"You open the "o$".":if ob=2 then if s(3)=0 then s(3)=1:goto 3200 else ?"It is empty.":return: rem open desk, see combadge if it's there
-2240 if ob>=15andob<=18 then s(ob+4)=2:goto3100: rem eps manifold inside the access panel
+2240 if ob>=15andob<=18 then s(ob+4)=2:goto3100: rem access panel; toggle eps manifold visibility
 2250 if ob=23 then s=s-1000:?"Antimatter shoots out, annihilating":?"everything in its path! The ship blows":?"up! Everybody dies!":goto9500
 2290 return
 2300 gosub3000:iff then return:rem close
 2310 if s(ob)=5 then ?"It's already closed.":return
 2320 if s(ob)<>6 then ?"You can't close that.":return
 2330 s(ob)=5:?"You close the "o$".":if ob=2ands(3)=1andl(3)=1 then s(3)=0: rem desk; toggle combadge visibility
-2350 if ob>=15andob<=18 then s(ob+4)=0: rem access panel; toggle power conduit visibility
+2350 if ob>=15andob<=18 then s(ob+4)=0: rem access panel; toggle eps manifold visibility
 2390 return
 2400 a=1-a:?"Auto-look turned o";:if a then ?"n." else ?"ff.
 2410 return
@@ -115,7 +115,7 @@
 2600 t=val(o$):if t>0andt<=nr then r=t:?"Transporting to "r$(t):return
 2610 ?"Commands: ":for i=1 to nv:?v$(i)" ";:next:?:return
 2700 ?"Current score:"s:return
-2999 rem double check ob. TODO: make this better, so we can more easily deal with power button
+2999 rem double check ob.
 3000 f=0:if (ob=0ando$<>"")or(ob<>0ands(ob)=0) then ?"I don't know what that is.":f=1:return: rem bad object or invisible
 3010 if ob=0 then ?"You must '"v$"' something!":f=1:return: rem no object
 3090 return
@@ -128,7 +128,7 @@
 4500 if (q2*q3*q4)=0then?"Your combadge beeps. 'Ensign, report to
 4510 if q2=0 then ?"the armory on deck 2. PREPARE TO REPEL":?"BOARDERS!'":return
 4520 if q3=0 then ?"engineering to fix a plasma leak in":?"an EPS manifold.'":return
-4530 if q4=0 then ?"the bridge.'
+4530 if q4=0 then ?"the bridge and re-establish comms with":?"Starbase 73.'
 4590 return
 4999 rem "use" hyperspanner
 5000 if r=25ands(18)=6ands(22)=2 then q3=1:s(22)=4:s=s+200:?"The hyperspanner seals the EPS manifold.The plasma leak is fixed!":goto4500
