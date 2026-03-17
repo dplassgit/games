@@ -5,7 +5,6 @@ the ship, and save the day!
 
 ![Screenshot of VENTUR on Commodore PET](./images/ventur.png)
 
-
 ## Installing
 
 This version should work on all Commodore BASIC machines. It was specifically tested on the PET emulator

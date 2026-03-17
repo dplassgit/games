@@ -1,236 +1,238 @@
-5?CHR$(147)"INITIALIZING...":NR=35:NA=10:NV=20:NO=28:NB=5:OA=11:GOSUB10000
-10R=1:?CHR$(147)CHR$(18)"USS VENTUR NCC-73209"CHR$(146)
-15?:?"YELLOW ALERT. THE VENTUR IS DEAD IN"
-20?"SPACE. WE MUST MAKE REPAIRS AND --"A$:?:?"HIT A KEY TO START..."
-25GET X$:IFX$=""THEN25
-30?:?CHR$(18)R$(R)CHR$(146):IFQ1=0THEN?A$
-35IFS(1)<>3THEN?"YOU ARE IN YOUR SKIVVIES."
-40IFR=12THEN?"THE TURBOLIFT SAYS":?"'PLEASE STATE YOUR DESTINATION'."
-50IFAAND(V=1ORV>4)THENGOSUB1100
-60D$="":INPUT "YOUR ORDERS";D$:IFD$=""THEN60
-70V=0:GOSUB500:IFV=0THEN?"I DON'T KNOW HOW TO '"D$"'.":GOTO30
-80?:IFV<11THENON VGOSUB1000,1200,1200,1300,1300,1400,1400,1500,1500,1500
-90IFV>10THENON V-10GOSUB1900,2100,2200,2300,2500,2500,2600,2400,2700,9500
-100GOTO30
-200FORII=1TONA:IFI$=A$(II,JJ)THENOU$=A$(II,1-JJ):RETURN
-210NEXT:OU$=I$:RETURN
-500V=0:O$="":OB=0:FORI=1TONA:IFD$=A$(I,0)ORD$=A$(I,1)THEN510
-505NEXT:GOTO515
-510V=1:O$=A$(I,0):RETURN
-515FORI=1TONV:V$=V$(I):IFLEFT$(D$,LEN(V$))<>V$THEN530
-520IFMID$(D$,LEN(V$)+1,1)<>" "ANDLEN(D$)>LEN(V$)THEN530
-525GOTO540
-530NEXT:V$=D$:RETURN
-540V=I:IFLEN(V$)>=LEN(D$)THENRETURN
-545T$=MID$(D$,LEN(V$)+1):IFLEFT$(T$,1)<>" "THENV=0:RETURN
-550O$=MID$(T$,2)
-555IFO$=O$(10)ANDR>=13ANDR<=19THENOB=10:RETURN
-565F=S(4)=3:FORJ=1TONO:IFO$(J)<>O$THEN575
-570IFL(J)=RORS(J)=3OR(J=28ANDF)THENOB=J:RETURN
-575NEXT:FORJ=1TOOA:IFOA$(J)<>O$THEN590
-580K=OA(J):IFL(K)=RORS(K)=3OR(K=28ANDF)THENOB=K:O$=O$(OB):RETURN
-590NEXT:RETURN
-1000I$=O$:JJ=1:GOSUB200:I$=OU$:D=0:FORI=1TOND(R)
-1010IFI$=D$(R,I)THEND=D(R,I):GOTO1030
-1020NEXT
-1030IFD=0THEN?"YOU CAN'T GO THAT WAY.":RETURN
-1040FORI=1TONB:IFB(I)=RANDB$(I,0)=I$THEN?B$(I,1):RETURN
-1050NEXT
-1060R=D:JJ=0:GOSUB200:?"YOU GO "OU$".":RETURN
-1100?"YOU CAN GO: ";:FORI=1TOND(R):JJ=0:I$=D$(R,I):GOSUB200
-1110?OU$" ";:NEXT
-1120?:?"YOU SEE: ";:N$="NOTHING SPECIAL.":C$="":FORI=1TONO
-1130IFL(I)=RANDS(I)THEN?C$O$(I);:C$=", ":N$=""
-1140NEXT:IFR>=13ANDR<=19THEN?C$"VIEWSCREEN":N$=""
-1150IFR>=13ANDR<=19ANDS(11)=7THEN1170
-1160GOTO1190
-1170?:?"ALL THE CONSOLES ON THE BRIDGE ARE DARK.";
-1180?"THE COMPUTER MUST STILL BE OFFLINE.";
-1190?N$:RETURN
-1200IFO$=""THEN1100
-1205GOSUB3000:IFFTHENRETURN
-1210IFS(OB)=5THEN?"IT LOOKS LIKE IT CAN BE OPENED.":RETURN
-1215IFOB=2ANDS(2)=6ANDS(3)=1ANDL(3)=1THEN3200
-1220IFS(OB)=6ANDOB>=15ANDOB<=18THEN3100
-1225IFOB>=12ANDOB<=14ANDS(11)=7THEN?"IT IS OFFLINE.":RETURN
-1230IFOB=11ANDS(11)=7THEN?"IT DISPLAYS 'TAP HERE TO START'.":RETURN
-1235IFS(OB)=6THEN?"IT IS OPEN.":RETURN
-1236IFS(OB)=7THEN?"IT IS DEACTIVATED.":RETURN
-1240IFOB=9OROB=10THEN?"YOU SEE BILLIONS AND BILLIONS OF STARS.":RETURN
-1245IFOB=4THEN?"ON TOP YOU SEE A POWER LEVEL BUTTON.":RETURN
-1250IFOB=5ANDS(11)=7THEN1252
-1251GOTO1255
-1252?"IT SHOWS 'NO CONNECTION'. THE COMPUTER MUST STILL BE OFFLINE...":RETURN
-1255IFOB=5ANDPCTHEN?"IT DISPLAYS THE COORDINATES OF THE USS VENTUR.":RETURN
-1260IFOB=14ANDS(11)<>7THEN1262
-1261GOTO1265
-1262?"IT DISPLAYS: 'USS VENTUR, STARBASE 73 ACKNOWLEDGES YOUR SOS.";
-1263?" TRANSMIT YOUR COORDINATES AND WE WILL SEND A RESCUE TEAM.'":RETURN
-1265IFOB=12ANDS(11)<>7ANDPC=0THEN1267
-1266GOTO1270
-1267?"IT SHOWS A BUNCH OF DATA, INCLUDING THE VENTUR'S COORDINATES.";
-1268?" THE LOCATION IS TOO COMPLICATED TO REMEMBER; MAYBE YOU";
-1269?" CAN USE A PADD TO RECORD IT?":RETURN
-1270IFS(11)<>7AND((OB=5ANDPC=0)OR(OB>=11ANDOB<=14))THEN1272
-1271GOTO1275
-1272?"IT SHOWS A TYPICAL L-CARS INTERFACE.":RETURN
-1275IFOB=7THEN?"IT IS SET TO 'DETECT PLASMA'.":RETURN
-1290?"IT LOOKS LIKE A STANDARD-ISSUE "O$".":RETURN
-1300GOSUB3000:IFFTHENRETURN
-1310IFS(OB)<>1THEN?"YOU CAN'T TAKE THAT!":RETURN
-1320?"YOU TAKE THE "O$".":L(OB)=0:S(OB)=3:IFOB=1THEN?"YOU PUT IT ON."
-1325IFOB=4ANDQ2=0THENS(28)=2:Q2=1:S=S+10:GOTO4500
-1330IFOB=3ANDS(1)=3THEN?"YOU ATTACH THE COMBADGE TO YOUR UNIFORM."
-1340IF(OB=1OROB=3)ANDS(1)=3ANDS(3)=3THEN1355
-1350RETURN
-1355F=1:B(1)=0:S=S+10:Q1=1:GOTO4500
-1400GOSUB3000:IFFTHENRETURN
-1420?"YOU DROP THE "O$".":L(OB)=R:S(OB)=1
-1425IF(OB=1OROB=3)AND(S(1)<>3ORS(3)<>3)THEN1435
-1430GOTO1490
-1435B(1)=1:S=S-10
-1490RETURN
-1500GOSUB3000:IFFTHENRETURN
-1505IFS(OB)<>3THEN?"YOU DON'T HAVE THAT.":RETURN
-1510IF(OB=8OROB=4)ANDS(OB)=3THEN1600
-1515IFOB=7ANDS(7)=3THEN4000
-1520IFOB=6ANDS(6)=3THEN5000
-1530IFOB=5ANDR=16ANDS(11)<>7THEN1540
-1535GOTO1545
-1540S=S+10:?"THE COORDINATES ARE COPIED TO THE PADD.":PC=1:RETURN
-1545IFOB=5ANDR=19ANDPC=1THEN1555
-1550GOTO1590
-1555?"THE COORDINATES ARE SENT FROM THE PADD TO STARBASE 73."
-1560?"THE VENTUR IS SAVED! YOU WIN!":S=S+1000:GOTO9500
-1590?"NOTHING HAPPENS.":RETURN
-1600IFOB=8ANDH=2THEN?"THE HYPOSPRAY IS EMPTY.":RETURN
-1605FORB=24 TO 27:IFL(B)=RANDS(B)=2THEN1615
-1610NEXT:?"THERE IS NOTHING TO SHOOT AT HERE.":RETURN
-1615IFOB=4ANDPP>=PRTHEN1640
-1620IFOB=4THEN?"YOU SHOOT THE DRONE BUT NOTHING HAPPENS.":?"THE BORG HAVE";
-1625IFOB=4THEN?" ADAPTED TO THE PHASER'S POWER LEVEL!":RETURN
-1640IFOB=4THENS=S+100*PR:PR=PR+1:?"YOU SHOOT THE DRONE WITH THE PHASER."
-1650IFOB=8THENS=S+100:H=H+1:?"YOU INJECT THE DRONE WITH THE HYPOSPRAY."
-1660S(B)=7:O$(B)="A DEACTIVATED BORG DRONE"
-1665?"THE DRONE IS DEACTIVATED AND COLLAPSES.
-1670FORI=1TONB:IFB(I)=RTHENB(I)=0:RETURN
-1680NEXT:RETURN
-1900IFO$=""THEN?"SAY SOMETHING!":RETURN
-1905IFR<>12THEN1590
-1910IFO$<>"HELP"ANDO$<>"DIRECTORY"THEN1945
-1915?"THE TURBOLIFT SAYS 'YOU ARE ";:D=D(12,1)
-1920IFD=7THEN?"ON DECK 3";
-1925IFD=13THEN?"ON THE BRIDGE";
-1930IFD=31THEN?"ON DECK 2";
-1935IFD=20THEN?"IN ENGINEERING";
-1940?". YOU CAN SAY BRIDGE, DECK 2, DECK 3,ORENGINEERING'.":RETURN
-1945IFO$="DECK 3"THEND(12,1)=7:GOTO1985
-1950IFO$="DECK 2"THEND(12,1)=31:GOTO1985
-1955IFO$="ENGINEERING"THEND(12,1)=20:GOTO1985
-1960IFO$="BRIDGE"THEN1970
-1965?"THE TURBOLIFT SAYS '"O$" IS NOT A VALID DESTINATION'.":RETURN
-1970IFQ2*Q3THEND(12,1)=13:GOTO1985
-1975?"THE TURBOLIFT SAYS 'YOU ARE NOT (YET)
-1980?"AUTHORIZED TO GO TO THE BRIDGE.'":RETURN
-1985IFU=0THENS=S+10:U=1
-1990?"THE DOORS SWISH CLOSE. YOU FEEL THE TURBOLIFT MOVE. A FEW SECONDS LATER
-1995?"THE DOORS SWISH OPEN.":RETURN
-2100GOSUB3000:IFFTHENRETURN
-2105IFOB=28ANDS(4)=3ANDPP<4THEN?"THE POWER LEVEL INCREASES TO"PP+1
-2110IFOB=28ANDS(4)=3ANDPP<4THENPP=PP+1:RETURN
-2120IFOB=28ANDS(4)=3THEN?"THE POWER LEVEL IS ALREADY AT MAXIMUM.":RETURN
-2130IFR=18ANDOB=11ANDS(11)=7ANDQ3THEN2150
-2140GOTO2175
-2150S=S+50:?"ALL THE CONSOLES ON THE BRIDGE COME TO LIFE! YOU HEAR AN URGENT
-2160?"BEEPING FROM THE COMMS STATION.
-2170S(11)=2:S(12)=2:S(13)=2:S(14)=2:RETURN
-2175IFR=18ANDOB=11ANDS(11)=7ANDQ3=0THEN2185
-2180GOTO1590
-2185?"NOTHING HAPPENS. PERHAPS THERE IS AN ISSUE IN ENGINEERING?":RETURN
-2200GOSUB3000:IFFTHENRETURN
-2205IFS(OB)=6THEN?"IT'S ALREADY OPEN.":RETURN
-2210IFS(OB)<>5THEN?"YOU CAN'T OPEN THAT!":RETURN
-2220S(OB)=6:?"YOU OPEN THE "O$".":IFOB<>2THEN2240
-2225IFS(3)=0THENS(3)=1:GOTO3200
-2230?"IT IS EMPTY.":RETURN
-2240IFOB>=15ANDOB<=18THENS(OB+4)=2:GOTO3100
-2250IFOB<>23THENRETURN
-2255S=S-1000:?"ANTIMATTER SHOOTS OUT, ANNIHILATING EVERYTHING IN ITS PATH!"
-2260?"THE SHIP BLOWS UP! EVERYBODY DIES!":GOTO9500
-2300GOSUB3000:IFFTHENRETURN
-2310IFS(OB)=5THEN?"IT'S ALREADY CLOSED.":RETURN
-2320IFS(OB)<>6THEN?"YOU CAN'T CLOSE THAT.":RETURN
-2330S(OB)=5:?"YOU CLOSE THE "O$"."
-2340IFOB=2ANDS(3)=1ANDL(3)=1THENS(3)=0
-2350IFOB>=15ANDOB<=18THENS(OB+4)=0
-2390RETURN
-2400A=1-A:?"AUTO-LOOK TURNED O";:IFATHEN?"N.":RETURN
-2405?"FF.": RETURN
-2500?"YOU HAVE: ";:N$="NOTHING":FORI=1TONO:IFS(I)=3THEN?O$(I)" ";:N$=""
-2510NEXT:?N$:RETURN
-2600T=VAL(O$):IFT>0ANDT<=NRTHENR=T:?"TRANSPORTING TO "R$(T):RETURN
-2610?"COMMANDS: ":FORI=1TONV:?V$(I)" ";:NEXT:?:RETURN
-2700?"CURRENT SCORE:"S:RETURN
-3000F=0:IF(OB=0ANDO$<>"")OR(OB<>0ANDS(OB)=0)THEN3010
-3005GOTO3020
-3010?"I DON'T KNOW WHAT THAT IS.":F=1:RETURN
-3020IFOB=0THEN?"YOU MUST '"V$"' SOMETHING!":F=1:RETURN
-3090RETURN
-3100?"YOU SEE AN EPS MANIFOLD INSIDE.":RETURN
-3200?"YOU SEE A COMBADGE INSIDE.":RETURN
-4000IFR=25ANDS(18)=6AND S(22)=2THEN?"IT REPORTS 'PLASMA DETECTED'.":RETURN
-4090?"IT REPORTS 'NO PLASMA DETECTED'.":RETURN
-4500IF(Q2*Q3*Q4)=0THEN?"YOUR COMBADGE BEEPS. 'ENSIGN, REPORT TO"
-4510IFQ2=0THEN?"THE ARMORY ON DECK 2. PREPARE TO REPEL BOARDERS!'":RETURN
-4520IFQ3=0THEN?"ENGINEERING TO FIX A PLASMA LEAK IN AN EPS MANIFOLD.'":RETURN
-4530IFQ4=0THEN?"THE BRIDGE AND RE-ESTABLISH COMMS WITH":?"STARBASE 73.'
-4590RETURN
-5000IFR=25ANDS(18)=6ANDS(22)=2THEN5010
-5005GOTO1590
-5010Q3=1:S(22)=4:S=S+200:?"THE HYPERSPANNER SEALS THE EPS MANIFOLD."
-5011?"THE PLASMA LEAK IS FIXED!":GOTO4500
-9500?:?"GAME OVER. FINAL SCORE:"S:END
-10000DIMND(35),D(35,4),D$(35,4),R$(35),A$(10,1),V$(20)
-10010DIMO$(28),L(28),S(28),B(5),B$(5,1),OA$(11),OA(11)
-10030FORI=1TONR:READR$(I),ND(I):FORJ=1TOND(I):READD$(I,J),D(I,J):NEXT
-10035NEXT
-10050FORI=1TONV:READV$(I):NEXT:FORI=1TONA:READA$(I,0),A$(I,1):NEXT
-10070FORI=1TONO:READO$(I):NEXT:FORI=1TOOA:READOA$(I),OA(I):NEXT
-10080FORI=1TONO:READL(I):NEXT:FORI=1TONO:READS(I):NEXT
-10100FORI=1TONB:READB(I),B$(I,0),B$(I,1):NEXT
-10110A$="RED ALERT! PREPARE TO REPEL BOARDERS!":PP=1:PR=1:RETURN
-20000DATAYOUR QUARTERS,3,I,4,P,2,S,3,CLOSET,1,S,1,HEAD,1,P,1
-20005DATAPASSAGEWAY,3,O,1,CW,5,CCW,11,PASSAGEWAY,2,CW,6,CCW,4
-20010DATAPASSAGEWAY,2,CW,7,CCW,5,DECK 3 LOBBY,3,I,12,CW,8,CCW,6
-20015DATAPASSAGEWAY,2,CW,9,CCW,7,PASSAGEWAY,2,CW,10,CCW,8
-20020DATAPASSAGEWAY,2,CW,11,CCW,9,PASSAGEWAY,2,CW,4,CCW,10
-20025DATATURBOLIFT,1,OUT,7,BRIDGE/COMMAND DAIS,4,F,14,P,18,S,19,A,12
-20030DATABRIDGE/CENTER,3,P,15,S,16,A,13,BRIDGE/HELM,2,S,14,A,18
-20035DATABRIDGE/NAVIGATION,2,P,14,A,19,UNUSED,1,P,17,BRIDGE/OPS,2,F,15,S,13
-20040DATABRIDGE/COMMS,2,P,13,F,16,MAIN ENGINEERING,2,F,12,A,21
-20045DATAWARP CORE,3,F,20,P,22,S,24,JEFFRIES TUBE,2,S,21,P,23
-20050DATAJEFFRIES TUBE,1,S,22,JEFFRIES TUBE,2,P,21,S,25,JEFFRIES TUBE,1,P,24
-20055DATAARMORY,1,O,29,SICK BAY,1,I,28,PASSAGEWAY,3,O,27,CW,29,CCW,35
-20060DATAPASSAGEWAY,3,I,26,CW,30,CCW,28,PASSAGEWAY,2,CW,31,CCW,29
-20065DATADECK 2 LOBBY,3,I,12,CW,32,CCW,30,PASSAGEWAY,2,CW,33,CCW,31
-20070DATAPASSAGEWAY,2,CW,34,CCW,32,PASSAGEWAY,2,CW,35,CCW,33
-20075DATAPASSAGEWAY,2,CW,28,CCW,34
-21000DATAGO,LOOK,EXAMINE,GET,TAKE,DROP,LEAVE,USE,FIRE,SHOOT,SAY,TAP,OPEN,CLOSE
-21010DATAINVENTORY,INV,HELP,AUTOLOOK,SCORE,QUIT
-22000DATACW,CLOCKWISE,CCW,COUNTERCLOCKWISE,I,INBOARD,O,OUTBOARD,P,PORT
-22010DATAS,STARBOARD,A,AFT,F,FORWARD,OUT,OUT,S,SB
-23000DATAUNIFORM,DESK,COMBADGE,PHASER,PADD,HYPERSPANNER,TRICORDER,HYPOSPRAY
-23010DATAPORTHOLE,VIEWSCREEN,COMPUTER CONSOLE,NAV CONSOLE,HELM CONSOLE
-23015DATACOMMS CONSOLE,ACCESS PANEL,ACCESS PANEL,ACCESS PANEL,ACCESS PANEL
-23020DATAEPS MANIFOLD,EPS MANIFOLD,EPS MANIFOLD,EPS MANIFOLD,WARP CORE
-23025DATABORG DRONE,BORG DRONE,BORG DRONE,BORG DRONE,POWER LEVEL
-23100DATACOMMUNICATOR,3,PADD,5,HYPER-SPANNER,6,HYPO-SPRAY,8,COMPUTER,11
-23110DATAPOWER LEVEL BUTTON,28,POWER BUTTON,28,PANEL,15,PANEL,16,PANEL,17
-23120DATAPANEL,18
-23200DATA2,1,1,26,15,20,21,27,1,0,18,16,15,19,22,23,24,25,22,23,24,25,21
-23210DATA29,13,16,20,0
-23300DATA1,5,0,1,1,1,1,1,2,2,7,7,7,7,5,5,5,5,0,0,0,0,5,2,2,2,2,0
-24000DATA1,I,YOU NEED TO BE IN FULL UNIFORM FIRST!,29,I
-24005DATAA BORG DRONE BLOCKS YOUR PATH!,13,P,A BORG DRONE BLOCKS YOUR PATH.
-24010DATA16,A,A BORG DRONE BLOCKS YOUR PATH...,20,A
-24015DATAA BORG DRONE BLOCKS YOUR PATH!
+5printchr$(147)"initializing...":nr=35:na=10:nv=20:no=28:nb=5:oa=11:gosub10000
+10r=1:printchr$(147)chr$(18)"uss ventur ncc-73209"chr$(146)
+15print:print"yellow alert. the ventur is dead in"
+20print"space. we must make repairs and --"a$:print
+22print"hit a key to start..."
+25get x$:ifx$=""then25
+30print:printchr$(18)r$(r)chr$(146):ifq1=0thenprinta$
+35ifs(1)<>3thenprint"you are in your skivvies."
+40ifr=12thenprint"the turbolift says":print"'please state your destination'."
+50ifaand(v=1orv>4)thengosub1100
+60d$="":input "your orders";d$:ifd$=""then60
+70v=0:gosub500:ifv=0thenprint"i don't know how to '"d$"'.":goto30
+80print:ifv<11thenonvgosub1000,1200,1200,1300,1300,1400,1400,1500,1500,1500
+90ifv>10thenon v-10gosub1900,2100,2200,2300,2500,2500,2600,2400,2700,9500
+100goto30
+200forii=1tona:ifi$=a$(ii,jj)thenou$=a$(ii,1-jj):return
+210next:ou$=i$:return
+500v=0:o$="":ob=0:fori=1tona:ifd$=a$(i,0)ord$=a$(i,1)then510
+505next:goto515
+510v=1:o$=a$(i,0):return
+515fori=1tonv:v$=v$(i):ifleft$(d$,len(v$))<>v$then530
+520ifmid$(d$,len(v$)+1,1)<>" "andlen(d$)>len(v$)then530
+525goto540
+530next:v$=d$:return
+540v=i:iflen(v$)>=len(d$)thenreturn
+545t$=mid$(d$,len(v$)+1):ifleft$(t$,1)<>" "thenv=0:return
+550o$=mid$(t$,2)
+555ifo$=o$(10)andr>=13andr<=19thenob=10:return
+565f=s(4)=3:forj=1tono:ifo$(j)<>o$then575
+570ifl(j)=rors(j)=3or(j=28andf)thenob=j:return
+575next:forj=1tooa:ifoa$(j)<>o$then590
+580k=oa(j):ifl(k)=rors(k)=3or(k=28andf)thenob=k:o$=o$(ob):return
+590next:return
+1000i$=o$:jj=1:gosub200:i$=ou$:d=0:fori=1tond(r)
+1010ifi$=d$(r,i)thend=d(r,i):goto1030
+1020next
+1030ifd=0thenprint"you can't go that way.":return
+1040fori=1tonb:ifb(i)=randb$(i,0)=i$thenprintb$(i,1):return
+1050next
+1060r=d:jj=0:gosub200:print"you go "ou$".":return
+1100print"you can go: ";:fori=1tond(r):jj=0:i$=d$(r,i):gosub200
+1110printou$" ";:next
+1120print:print"you see: ";:n$="nothing special.":c$="":fori=1tono
+1130ifl(i)=rands(i)thenprintc$o$(i);:c$=", ":n$=""
+1140next:ifr>=13andr<=19thenprintc$"viewscreen":n$=""
+1150ifr>=13andr<=19ands(11)=7then1170
+1160goto1190
+1170print:print"all the consoles on the bridge are dark.";
+1180print"the computer must still be offline.";
+1190printn$:return
+1200ifo$=""then1100
+1205gosub3000:iffthenreturn
+1210ifs(ob)=5thenprint"it looks like it can be opened.":return
+1215ifob=2ands(2)=6ands(3)=1andl(3)=1then3200
+1220ifs(ob)=6andob>=15andob<=18then3100
+1225ifob>=12andob<=14ands(11)=7thenprint"it is offline.":return
+1230ifob=11ands(11)=7thenprint"it displays 'tap here to start'.":return
+1235ifs(ob)=6thenprint"it is open.":return
+1236ifs(ob)=7thenprint"it is deactivated.":return
+1240ifob=9orob=10thenprint"you see billions and billions of stars.":return
+1245ifob=4thenprint"on top you see a power level button.":return
+1250ifob=5ands(11)=7then1252
+1251goto1255
+1252print"it shows 'no connection'. the computer must still be offline..."
+1253return
+1255ifob=5andpcthenprint"it displays the coordinates of the uss ventur.":return
+1260ifob=14ands(11)<>7then1262
+1261goto1265
+1262print"it displays: 'uss ventur, starbase 73 acknowledges your sos.";
+1263print" transmit your coordinates and we will send a rescue team.'":return
+1265ifob=12ands(11)<>7andpc=0then1267
+1266goto1270
+1267print"it shows a bunch of data, including the ventur's coordinates.";
+1268print" the location is too complicated to remember; maybe you";
+1269print" can use a padd to record itprint":return
+1270ifs(11)<>7and((ob=5andpc=0)or(ob>=11andob<=14))then1272
+1271goto1275
+1272print"it shows a typical l-cars interface.":return
+1275ifob=7thenprint"it is set to 'detect plasma'.":return
+1290print"it looks like a standard-issue "o$".":return
+1300gosub3000:iffthenreturn
+1310ifs(ob)<>1thenprint"you can't take that!":return
+1320print"you take the "o$".":l(ob)=0:s(ob)=3:ifob=1thenprint"you put it on."
+1325ifob=4andq2=0thens(28)=2:q2=1:s=s+10:goto4500
+1330ifob=3ands(1)=3thenprint"you attach the combadge to your uniform."
+1340if(ob=1orob=3)ands(1)=3ands(3)=3then1355
+1350return
+1355f=1:b(1)=0:s=s+10:q1=1:goto4500
+1400gosub3000:iffthenreturn
+1420print"you drop the "o$".":l(ob)=r:s(ob)=1
+1425if(ob=1orob=3)and(s(1)<>3ors(3)<>3)then1435
+1430goto1490
+1435b(1)=1:s=s-10
+1490return
+1500gosub3000:iffthenreturn
+1505ifs(ob)<>3thenprint"you don't have that.":return
+1510if(ob=8orob=4)ands(ob)=3then1600
+1515ifob=7ands(7)=3then4000
+1520ifob=6ands(6)=3then5000
+1530ifob=5andr=16ands(11)<>7then1540
+1535goto1545
+1540s=s+10:print"the coordinates are copied to the padd.":pc=1:return
+1545ifob=5andr=19andpc=1then1555
+1550goto1590
+1555print"the coordinates are sent from the padd to starbase 73."
+1560print"the ventur is saved! you win!":s=s+1000:goto9500
+1590print"nothing happens.":return
+1600ifob=8andh=2thenprint"the hypospray is empty.":return
+1605forb=24 to 27:ifl(b)=rands(b)=2then1615
+1610next:print"there is nothing to shoot at here.":return
+1615ifob=4andpp>=prthen1640
+1620ifob=4thenprint"you shoot the drone but nothing happens.":print"the ";
+1625ifob=4thenprint"borg have adapted to the phaser's power level!":return
+1640ifob=4thens=s+100*pr:pr=pr+1:print"you shoot the drone with the phaser."
+1650ifob=8thens=s+100:h=h+1:print"you inject the drone with the hypospray."
+1660s(b)=7:o$(b)="a deactivated borg drone"
+1665print"the drone is deactivated and collapses.
+1670fori=1tonb:ifb(i)=rthenb(i)=0:return
+1680next:return
+1900ifo$=""thenprint"say something!":return
+1905ifr<>12then1590
+1910ifo$<>"help"ando$<>"directory"then1945
+1915print"the turbolift says 'you are ";:d=d(12,1)
+1920ifd=7thenprint"on deck 3";
+1925ifd=13thenprint"on the bridge";
+1930ifd=31thenprint"on deck 2";
+1935ifd=20thenprint"in engineering";
+1940print". you can say bridge, deck 2, deck 3, or engineering'.":return
+1945ifo$="deck 3"thend(12,1)=7:goto1985
+1950ifo$="deck 2"thend(12,1)=31:goto1985
+1955ifo$="engineering"thend(12,1)=20:goto1985
+1960ifo$="bridge"then1970
+1965print"the turbolift says '"o$" is not a valid destination'.":return
+1970ifq2*q3thend(12,1)=13:goto1985
+1975print"the turbolift says 'you are not (yet)
+1980print"authorized to go to the bridge.'":return
+1985ifu=0thens=s+10:u=1
+1990print"the doors swish close. you feel the turbolift move. a few seconds";
+1995print" later the doors swish open.":return
+2100gosub3000:iffthenreturn
+2105ifob=28ands(4)=3andpp<4thenprint"the power level increases to"pp+1
+2110ifob=28ands(4)=3andpp<4thenpp=pp+1:return
+2120ifob=28ands(4)=3thenprint"the power level is already at maximum.":return
+2130ifr=18andob=11ands(11)=7andq3then2150
+2140goto2175
+2150s=s+50:print"all the consoles on the bridge come to life! you hear an";
+2160print" urgent beeping from the comms station.
+2170s(11)=2:s(12)=2:s(13)=2:s(14)=2:return
+2175ifr=18andob=11ands(11)=7andq3=0then2185
+2180goto1590
+2185print"nothing happens. perhaps there is an issue in engineering?":return
+2200gosub3000:iffthenreturn
+2205ifs(ob)=6thenprint"it's already open.":return
+2210ifs(ob)<>5thenprint"you can't open that!":return
+2220s(ob)=6:print"you open the "o$".":ifob<>2then2240
+2225ifs(3)=0thens(3)=1:goto3200
+2230print"it is empty.":return
+2240ifob>=15andob<=18thens(ob+4)=2:goto3100
+2250ifob<>23thenreturn
+2255s=s-1000:print"antimatter shoots out, annihilating everything in its path!"
+2260print"the ship blows up! everybody dies!":goto9500
+2300gosub3000:iffthenreturn
+2310ifs(ob)=5thenprint"it's already closed.":return
+2320ifs(ob)<>6thenprint"you can't close that.":return
+2330s(ob)=5:print"you close the "o$"."
+2340ifob=2ands(3)=1andl(3)=1thens(3)=0
+2350ifob>=15andob<=18thens(ob+4)=0
+2390return
+2400a=1-a:print"auto-look turned o";:ifathenprint"n.":return
+2405print"ff.": return
+2500print"you have: ";:n$="nothing":fori=1tono:ifs(i)=3thenprinto$(i)" ";:n$=""
+2510next:printn$:return
+2600t=val(o$):ift>0andt<=nrthenr=t:print"transporting to "r$(t):return
+2610print"commands: ":fori=1tonv:printv$(i)" ";:next:print:return
+2700print"current score:"s:return
+3000f=0:if(ob=0ando$<>"")or(ob<>0ands(ob)=0)then3010
+3005goto3020
+3010print"i don't know what that is.":f=1:return
+3020ifob=0thenprint"you must '"v$"' something!":f=1:return
+3090return
+3100print"you see an eps manifold inside.":return
+3200print"you see a combadge inside.":return
+4000ifr=25ands(18)=6and s(22)=2thenprint"it reports 'plasma detected'.":return
+4090print"it reports 'no plasma detected'.":return
+4500if(q2*q3*q4)=0thenprint"your combadge beeps. 'ensign, report to"
+4510ifq2=0thenprint"the armory on deck 2. prepare to repel boarders!'":return
+4520ifq3=0thenprint"engineering to fix a plasma leak in an eps manifold.'":reT
+4530ifq4=0thenprint"the bridge and re-establish comms with":print"starbase 73.'
+4590return
+5000ifr=25ands(18)=6ands(22)=2then5010
+5005goto1590
+5010q3=1:s(22)=4:s=s+200:print"the hyperspanner seals the eps manifold."
+5011print"the plasma leak is fixed!":goto4500
+9500print:print"game over. final score:"s:end
+10000dimnd(35),d(35,4),d$(35,4),r$(35),a$(10,1),v$(20)
+10010dimo$(28),l(28),s(28),b(5),b$(5,1),oa$(11),oa(11)
+10030fori=1tonr:readr$(i),nd(i):forj=1tond(i):readd$(i,j),d(i,j):next
+10035next
+10050fori=1tonv:readv$(i):next:fori=1tona:reada$(i,0),a$(i,1):next
+10070fori=1tono:reado$(i):next:fori=1tooa:readoa$(i),oa(i):next
+10080fori=1tono:readl(i):next:fori=1tono:reads(i):next
+10100fori=1tonb:readb(i),b$(i,0),b$(i,1):next
+10110a$="red alert! prepare to repel boarders!":pp=1:pr=1:return
+20000datayour quarters,3,i,4,p,2,s,3,closet,1,s,1,head,1,p,1
+20005datapassageway,3,o,1,cw,5,ccw,11,passageway,2,cw,6,ccw,4
+20010datapassageway,2,cw,7,ccw,5,deck 3 lobby,3,i,12,cw,8,ccw,6
+20015datapassageway,2,cw,9,ccw,7,passageway,2,cw,10,ccw,8
+20020datapassageway,2,cw,11,ccw,9,passageway,2,cw,4,ccw,10
+20025dataturbolift,1,out,7,bridge/command dais,4,f,14,p,18,s,19,a,12
+20030databridge/center,3,p,15,s,16,a,13,bridge/helm,2,s,14,a,18
+20035databridge/navigation,2,p,14,a,19,unused,1,p,17,bridge/ops,2,f,15,s,13
+20040databridge/comms,2,p,13,f,16,main engineering,2,f,12,a,21
+20045datawarp core,3,f,20,p,22,s,24,jeffries tube,2,s,21,p,23
+20050datajeffries tube,1,s,22,jeffries tube,2,p,21,s,25,jeffries tube,1,p,24
+20055dataarmory,1,o,29,sick bay,1,i,28,passageway,3,o,27,cw,29,ccw,35
+20060datapassageway,3,i,26,cw,30,ccw,28,passageway,2,cw,31,ccw,29
+20065datadeck 2 lobby,3,i,12,cw,32,ccw,30,passageway,2,cw,33,ccw,31
+20070datapassageway,2,cw,34,ccw,32,passageway,2,cw,35,ccw,33
+20075datapassageway,2,cw,28,ccw,34
+21000datago,look,examine,get,take,drop,leave,use,fire,shoot,say,tap,open,close
+21010datainventory,inv,help,autolook,score,quit
+22000datacw,clockwise,ccw,counterclockwise,i,inboard,o,outboard,p,port
+22010datas,starboard,a,aft,f,forward,out,out,s,sb
+23000datauniform,desk,combadge,phaser,padd,hyperspanner,tricorder,hypospray
+23010dataporthole,viewscreen,computer console,nav console,helm console
+23015datacomms console,access panel,access panel,access panel,access panel
+23020dataeps manifold,eps manifold,eps manifold,eps manifold,warp core
+23025databorg drone,borg drone,borg drone,borg drone,power level
+23100datacommunicator,3,padd,5,hyper-spanner,6,hypo-spray,8,computer,11
+23110datapower level button,28,power button,28,panel,15,panel,16,panel,17
+23120datapanel,18
+23200data2,1,1,26,15,20,21,27,1,0,18,16,15,19,22,23,24,25,22,23,24,25,21
+23210data29,13,16,20,0
+23300data1,5,0,1,1,1,1,1,2,2,7,7,7,7,5,5,5,5,0,0,0,0,5,2,2,2,2,0
+24000data1,i,you need to be in full uniform first!,29,i
+24005dataa borg drone blocks your path!,13,p,a borg drone blocks your path.
+24010data16,a,a borg drone blocks your path...,20,a
+24015dataa borg drone blocks your path!
