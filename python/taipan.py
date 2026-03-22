@@ -57,10 +57,13 @@ ed           = .5
 
 price=[0,0,0,0]
 
-# Hong Kong warehouse
+# Hong Kong warehouse (Opium, silk, arms, general)
 hkw_=[0, 0, 0, 0]
+
+# Contents of ship
 hold_=[0, 0, 0, 0]
 
+# Total stored in hold
 hold         = 0
 capacity     = 60
 guns         = 0
@@ -85,14 +88,15 @@ def cbreak():
 def nocbreak():
   curses.nocbreak()
 
-
-def noecho():
-  pass
-
+A_REVERSE=curses.A_REVERSE
+A_NORMAL=curses.A_NORMAL
 
 def attrset(value):
   global window
-  window.attrset(value)
+  if value == A_REVERSE:
+      window.attron(value)
+  else:
+      window.attroff(A_REVERSE)
 
 
 def flushinp():
@@ -121,10 +125,6 @@ def getch():
 
 def curs_set(val):
   curses.curs_set(val)
-
-
-A_REVERSE=0x0400
-A_NORMAL=0
 
 
 def refresh():
@@ -292,9 +292,8 @@ def port_stats():
    status = 100 - ((float(damage) / capacity) * 100)
 
    clear()
-   spacer = 12 - (len(firm) / 2)
-   for i in range(1, int(spacer) + 1):
-      printw(" ")
+   spacer = 13 - len(firm) // 2
+   printw(" " * spacer)
    printw("Firm: %s, Hong Kong\n"% firm)
    printw(" ______________________________________\n")
    printw("|Hong Kong Warehouse                   |     Date\n")
@@ -322,7 +321,7 @@ def port_stats():
    printw("%d"% hkw_[3])
    move(8, 6)
    global hold
-   if (hold >= 0):
+   if hold >= 0:
       printw("%d"% hold)
    else:
       attrset(A_REVERSE)
@@ -368,18 +367,16 @@ def port_stats():
 
    move(6, 43)
    global port
-   spacer = (9 - len(location[port])) / 2
-   for i in range(1, int(spacer) + 1):
-      printw(" ")
+   spacer = (9 - len(location[port])) // 2
+   printw(" " * spacer)
    attrset(A_REVERSE)
    printw("%s"% location[port])
    attrset(A_NORMAL)
 
    move(9, 41)
    fancy_num = fancy_numbers(debt)
-   spacer = (12 - len(fancy_num)) / 2
-   for i in range(1, int(spacer) + 1):
-      printw(" ")
+   spacer = (12 - len(fancy_num)) // 2
+   printw(" " * spacer)
    attrset(A_REVERSE)
    printw("%s"% fancy_num)
    attrset(A_NORMAL)
@@ -2171,7 +2168,6 @@ def main():
    window = initscr()
 
    cbreak()
-   noecho()
 
    splash_intro()
    name_firm()
