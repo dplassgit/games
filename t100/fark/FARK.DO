@@ -1,5 +1,5 @@
 0 REM FARKLE! for Tandy 200 by David Plass
-5 GOSUB1000:GOTO100: REM Set up
+5 GOSUB1000:GOSUB30000:GOTO100: REM Set up
 39 REM Calculate "Selected total" in ST. If A=1 then all table dice are counted, otherwise just selected dice in S()
 40 ST=0:FORI=1TO6:C(I)=0:D(I)=0:NEXT:FORI=1TONT:IFAORS(I)THENT=T(I):C(T)=C(T)+1:NEXTELSENEXT
 41 FORI=1TO6:D(C(I))=D(C(I))+1:NEXT: REM D(I)=how many of each count, i.e., D(2) is how many doubles
@@ -11,7 +11,7 @@
 48 IFC(I)<=2THENST=ST-C(I)*(50*(I=5)+100*(I=1)): REM 1, 11, 5, 55
 49 NEXT:RETURN
 79 REM Draw die D at location L. Updates L=L+5
-80 D$=D$(D):?@L,LEFT$(D$,3):?@L+40,MID$(D$,4,3):?@L+80,RIGHT$(D$,3):L=L+5:RETURN
+80 ?@L,;:GOSUB 30100:?@L+40,;:GOSUB30200:?@L+80,;:GOSUB30300: L=L+5: RETURN
 99 REM Main loop: show score, roll dice
 100 ?@614,ST+RT"  ";:?@26,R$" SCORE:"S:?@66," ROLLS:"R;N$
 110 IFR=11THEN700: REM Game over
@@ -36,7 +36,7 @@
 399 REM Bank subroutine
 400 IFRT+ST=0THENBEEP:RETURN: REM If no running total, cannot bank
 410 S=S+ST+RT:ST=0:RT=0:NT=6:NH=0:R=R+1:GOSUB900:B=1:RETURN: REM bump score, clear hand, roll all
-700 ?@280,R$CHR$(27)"WGAME OVER!"N$SPACE$(17)
+700 ?@280,R$"GAME OVER!"N$SPACE$(17)
 710 ?:?R$"YOU ";:IFS<5000THEN?"LOST!"N$ELSE?"WON!"N$
 790 END
 799 REM Farkle subroutine
@@ -46,14 +46,45 @@
 900 L=440:FORI=1TO6:D=-H(I)*(I<=NH):GOSUB80:NEXT:RETURN
 999 REM set up
 1000 CLS:DEFINTA-Z:R$=CHR$(27)+"p":N$=CHR$(27)+"q": REM reverse, normal video
-1020 ?@6,R$CHR$(27)"V F A R K L E !"N$:Z=RND(-VAL(RIGHT$(TIME$,2))):A=0:B=0:D=0: REM local variables
-1030 DIMC(6),D(6),D$(6),H(6),S(6),T(6): REM die count, count count, dice strings, hand dice, selected dice, table dice
+1010 NS$=CHR$(27)+"V": SC$=CHR$(27)+"W": REM no scroll, scrolling last line
+1020 ?@6,R$" F A R K L E !"N$:Z=RND(-VAL(RIGHT$(TIME$,2))):A=0:B=0:D=0: REM local variables
+1030 DIMC(6),D(6),H(6),S(6),T(6): REM die count, count count, hand dice, selected dice, table dice
 1040 NT=6:NH=0:S=0:RT=0:ST=0:R=1: REM number on table, number in hand, score, running total, selected total, # rolls
-1050 FORI=0TO6:READD$(I):NEXT: REM read dice strings (0th entry is blank)
-1060 ?@360,"Kept:":L=189:FORI=1TO12:READS$:?@L,S$:L=L+40:NEXT: REM Print scoring values
-1070 ?@600,"Running total:
+1060 ?@360,NS$"Kept:";:L=189:FORI=1TO12:READS$:?@L,S$;:L=L+40:NEXT:?@0,SC$: REM Print scoring values
+1070 ?@600,"Running total:";
 1080 P$="Keep ("+R$+"1"+N$+"-"+R$:Q$=N$+"), "+R$+"R"+N$+"oll, "+R$+"B"+N$+"ank:  "
 1090 RETURN
-2000 DATA"         ","    o    ","o       o","o   o   o","o o   o o","o o o o o","o oo oo o"
 2010 DATA" Scoring:",  "     1: 100","     5:  50","   111:1000","   xxx: x00","  xxxx:1000"
 2020 DATA" xxxxx:2000","xxxxxx:3000","xxyyzz:1500","xxxxyy:1500","xxxyyy:2500","123456:1500"
+30000 REM Define dots for the dice
+30002 'ML routines by Jim Irwin (72346,1020)
+30010 RESTORE 30000
+30020 FOR I!=64000 TO 64007:READ N:POKE I!,N:NEXT
+30025 DIM CD(4)
+30030 FOR J=0 TO 3:READ X,Y:CD(J)=X+256*Y-32768 :NEXT
+30040 RETURN
+30050 REM Print dot current location
+30060 CALL 64000,0,VARPTR(CD(0))  '       Find address of desired pixel image
+30070 CALL 64004,0,CSRLIN*320+POS(0)     'Set @ cursor position
+30080 ? CHR$(27);"C";'Escape-C to update cursor
+30090 RETURN
+30100 REM Print first line of dots by input D
+30105 IF D=0 THEN ?"   ";: RETURN
+30110 IF D=1 THEN RETURN
+30120 IF D=2 OR D=3 THEN ?"  ";:GOSUB30050:RETURN
+30130 GOSUB30050:?" ";:GOSUB30050:RETURN
+30200 REM Print 2nd line
+30205 IF D=0 THEN ?"   ";: RETURN
+30210 IF D=1 OR D=3 OR D=5 THEN ?" ";:GOSUB 30050:RETURN
+30220 IF D=6 THEN GOSUB30050:?" ";:GOSUB 30050:RETURN
+30290 RETURN
+30300 REM print 3rd line
+30305 IF D=0 THEN ?"   ";: RETURN
+30310 IF D=1 THEN RETURN
+30320 IF D=2 OR D=3 THEN GOSUB 30050: RETURN
+30330 GOSUB 30050:?" ";:GOSUB30050:RETURN
+30390 RETURN
+33000 'ML Routine by Jim Irwin
+33010 DATA 34,164,254,201,235,195,215,141
+33019 'DOT
+33020 DATA 0,14,31,31,31,14,0,0
